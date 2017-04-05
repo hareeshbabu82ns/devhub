@@ -7,81 +7,82 @@
  */
 // Core variables and mixins
 @import "bootstrap-variables";
-@import "bootstrap_src/variables";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/variables";
 @import "custom-variables";
-@import "bootstrap_src/mixins";
+@import "node_modules/bootstrap/scss/mixins";
 @import "core/mixins";
 
 // Reset and dependencies
-@import "bootstrap_src/normalize";
-@import "bootstrap_src/print";
+@import "node_modules/bootstrap/scss/normalize";
+@import "node_modules/bootstrap/scss/print";
 
 // Core CSS
-@import "bootstrap_src/reboot";
-@import "bootstrap_src/type";
-@import "bootstrap_src/images";
-@import "bootstrap_src/code";
-@import "bootstrap_src/grid";
+@import "node_modules/bootstrap/scss/reboot";
+@import "node_modules/bootstrap/scss/type";
+@import "node_modules/bootstrap/scss/images";
+@import "node_modules/bootstrap/scss/code";
+@import "node_modules/bootstrap/scss/grid";
 
-@import "bootstrap_src/tables";
+@import "node_modules/bootstrap/scss/tables";
 @import "bootstrap_custom/tables";
 
-@import "bootstrap_src/forms";
+@import "node_modules/bootstrap/scss/forms";
 
-@import "bootstrap_src/buttons";
+@import "node_modules/bootstrap/scss/buttons";
 @import "bootstrap_custom/buttons";
 
 // Components
-@import "bootstrap_src/transitions";
+@import "node_modules/bootstrap/scss/transitions";
 
-@import "bootstrap_src/dropdown";
+@import "node_modules/bootstrap/scss/dropdown";
 @import "bootstrap_custom/dropdown";
 
-@import "bootstrap_src/button-group";
+@import "node_modules/bootstrap/scss/button-group";
 
-@import "bootstrap_src/input-group";
+@import "node_modules/bootstrap/scss/input-group";
 @import "bootstrap_custom/input-group";
 
 //@import "custom-forms";
 
-@import "bootstrap_src/nav";
+@import "node_modules/bootstrap/scss/nav";
 @import "bootstrap_custom/nav";
 
-@import "bootstrap_src/navbar";
+@import "node_modules/bootstrap/scss/navbar";
 @import "bootstrap_custom/navbar";
 
-@import "bootstrap_src/card";
+@import "node_modules/bootstrap/scss/card";
 @import "bootstrap_custom/card";
 
-@import "bootstrap_src/breadcrumb";
+@import "node_modules/bootstrap/scss/breadcrumb";
 @import "bootstrap_custom/breadcrumb";
 
-@import "bootstrap_src/pagination";
+@import "node_modules/bootstrap/scss/pagination";
 
-@import "bootstrap_src/badge";
+@import "node_modules/bootstrap/scss/badge";
 @import "bootstrap_custom/badge";
 
 //@import "jumbotron";
-@import "bootstrap_src/alert";
+@import "node_modules/bootstrap/scss/alert";
 
-@import "bootstrap_src/progress";
+@import "node_modules/bootstrap/scss/progress";
 @import "bootstrap_custom/progress";
 
-@import "bootstrap_src/media";
-@import "bootstrap_src/list-group";
-@import "bootstrap_src/responsive-embed";
-@import "bootstrap_src/close";
+@import "node_modules/bootstrap/scss/media";
+@import "node_modules/bootstrap/scss/list-group";
+@import "node_modules/bootstrap/scss/responsive-embed";
+@import "node_modules/bootstrap/scss/close";
 
 // Components w/ JavaScript
-@import "bootstrap_src/modal";
+@import "node_modules/bootstrap/scss/modal";
 @import "bootstrap_custom/modal";
 
-@import "bootstrap_src/tooltip";
-@import "bootstrap_src/popover";
-@import "bootstrap_src/carousel";
+@import "node_modules/bootstrap/scss/tooltip";
+@import "node_modules/bootstrap/scss/popover";
+@import "node_modules/bootstrap/scss/carousel";
 
 // Utility classes
-@import "bootstrap_src/utilities";
+@import "node_modules/bootstrap/scss/utilities";
 
 // Vendors Styles
 @import "vendors/vendors";
