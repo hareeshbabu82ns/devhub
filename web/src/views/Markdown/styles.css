@@ -1,0 +1,54 @@
+.editor-pane {
+  height: 100%;
+}
+.CodeMirror {
+  height: 100%;
+  padding-top: 20px;
+  padding-left: 20px;
+}
+.ReactCodeMirror {
+  height: 100%;
+}
+
+.view-pane {
+  background: #272822;
+}
+
+.markdownPane {
+  background: #272822;
+  color: #f8f8f2;
+}
+
+hr {
+  color: #f8f8f2 !important;
+}
+
+pre {
+  border: 1px solid #af9295;
+}
+
+code {
+  background: #ccc !important;
+}
+
+blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 3em;
+  border-left: 0.5em #eee solid;
+}
+
+tr {
+  border-top: 1px solid #c6cbd1;
+  background: #575852;
+}
+
+th,
+td {
+  padding: 6px 13px;
+  border: 1px solid #af9295;
+}
+
+table tr:nth-child(2n) {
+  background: #777872;
+}
