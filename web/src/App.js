@@ -8,6 +8,7 @@ import './App.css';
 
 import Callback from './views/Callback/Callback';
 import Auth from './Auth/Auth';
+import {AuthContext} from './Auth/AuthContext';
 import history from './history';
 
 import FullPage from './views/full-page';
@@ -16,7 +17,7 @@ import LoginAuth0 from './views/LoginAuth0/Login';
 import ErrorPage from './views/error_page';
 
 
-const auth = new Auth(history);
+const auth = new Auth();
 
 const handleAuthentication = ({ location, successRoute }) => {
   if (/access_token|id_token|error/.test(location.hash)) {
@@ -27,6 +28,7 @@ const handleAuthentication = ({ location, successRoute }) => {
 class App extends Component {
   render() {
     return (
+      <AuthContext.Provider value={auth}>
       <Router history={history}>
         <Switch>
           <Route exact path="/login" name="Login Page" render={(props) => (
@@ -47,6 +49,7 @@ class App extends Component {
           )} />
         </Switch>
       </Router>
+      </AuthContext.Provider>
     );
   }
 }

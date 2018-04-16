@@ -11,19 +11,18 @@ export default class Auth {
     redirectUri: AUTH_CONFIG.callbackUrl,
     audience: AUTH_CONFIG.apiUrl,
     responseType: 'token id_token',
-    scope: 'openid profile read:contents'
+    scope: 'openid profile read:contents modify:contents'
   });
 
   userProfile;
 
-  constructor(history) {
+  constructor() {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.getAccessToken = this.getAccessToken.bind(this);
     this.getProfile = this.getProfile.bind(this);
-    this.history = history;
   }
 
   login() {
@@ -35,15 +34,15 @@ export default class Auth {
       console.log('Auth Err:', err);
       console.log('Auth Result:', authResult);
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult,successRoute);
+        this.setSession(authResult, successRoute);
 
         //set Authorization Header for Axios
-        axios.defaults.headers.common['Authorization'] 
+        axios.defaults.headers.common['Authorization']
           = `Bearer ${authResult.accessToken}`;
 
-        this.history.replace(successRoute);
+        history.replace(successRoute);
       } else if (err) {
-        this.history.replace(successRoute);
+        history.replace(successRoute);
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
@@ -59,7 +58,7 @@ export default class Auth {
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
     // navigate to the home route
-    this.history.replace(successRoute);
+    history.replace(successRoute);
   }
 
   getAccessToken() {
@@ -76,7 +75,8 @@ export default class Auth {
       if (profile) {
         this.userProfile = profile;
       }
-      cb(err, profile);
+      if (cb)
+        cb(err, profile);
     });
   }
 
@@ -91,7 +91,7 @@ export default class Auth {
     axios.defaults.headers.common['Authorization'] = '';
 
     // navigate to the home route
-    this.history.replace(successRoute);
+    history.replace(successRoute);
   }
 
   isAuthenticated() {

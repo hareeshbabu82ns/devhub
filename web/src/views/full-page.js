@@ -13,13 +13,13 @@ class FullPage extends Component {
   render() {
     return (
       <div>
-        <AppMenu auth={this.props.auth} />
+        <AppMenu/>
 
         <Container style={{ marginTop: "3.5em" }}>
           <Switch>
             {routes.map((route, idx) => {
               return route.component ? (<Route key={idx} path={route.path} exact={route.exact} name={route.name} render={props => (
-                <route.component auth={this.props.auth} {...props} />
+                <route.component {...props} />
               )} />)
                 : (null);
             },

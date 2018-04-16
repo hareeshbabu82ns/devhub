@@ -10,9 +10,9 @@ class DashboardPage extends React.Component {
   }
 
   fetchMessage(){
-    const { getAccessToken } = this.props.auth;
-    console.log("Token:",getAccessToken());
-    const headers = { 'Authorization': `Bearer ${getAccessToken()}`}
+    // const { getAccessToken } = this.props.auth;
+    // console.log("Token:",getAccessToken());
+    // const headers = { 'Authorization': `Bearer ${getAccessToken()}`}
     axios.get(`/private`)
       .then(response => this.setState({ message: response.data.message }))
       .catch(error => this.setState({ message: error.message }));

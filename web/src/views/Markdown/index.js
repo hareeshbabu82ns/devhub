@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Grid } from "semantic-ui-react";
 
-import Editor from '../../../views/markdown-editor.js';
+import Editor from './markdown-editor.js';
 import ReactMarkdown from 'react-markdown';
 
 import CodeBlock from './code-block';
@@ -25,16 +26,18 @@ class Markdown extends Component {
 
   render() {
     return (
-      <div className="animated fadeIn row">
-        <div className="col editor-pane">
+      <Grid columns={2} divided inverted padded>
+        <Grid.Row stretched>
+        <Grid.Column color='black'>
           <Editor className="editor" value={this.state.markdownSrc}
                 onChange={this.onMarkdownChange}/>
-        </div>
-        <div className="col view-pane">
+        </Grid.Column>
+        <Grid.Column color='black'>
           <ReactMarkdown className="markdownPane" source={this.state.markdownSrc} 
             renderers={{code: CodeBlock}}/>
-        </div>
-      </div>
+        </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 }
