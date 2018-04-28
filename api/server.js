@@ -39,5 +39,8 @@ app.get('/api/private', checkJwt, checkScopes, function (req, res) {
   res.json({ message: "private data" });
 });
 
+//initiate GraphQL
+require('./graphql')(app, [checkJwt, checkScopes]);
+
 app.listen(3001);
-console.log('Server listening on http://localhost:3001. The React app will be built and served at http://localhost:3000.');
+console.log('Server listening on http://localhost:3001.');
