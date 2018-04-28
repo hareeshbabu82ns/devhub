@@ -32,13 +32,16 @@ class AppMenu extends React.Component {
         <Container>
           <Menu.Item as="a" header>
             <Icon name="inr" />Devotional Hub
-    </Menu.Item>
+          </Menu.Item>
           <Menu.Item as={NavLink} to="/dashboard" exact>
             <Icon name="dashboard" />Dashboard
-    </Menu.Item>
+          </Menu.Item>
+          <Menu.Item as={NavLink} to="/gods">
+            <Icon name="book" />Gods
+          </Menu.Item>
           <Menu.Item as={NavLink} to="/markdown">
             <Icon name="book" />Markdown
-    </Menu.Item>
+          </Menu.Item>
           <Menu.Menu position='right'>
             {(profile) ?
               (<Dropdown item

@@ -3,13 +3,16 @@ import { Grid } from "semantic-ui-react";
 
 import axios from '../axios';
 
+import GalleryItemActions from './Gallery/gallery_item_actions';
+import GalleryAlbumActions from './Gallery/gallery_album_actions';
+
 class DashboardPage extends React.Component {
   componentWillMount() {
     this.setState({ message: '' });
     this.fetchMessage();
   }
 
-  fetchMessage(){
+  fetchMessage() {
     // const { getAccessToken } = this.props.auth;
     // console.log("Token:",getAccessToken());
     // const headers = { 'Authorization': `Bearer ${getAccessToken()}`}
@@ -19,11 +22,24 @@ class DashboardPage extends React.Component {
   }
 
   render() {
-  return (
-  <div>
-    Dashboard :{this.state.message}
-  </div>
-  )
+    return (
+      <div>
+        Dashboard :{this.state.message}
+
+        <div id="album">
+          <GalleryAlbumActions />
+        </div>
+
+        <div id="album_items">
+
+          <div class="ui cards" style={{ margin: '10px' }}>
+            <GalleryItemActions />
+          </div>
+
+        </div>
+
+      </div>
+    )
   }
 };
 
