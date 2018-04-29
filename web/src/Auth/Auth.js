@@ -2,7 +2,7 @@ import auth0 from 'auth0-js';
 import { AUTH_CONFIG } from './auth0-variables';
 import history from '../history';
 
-import axios from '../axios';
+import { axiosAPI, axiosGQL } from '../axios';
 
 export default class Auth {
   auth0 = new auth0.WebAuth({
@@ -37,7 +37,9 @@ export default class Auth {
         this.setSession(authResult, successRoute);
 
         //set Authorization Header for Axios
-        axios.defaults.headers.common['Authorization']
+        axiosAPI.defaults.headers.common['Authorization']
+          = `Bearer ${authResult.accessToken}`;
+        axiosGQL.defaults.headers.common['Authorization']
           = `Bearer ${authResult.accessToken}`;
 
         history.replace(successRoute);
@@ -88,7 +90,8 @@ export default class Auth {
     this.userProfile = null;
 
     //remove Authorization Header for Axios
-    axios.defaults.headers.common['Authorization'] = '';
+    axiosAPI.defaults.headers.common['Authorization'] = '';
+    axiosGQL.defaults.headers.common['Authorization'] = '';
 
     // navigate to the home route
     history.replace(successRoute);

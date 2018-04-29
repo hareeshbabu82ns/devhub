@@ -22,16 +22,16 @@ export default () => (
 
 
       <Card.Content extra>
-        <div class="ui right labeled button" data-content="Like it!" data-variation="tiny">
-          <div class="ui red icon tiny button">
-            <i class="thumbs outline up large icon"></i>
+        <div className="ui right labeled button" data-content="Like it!" data-variation="tiny">
+          <div className="ui red icon tiny button">
+            <i className="thumbs outline up large icon"></i>
           </div>
-          <a class="ui basic red left pointing label">365</a>
+          <a className="ui basic red left pointing label">365</a>
         </div>
-        <div class="ui left labeled right floated button" data-content="Share it!" data-variation="tiny">
-          <a class="ui basic red right pointing label">183</a>
-          <div class="ui red icon tiny button">
-            <i class="external share large icon"></i>
+        <div className="ui left labeled right floated button" data-content="Share it!" data-variation="tiny">
+          <a className="ui basic red right pointing label">183</a>
+          <div className="ui red icon tiny button">
+            <i className="external share large icon"></i>
           </div>
         </div>
       </Card.Content>
