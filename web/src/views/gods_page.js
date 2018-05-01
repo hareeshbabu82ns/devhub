@@ -1,42 +1,45 @@
 import React from "react";
 import { Grid } from "semantic-ui-react";
 
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+
 import { axiosGQL } from '../axios';
 
 import CardGod from './Gallery/card_god';
 
+const GET_GODS = gql`
+  {
+    gods {
+      id
+      title
+      image
+      items
+    }
+  }
+`;
+
 class GodsPage extends React.Component {
-  state = { gods: [] };
-
-  componentWillMount() {
-    this.fetchGods();
-  }
-
-  fetchGods() {
-    // axios.get(`/gods`)
-    //   .then(response => this.setState({ gods: response.data.gods }))
-    //   .catch(error => this.setState({ gods: [] }));
-    axiosGQL.post('/', {
-      "operationName": null,
-      "variables": null,
-      "query": "{gods{id title image items}}"
-    })
-      .then(response => this.setState({ gods: response.data.data.gods }))
-      .catch(error => this.setState({ message: error.message }));
-  }
-
   render() {
     return (
       <div style={{ marginTop: "4.5em" }}>
-        <Grid>
-          {
-            this.state.gods && this.state.gods.map((god, idx) => (
-              <Grid.Column computer={4} tablet={6} mobile={8} stretched textAlign="center">
-                <CardGod  {...god} key={idx} />
-              </Grid.Column>
-            ))
-          }
-        </Grid>
+        <Query query={GET_GODS}>
+          {({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error) return `Error! ${error.message}`;
+            return (
+              <Grid>
+                {
+                  data.gods.map((god, idx) => (
+                    <Grid.Column computer={4} tablet={6} mobile={8} stretched textAlign="center">
+                      <CardGod  {...god} key={idx} />
+                    </Grid.Column>
+                  ))
+                }
+              </Grid>
+            );
+          }}
+        </Query>
       </div>
     )
   }

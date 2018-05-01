@@ -22,7 +22,8 @@ function setup(app, middlewares) {
   });
 
   // The GraphQL endpoint
-  app.use('/graphql', json(), ...middlewares, graphqlExpress({ schema }));
+  app.use('/graphql', json(), ...middlewares,
+    graphqlExpress(request => ({ schema, context: { request } })));
 
   // GraphiQL, a visual editor for queries
   app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));

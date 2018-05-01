@@ -18,7 +18,10 @@ extend type Query {
 
 const ResolversGod = {
   Query: {
-    gods: () => GodModel.find({}).then(gods => gods),
+    gods: (_, __, { request }) => {
+      console.log(request.body);
+      return GodModel.find({}).then(gods => gods);
+    },
     godByTitle: (_, { title }) => GodModel.findOne({ title }).then(god => god),
     god: (_, { id }) => GodModel.findById(id).then(god => god)
   },
