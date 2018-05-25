@@ -10,5 +10,6 @@ console.log('URL: ', mongodbURL);
 const mongoose = Mongoose.connect(mongodbURL);
 
 const GodModel = require('./god-model')
+const ItemModel = require('./item-model')
 
-module.exports = { GodModel };
+module.exports = { GodModel, ItemModel };

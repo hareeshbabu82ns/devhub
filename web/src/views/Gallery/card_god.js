@@ -5,7 +5,7 @@ import { Label, Segment, Card, Image, Button, Icon } from "semantic-ui-react";
 export default (props) => (
   <Segment piled>
     <Label color="grey" floating>{props.items}</Label>
-    <Card link>
+    <Card link onClick={props.onClick}>
       <Image src={props.image} wrapped={true} />
 
       <Card.Content>

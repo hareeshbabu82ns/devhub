@@ -31,8 +31,8 @@ class GodsPage extends React.Component {
               <Grid>
                 {
                   data.gods.map((god, idx) => (
-                    <Grid.Column computer={4} tablet={6} mobile={8} stretched textAlign="center">
-                      <CardGod  {...god} key={idx} />
+                    <Grid.Column computer={4} tablet={6} mobile={8} stretched textAlign="center" key={idx}>
+                      <CardGod  {...god} image={`${god.image}/${god.title}`} onClick={() => { this.props.history.push(`/gods/${god.id}/items`) }} />
                     </Grid.Column>
                   ))
                 }

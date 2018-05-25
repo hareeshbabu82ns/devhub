@@ -3,6 +3,7 @@ const { json } = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
 const { makeExecutableSchema } = require('graphql-tools');
 const { God, ResolversGod } = require('./god');
+const { Item, ResolversItem } = require('./item');
 
 function setup(app, middlewares) {
   // The GraphQL schema in string form
@@ -17,8 +18,8 @@ function setup(app, middlewares) {
 
   // Put together a schema
   const schema = makeExecutableSchema({
-    typeDefs: [Query, God],
-    resolvers: merge(resolvers, ResolversGod),
+    typeDefs: [Query, God, Item],
+    resolvers: merge(resolvers, ResolversGod, ResolversItem),
   });
 
   // The GraphQL endpoint
