@@ -1,69 +1,37 @@
-# schema.py
-from ariadne import make_executable_schema, snake_case_fallback_resolvers
 from ariadne import ObjectType
 
 from devhub.gql_root_types import query
-from .models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning
+from .models import EntityType, Language
 
+from gql_api.resolvers import entity as entity_resolvers, content as content_resolvers
 
 types = []
 
 # Content
 contentLineType = ObjectType('ContentLine')
 
+contentLineType.set_field(
+    "meaning", content_resolvers.resolve_content_line_meaning)
 
-@contentLineType.field("meaning")
-def resolve_content_line_meaning(parent, *_):
-    return ContentMeaning.objects.filter(parent=parent.id)[0]
-
-
-@contentLineType.field("extras")
-def resolve_content_line_extras(parent, *_):
-    return ContentExtras.objects.filter(parent=parent.id)[0]
-
+contentLineType.set_field(
+    "extras", content_resolvers.resolve_content_line_extras)
 
 types.append(contentLineType)
 
 # Entity
 entityType = ObjectType('Entity')
 
+query.set_field("entities", entity_resolvers.resolve_entities)
 
-@query.field("entities")
-def resolve_entities(*_):
-    return Entity.objects.all()
+entityType.set_field("childEntities", entity_resolvers.resolve_children)
 
+entityType.set_field("parentEntities", entity_resolvers.resolve_parents)
 
-@entityType.field("childEntities")
-def resolve_entity_children(parent, *_):
-    related = EntityRelation.objects.select_related('to_entity').filter(
-        from_entity=parent.id, from_type=parent.type.id)
-    return [rel.to_entity for rel in related]
+entityType.set_field("textData", entity_resolvers.resolve_text_data)
 
+entityType.set_field("metaData", entity_resolvers.resolve_meta_data)
 
-@entityType.field("parentEntities")
-def resolve_entity_parents(parent, *_):
-    related = EntityRelation.objects.select_related('from_entity').filter(
-        to_entity=parent.id, to_type=parent.type.id)
-    return [rel.from_entity for rel in related]
-
-
-@entityType.field("textData")
-def resolve_entity_text_data(parent, *_):
-    return EntityText.objects.filter(
-        parent=parent.id, type=parent.type.id)
-
-
-@entityType.field("metaData")
-def resolve_entity_meta_data(parent, *_):
-    return EntityMeta.objects.filter(
-        parent=parent.id, type=parent.type.id)
-
-
-@entityType.field("content")
-def resolve_entity_content(parent, *_):
-    return ContentLine.objects.filter(
-        parent=parent.id)
-
+entityType.set_field("content", entity_resolvers.resolve_content)
 
 types.append(entityType)
 
