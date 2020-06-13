@@ -1,0 +1,115 @@
+scalar Date
+scalar DateTime
+
+type Query {
+    entityTypes:[EntityType!]!
+    languages:[Language!]!
+    entities:[Entity!]
+}
+
+"""
+Type of the Entity ex. God, Author, Slokam etc.
+"""
+type EntityType {
+    id: ID!
+    name: String!
+    description: String
+}
+
+"""
+ISO Language identifier ex. SAN, TEL, ENG etc.
+"""
+type Language {
+    id: ID!
+    iso: String!
+    name: String!
+    description: String
+}
+
+"""
+Base Entity of the system ex Slokam, Adhyaayam, Grandham etc.
+"""
+type Entity {
+    id: ID!
+    type: EntityType!
+    """
+',' delimited tags for identification    
+    """
+    tags: String
+
+    childEntities:[Entity!]
+    parentEntities:[Entity!]
+
+    textData:[EntityText!]
+    metaData:[EntityMeta!]
+
+    content:[ContentLine!]
+}
+
+"""
+Entity to Entity Relationship
+"""
+type EntityRelation {
+    id: ID!
+    fromEntity: Entity!
+    fromType: EntityType!
+    toEntity: Entity!
+    toType: EntityType!
+}
+
+"""
+Text data for the Entity (leaf node of the Graph)
+"""
+type EntityText {
+    id: ID!
+    parentEntity: Entity!
+    type: EntityType!
+    language: Language!
+    text: String!
+    description: String
+}
+
+"""
+Meta Data for the Entity (leaf node of the Graph, sibling to TextData)
+"""
+type EntityMeta {
+    id: ID!
+    parentEntity: Entity!
+    type: EntityType!
+    name: String!
+    description: String
+}
+
+"""
+Acutual content of the Entity
+"""
+type ContentLine {
+    id: ID!
+    parentEntity: Entity!
+    language: Language!
+    content: String!
+    meaning: ContentMeaning
+    extras: ContentExtras
+}
+
+"""
+Content related meaning
+"""
+type ContentMeaning {
+    id: ID!
+    parentEntity: Entity!
+    forContent: ContentLine!
+    language: Language!
+    content: String!
+}
+
+"""
+Content related extra data
+"""
+type ContentExtras {
+    id: ID!
+    parentEntity: Entity!
+    forContent: ContentLine!
+    language: Language!
+    content: String!
+}
