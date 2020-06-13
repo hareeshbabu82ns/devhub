@@ -8,6 +8,9 @@ from gql_api.resolvers import entity as entity_resolvers, content as content_res
 types = []
 
 # Content
+
+query.set_field("contentLines", content_resolvers.resolve_content_lines)
+
 contentLineType = ObjectType('ContentLine')
 
 contentLineType.set_field(

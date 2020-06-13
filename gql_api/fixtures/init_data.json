@@ -69,6 +69,13 @@
     }
   },
   {
+    "model": "gql_api.entitytype",
+    "pk": 7,
+    "fields": {
+      "name": "Strotram"
+    }
+  },
+  {
     "model": "gql_api.entity",
     "pk": 1,
     "fields": {

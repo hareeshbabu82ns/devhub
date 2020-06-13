@@ -2,8 +2,21 @@
 from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning
 
 
-def resolve_entities(*_):
-    return Entity.objects.all()
+def resolve_entities(*_, by=None):
+    if not by:
+        return Exception('argument missing error')
+
+    q = Entity.objects
+
+    id = by.get('id')
+    if id:
+        q = q.filter(id=id)
+
+    type = by.get('type')
+    if type:
+        q = q.filter(type=type)
+
+    return q
 
 
 def resolve_children(parent, *_):
@@ -18,9 +31,16 @@ def resolve_parents(parent, *_):
     return [rel.from_entity for rel in related]
 
 
-def resolve_text_data(parent, *_):
-    return EntityText.objects.filter(
+def resolve_text_data(parent, *_, language=None):
+    q = EntityText.objects
+
+    q = q.filter(
         parent=parent.id, type=parent.type.id)
+
+    if language:
+        q = q.filter(language=language)
+
+    return q
 
 
 def resolve_meta_data(parent, *_):
@@ -28,6 +48,8 @@ def resolve_meta_data(parent, *_):
         parent=parent.id, type=parent.type.id)
 
 
-def resolve_content(parent, *_):
+def resolve_content(parent, *_, language=None):
+    if not language:
+        return Exception('Language parameter missing')
     return ContentLine.objects.filter(
-        parent=parent.id)
+        parent=parent.id, language=language)
