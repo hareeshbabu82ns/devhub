@@ -36,6 +36,8 @@ entityType.set_field("metaData", entity_resolvers.resolve_meta_data)
 
 entityType.set_field("content", entity_resolvers.resolve_content)
 
+entityType.set_field("childTypes", entity_resolvers.resolve_child_types)
+
 types.append(entityType)
 
 

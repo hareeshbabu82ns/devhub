@@ -19,13 +19,14 @@ class EntityType(models.Model):
 
 
 class Entity(models.Model):
+    default_text = models.CharField(max_length=50)
     type = models.ForeignKey('EntityType', on_delete=models.CASCADE)
     tags = models.TextField(blank=True)
     relations = models.ManyToManyField(
         'Entity', blank=True, through='EntityRelation')
 
     def __str__(self):
-        return f'{self.id} {self.type}'
+        return f'{self.id} {self.type} {self.default_text}'
 
 
 class EntityRelation(models.Model):

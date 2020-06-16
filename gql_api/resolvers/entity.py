@@ -16,19 +16,41 @@ def resolve_entities(*_, by=None):
     if type:
         q = q.filter(type=type)
 
+    # parent = by.get('parent')
+    # if parent:
+    #     q = q.filter(from_entity=parent)
+    # print(q)
     return q
 
 
-def resolve_children(parent, *_):
-    related = EntityRelation.objects.select_related('to_entity').filter(
+def resolve_child_types(parent, *_):
+    q = EntityRelation.objects.select_related('to_type').filter(
         from_entity=parent.id, from_type=parent.type.id)
-    return [rel.to_entity for rel in related]
+    return set(rel.to_type for rel in q)
 
 
-def resolve_parents(parent, *_):
-    related = EntityRelation.objects.select_related('from_entity').filter(
+def resolve_children(parent, *_, by=None):
+    q = EntityRelation.objects.select_related('to_entity').filter(
+        from_entity=parent.id, from_type=parent.type.id)
+
+    if by:
+        type = by.get('type')
+        if type:
+            q = q.filter(to_type=type)
+
+    return [rel.to_entity for rel in q]
+
+
+def resolve_parents(parent, *_, by=None):
+    q = EntityRelation.objects.select_related('from_entity').filter(
         to_entity=parent.id, to_type=parent.type.id)
-    return [rel.from_entity for rel in related]
+
+    if by:
+        type = by.get('type')
+        if type:
+            q = q.filter(to_type=type)
+
+    return [rel.from_entity for rel in q]
 
 
 def resolve_text_data(parent, *_, language=None):

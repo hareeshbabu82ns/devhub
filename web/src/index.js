@@ -4,12 +4,18 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import { ApolloProvider } from '@apollo/client';
+
 import { RecoilRoot } from 'recoil'
+
+import client from './state/gql_client'
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <App />
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')

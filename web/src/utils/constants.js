@@ -1,0 +1,7 @@
+export const C_ENTITY_TYPE_GOD = 'God'
+export const C_ENTITY_TYPE_AUTHOR = 'Author'
+export const C_ENTITY_TYPE_STOTRAM = 'Stotram'
+export const C_ENTITY_TYPE_ADHYAAYAM = 'Adhyaayam'
+export const C_ENTITY_TYPE_PARVAM = 'Parvam'
+export const C_ENTITY_TYPE_KAANDAM = 'Kaandam'
+export const C_ENTITY_TYPE_SLOKAM = 'Slokam'

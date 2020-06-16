@@ -24,6 +24,10 @@ input ContentLinesBy{
 	language: ID!
 }
 
+input RelatedEntitiesBy{
+	type: ID
+}
+
 """
 Type of the Entity ex. God, Author, Slokam etc.
 """
@@ -50,11 +54,19 @@ type Entity{
 	id: ID!
 	type: EntityType!
 	"""
+	fallback default Text for Entity if TextData is missing
+	"""
+	defaultText: String!
+	"""
 	',' delimited tags for identification    
 	"""
 	tags: String
-	childEntities: [Entity!]
-	parentEntities: [Entity!]
+	childEntities(
+		by: RelatedEntitiesBy
+	): [Entity!]
+	parentEntities(
+		by: RelatedEntitiesBy
+	): [Entity!]
 	textData(
 		language: ID
 	): [EntityText!]
@@ -62,6 +74,7 @@ type Entity{
 	content(
 		language: ID!
 	): [ContentLine!]
+	childTypes: [EntityType!]
 }
 
 """

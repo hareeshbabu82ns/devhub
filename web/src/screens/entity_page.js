@@ -1,17 +1,40 @@
+/*
+EntityPage (TODOs)
+  Display Entity Content
+  Use Entity Metadata for customizing the pages
+  show ContentLines
+  provide ContentMeaning
+  ContentExtras for customizing lines or extra information
+*/
 import React from 'react'
+import { Grid } from 'semantic-ui-react'
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+} from "react-router-dom";
+import EntityChildNavbar from './entity_childs_sidenav'
+import EntityList from '../components/entity_list'
+
 
 const EntityPage = () => {
+  const match = useRouteMatch()
+  console.log(match)
   return (
-    <div>
-      <h1>EntityPage (TODOs)</h1>
-      <ul>
-        <li>Display Entity Content</li>
-        <li>Use Entity Metadata for customizing the pages</li>
-        <li>show ContentLines</li>
-        <li>provide ContentMeaning</li>
-        <li>ContentExtras for customizing lines or extra information</li>
-      </ul>
-    </div>
+    <Grid columns='2' divided>
+      <Grid.Column width={4}>
+        <EntityChildNavbar entityId={match.params.entityId} />
+      </Grid.Column>
+      <Grid.Column>
+        {
+          <Switch>
+            <Route path={`${match.url}/:entityTypeName`}>
+              <EntityList entityId={match.params.entityId} />
+            </Route>
+          </Switch>
+        }
+      </Grid.Column>
+    </Grid>
   )
 }
 
