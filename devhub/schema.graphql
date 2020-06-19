@@ -2,6 +2,64 @@ scalar Date
 
 scalar DateTime
 
+type Mutation{
+	deleteEntity(
+		id: ID!
+	): Boolean
+	updateEntityContent(
+		id: ID
+		withData: EntityContentInput!
+	): Entity!
+	updateContent(
+		id: ID
+		withData: ContentLineInput
+	): ContentLine!
+	deleteContent(
+		id: ID!
+	): Boolean
+}
+
+input EntityContentInput{
+	parentId: ID
+	defaultText: String
+	type: ID
+	tags: String
+	textData: [EntityTextDataInput!]
+	metaData: [EntityMetaDataInput!]
+	content: [ContentLineInput!]
+}
+
+input EntityMetaDataInput{
+	id: ID
+	name: String!
+	description: String
+}
+
+input EntityTextDataInput{
+	id: ID
+	language: ID!
+	text: String!
+	description: String
+}
+
+input ContentLineInput{
+	parentEntity: ID
+	language: ID!
+	content: String!
+	meaning: [ContentMeaningInput!]
+	extras: [ContentExtrasInput!]
+}
+
+input ContentMeaningInput{
+	language: ID!
+	content: String!
+}
+
+input ContentExtrasInput{
+	language: ID!
+	content: String!
+}
+
 type Query{
 	entityTypes: [EntityType!]!
 	languages: [Language!]!
@@ -94,6 +152,9 @@ Text data for the Entity (leaf node of the Graph)
 type EntityText{
 	id: ID!
 	parentEntity: Entity!
+	"""
+	parent Entity Type
+	"""
 	type: EntityType!
 	language: Language!
 	text: String!
@@ -106,6 +167,9 @@ Meta Data for the Entity (leaf node of the Graph, sibling to TextData)
 type EntityMeta{
 	id: ID!
 	parentEntity: Entity!
+	"""
+	parent Entity Type
+	"""
 	type: EntityType!
 	name: String!
 	description: String
@@ -147,5 +211,6 @@ type ContentExtras{
 	content: String!
 }
 schema{
-	query: Query
+	query: Query,
+	mutation: Mutation
 }

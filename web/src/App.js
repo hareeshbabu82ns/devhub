@@ -1,4 +1,6 @@
 import React from 'react';
+
+import 'react-toastify/dist/ReactToastify.css'
 import './App.css';
 
 import {
@@ -6,11 +8,12 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-
+import { ToastContainer } from 'react-toastify'
 import {
   Container,
   Segment
 } from 'semantic-ui-react'
+
 import { C_ENTITY_TYPE_STOTRAM } from './utils/constants'
 import { gql, useQuery } from '@apollo/client'
 import { useSetRecoilState } from 'recoil'
@@ -21,6 +24,7 @@ import AuthorsPage from './screens/authors_page'
 import SettingsPage from './screens/settings_page'
 import EntityPage from './screens/entity_page'
 import SthotramPage from './screens/sthotram_page'
+import OperationModal from './components/operation_modal'
 
 import { baseTypes } from './state/base_types'
 
@@ -29,7 +33,7 @@ function AppRoutes() {
     <Router>
       <React.Fragment>
         <NavBar />
-        <Container fluid style={{ marginTop: '7em' }}>
+        <Container fluid style={{ marginTop: '5em' }}>
           <Switch>
             <Route path="/" exact>
               <Home />
@@ -50,6 +54,7 @@ function AppRoutes() {
               <EntityPage />
             </Route>
           </Switch>
+          <OperationModal />
         </Container>
       </React.Fragment>
     </Router>
@@ -80,7 +85,12 @@ function App() {
 
   setBaseTypes(() => ({ ...data }))
 
-  return (<AppRoutes />)
+  return (
+    <React.Fragment>
+      <AppRoutes />
+      <ToastContainer closeButton={false} style={{ width: '400px' }} />
+    </React.Fragment>
+  )
 }
 
 export default App;

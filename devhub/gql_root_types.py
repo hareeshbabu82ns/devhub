@@ -1,3 +1,4 @@
-from ariadne import QueryType
+from ariadne import QueryType, MutationType
 
 query = QueryType()
+mutation = MutationType()

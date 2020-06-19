@@ -1,9 +1,9 @@
 from ariadne import ObjectType
 
-from devhub.gql_root_types import query
+from devhub.gql_root_types import query, mutation
 from .models import EntityType, Language
 
-from gql_api.resolvers import entity as entity_resolvers, content as content_resolvers
+from gql_api.resolvers import entity as entity_resolvers, content as content_resolvers, entity_mutation as entity_mutations
 
 types = []
 
@@ -25,6 +25,15 @@ types.append(contentLineType)
 entityType = ObjectType('Entity')
 
 query.set_field("entities", entity_resolvers.resolve_entities)
+
+mutation.set_field("updateEntityContent",
+                   entity_mutations.mutation_update_entity_content)
+mutation.set_field("deleteEntity",
+                   entity_mutations.mutation_delete_entity)
+mutation.set_field("updateContent",
+                   entity_mutations.mutation_update_content_line)
+mutation.set_field("deleteContent",
+                   entity_mutations.mutation_delete_content)
 
 entityType.set_field("childEntities", entity_resolvers.resolve_children)
 

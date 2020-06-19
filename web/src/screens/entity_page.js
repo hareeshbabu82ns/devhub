@@ -19,13 +19,13 @@ import EntityList from '../components/entity_list'
 
 const EntityPage = () => {
   const match = useRouteMatch()
-  console.log(match)
+  // console.log(match)
   return (
     <Grid columns='2' divided>
       <Grid.Column width={4}>
         <EntityChildNavbar entityId={match.params.entityId} />
       </Grid.Column>
-      <Grid.Column>
+      <Grid.Column width={12}>
         {
           <Switch>
             <Route path={`${match.url}/:entityTypeName`}>

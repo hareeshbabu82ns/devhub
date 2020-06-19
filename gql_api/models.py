@@ -4,7 +4,7 @@ from django.db import models
 class Language(models.Model):
     iso = models.CharField(max_length=3)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50, blank=True)
+    description = models.CharField(max_length=50, blank=True, default='')
 
     def __str__(self):
         return self.description
@@ -12,7 +12,7 @@ class Language(models.Model):
 
 class EntityType(models.Model):
     name = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default='')
 
     def __str__(self):
         return self.name
@@ -21,7 +21,7 @@ class EntityType(models.Model):
 class Entity(models.Model):
     default_text = models.CharField(max_length=50)
     type = models.ForeignKey('EntityType', on_delete=models.CASCADE)
-    tags = models.TextField(blank=True)
+    tags = models.TextField(blank=True, default='')
     relations = models.ManyToManyField(
         'Entity', blank=True, through='EntityRelation')
 
@@ -48,7 +48,7 @@ class EntityText(models.Model):
     type = models.ForeignKey('EntityType', on_delete=models.CASCADE)
     language = models.ForeignKey('Language', on_delete=models.CASCADE)
     text = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default='')
 
     def __str__(self):
         return f'{self.id} {self.language}'
@@ -58,7 +58,7 @@ class EntityMeta(models.Model):
     parent = models.ForeignKey('Entity', on_delete=models.CASCADE)
     type = models.ForeignKey('EntityType', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    value = models.TextField(blank=True)
+    value = models.TextField()
 
     def __str__(self):
         return f'{self.id} {self.name}'

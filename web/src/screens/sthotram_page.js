@@ -6,19 +6,20 @@
 */
 
 import React from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import ReactMarkdown from 'react-markdown'
 
 import {
   Container,
   Segment,
-  Header,
+  Menu,
   Table
 } from 'semantic-ui-react'
 import { gql, useQuery } from '@apollo/client'
 import {
   useRouteMatch,
 } from "react-router-dom";
+import _ from 'lodash'
 
 import settings from '../state/settings'
 import { C_ENTITY_TYPE_STOTRAM } from '../utils/constants'
@@ -28,9 +29,16 @@ import EntityList from '../components/entity_list'
 const SthotramPage = () => {
   const match = useRouteMatch();
 
-  const { language } = useRecoilValue(settings)
+  const { language, fontSize } = useRecoilValue(settings)
+  const setSetting = useSetRecoilState(settings)
   const { entityTypes } = useRecoilValue(baseTypes)
   const entityType = entityTypes.find((types) => types.name === C_ENTITY_TYPE_STOTRAM)
+
+  const updateFontSize = (by) => {
+    const newFontSize = fontSize + by
+    if (newFontSize < 1) return
+    setSetting(oldSetting => ({ ...oldSetting, fontSize: oldSetting.fontSize + by }))
+  }
 
   const variables = {
     stotramId: Number(match.params.stotramId),
@@ -45,9 +53,18 @@ const SthotramPage = () => {
   const stotram = data.stotram[0]
   return (
     <Container fluid style={{ padding: '0 2em' }}>
-      <Header as='h3' attached='top' color='olive' inverted>{stotram.defaultText}</Header>
+      <Menu color={'blue'} inverted attached={'top'}>
+        <Menu.Item as='h4' header>
+          {!_.isEmpty(_.get(stotram.textData[0], 'text')) ? stotram.textData[0].text : stotram.defaultText}
+        </Menu.Item>
+        <Menu.Menu position='right'>
+          <Menu.Item onClick={() => updateFontSize(-0.5)} >A-</Menu.Item>
+          <Menu.Item onClick={() => updateFontSize(0.5)} >A+</Menu.Item>
+          <Menu.Item icon='add' />
+        </Menu.Menu>
+      </Menu>
       <Table attached striped size='large'>
-        <Table.Body>
+        <Table.Body style={{ fontSize: `${fontSize}em` }}>
           {stotram.slokas.map(slokam => (
             <Table.Row key={slokam.id} >
               <Table.Cell>
