@@ -5,7 +5,8 @@ const settings = atom({
   default: {
     language: '1', //sanskrit
     meaningLanguage: '3', //english
-    fontSize: 1, //in em
+    fontSize: 2, //in em
+    inverted: true,
   }
 })
 

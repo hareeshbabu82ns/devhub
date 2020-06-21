@@ -35,7 +35,7 @@ const SthotramPage = () => {
   const entityId = match.params.stotramId
   const [showMeanings, toggleMeanings] = useState(false)
 
-  const { language, meaningLanguage, fontSize } = useRecoilValue(settings)
+  const { language, meaningLanguage, fontSize, inverted } = useRecoilValue(settings)
   const setSetting = useSetRecoilState(settings)
   const { entityTypes } = useRecoilValue(baseTypes)
   const entityType = entityTypes.find((types) => types.name === C_ENTITY_TYPE_SLOKAM)
@@ -60,7 +60,7 @@ const SthotramPage = () => {
   const stotram = data.stotram[0]
   return (
     <Container fluid style={{ padding: '0 2em' }}>
-      <Menu color={'blue'} inverted attached={'top'}>
+      <Menu color={'blue'} inverted={inverted} attached={'top'}>
         <Menu.Item as='h4' header>
           {!_.isEmpty(_.get(stotram.textData[0], 'text')) ? stotram.textData[0].text : stotram.defaultText}
         </Menu.Item>
@@ -76,7 +76,7 @@ const SthotramPage = () => {
               `&createType=${entityType.id}`)} />
         </Menu.Menu>
       </Menu>
-      <Table attached striped size='large'>
+      <Table attached striped size='large' inverted={inverted}>
         <Table.Body style={{ fontSize: `${fontSize}em` }}>
           {stotram.slokas.map(slokam => (
             <Table.Row key={slokam.id} >
@@ -84,13 +84,13 @@ const SthotramPage = () => {
                 <ReactMarkdown source={_.get(slokam, 'content[0].content',
                   `**${slokam.defaultText}** has **no content**`)} escapeHtml={false} />
                 {showMeanings &&
-                  <div style={{ marginLeft: '0.5em', borderLeft: '1px solid blue', paddingLeft: '0.5em' }}>
+                  <div style={{ marginLeft: '0.5em', borderLeft: '1px solid #aaa', color: '#999', paddingLeft: '0.5em' }}>
                     <ReactMarkdown source={_.get(slokam, 'contentMeaning[0].content', '**no meaning**')} escapeHtml={false} />
                   </div>
                 }
               </Table.Cell>
               <Table.Cell textAlign='right'>
-                <Button.Group size='mini' basic>
+                <Button.Group size='mini' basic inverted={inverted}>
                   <Button icon='edit' onClick={() => history.push(
                     match.url + `?operation=createContent&parentEntity=${entityId}` +
                     `&entityId=${slokam.id}&createType=${entityType.id}`)} />

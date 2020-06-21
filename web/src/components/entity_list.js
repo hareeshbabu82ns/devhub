@@ -69,7 +69,7 @@ const EntityList = ({ entityId, entityTypeName }) => {
 
   return (
     <Container fluid style={{ padding: '0 1em' }}>
-      <Menu attached='top'>
+      <Menu attached='top' inverted={settingsData.inverted}>
         <Menu.Item>
           <Menu.Header content={title}></Menu.Header>
         </Menu.Item>
@@ -81,7 +81,7 @@ const EntityList = ({ entityId, entityTypeName }) => {
               `&parentEntity=${entityId ? entityId : ''}&createType=${entityType.id}`)} />
         </Menu.Menu>
       </Menu>
-      <Segment attached='bottom'>
+      <Segment attached='bottom' inverted={settingsData.inverted}>
         <Card.Group centered doubling>
           {entities.map((entity) =>
             (<EntityCard key={entity.id} data={{

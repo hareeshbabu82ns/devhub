@@ -11,29 +11,30 @@ import settings from '../state/settings'
 import { baseTypes } from '../state/base_types'
 
 const ContentForm = (props) => {
+  const settingsData = useRecoilValue(settings)
   const panes = [
     {
       menuItem: 'Main Data',
-      render: () => <Tab.Pane><EntityContentForm {...props} /></Tab.Pane>
+      render: () => <Tab.Pane inverted={settingsData.inverted}><EntityContentForm {...props} /></Tab.Pane>
     },
     {
       menuItem: 'Content',
-      render: () => <Tab.Pane><ContentLineForm {...props} /></Tab.Pane>
+      render: () => <Tab.Pane inverted={settingsData.inverted}><ContentLineForm {...props} /></Tab.Pane>
     },
     {
       menuItem: 'Meaning',
-      render: () => <Tab.Pane><ContentMeaningForm {...props} /></Tab.Pane>
+      render: () => <Tab.Pane inverted={settingsData.inverted}><ContentMeaningForm {...props} /></Tab.Pane>
     },
   ]
   return (
     <Container fluid>
-      <Menu attached='top'>
+      <Menu attached='top' inverted={settingsData.inverted}>
         <Menu.Item>
           <Menu.Header as='h4' content={'Entity'}></Menu.Header>
         </Menu.Item>
       </Menu>
-      <Segment attached='bottom' style={{ padding: '0' }}>
-        <Tab panes={panes} menu={{ pointing: true, attached: 'top' }} />
+      <Segment attached='bottom' style={{ padding: '0' }} inverted={settingsData.inverted}>
+        <Tab panes={panes} menu={{ pointing: true, attached: 'top', inverted: settingsData.inverted }} />
       </Segment>
     </Container>
   )
@@ -103,7 +104,7 @@ const EntityContentForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} inverted={settingsData.inverted}>
       <Form.Group widths='equal'>
         <input type='text' ref={register} name='id' hidden />
         <Controller as={Form.Select} control={control} name='type'
@@ -124,7 +125,7 @@ const EntityContentForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
           rules={validations.defaultText} error={errors.defaultText && errors.defaultText.message}
         />
       </Form.Group>
-      <Table striped stackable>
+      <Table striped stackable inverted={settingsData.inverted}>
         <Table.Body>
           {fields.map((field, index) => (
             <Table.Row key={field.id}>
@@ -147,21 +148,21 @@ const EntityContentForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
           ))}
         </Table.Body>
       </Table>
-      <Divider />
+      <Divider inverted={settingsData.inverted} />
       <Form.Group style={{ justifyContent: 'flex-end' }} >
         <Form.Button color='red' onClick={() => onDeleteClicked(entityId)}
-          inverted type='button' disabled={!entityId}>
+          inverted={settingsData.inverted} type='button' disabled={!entityId}>
           <Icon name='delete' /> Delete
             </Form.Button>
         <Form.Button secondary onClick={handleClose}
-          inverted type='button'>
+          inverted={settingsData.inverted} type='button'>
           <Icon name='arrow left' /> Close
         </Form.Button>
         <Form.Button secondary onClick={() => reset(defaultValues)}
-          inverted type='reset' disabled={!formState.dirty}>
+          inverted={settingsData.inverted} type='reset' disabled={!formState.dirty}>
           <Icon name='undo' /> Reset
         </Form.Button>
-        <Form.Button color='green' inverted disabled={!formState.dirty} loading={wipSubmit}>
+        <Form.Button color='green' inverted={settingsData.inverted} disabled={!formState.dirty} loading={wipSubmit}>
           <Icon name='save' /> Save
             </Form.Button>
       </Form.Group>

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { useRecoilValue } from 'recoil'
 import {
   Container,
   Image,
@@ -7,10 +7,12 @@ import {
 } from 'semantic-ui-react'
 
 import { Link } from 'react-router-dom'
+import settings from '../state/settings'
 
 const NavBar = () => {
+  const settingsData = useRecoilValue(settings)
   return (
-    <Menu fixed='top' color={'teal'} inverted>
+    <Menu fixed='top' inverted={settingsData.inverted}>
       <Container fluid>
         <Menu.Item as={Link} to={'/'} header>
           <Image size='mini' src='/logo192.png' style={{ marginRight: '1.0em' }} />

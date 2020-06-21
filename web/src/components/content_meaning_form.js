@@ -110,7 +110,7 @@ const ContentMeaningForm = ({ handleClose,
 
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} inverted={settingsData.inverted}>
       <Form.Group widths='equal'>
         <input type='text' ref={register} name='id' hidden />
         <input type='text' ref={register} name='parent' hidden />

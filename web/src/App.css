@@ -1,4 +1,157 @@
-.Toastify__toast--default {
-  background: transparent;
-  padding: 0px;
-}
+      .background_color_1 {
+        background-color: rgb(9, 20, 28);
+      }
+      .background_color_2 {
+        background-color: rgb(11, 20, 28);
+      }
+      .background_color_3 {
+        background-color: rgb(11, 25, 36);
+      }
+      .background_color_4 {
+        background-color: rgb(15, 32, 45);
+      }
+      .background_color_5 {
+        background-color: rgb(20, 24, 35);
+      }
+      .background_color_6 {
+        background-color: rgb(23, 43, 58);
+      }
+      .background_color_7 {
+        background-color: rgb(185, 191, 196);
+      }
+
+/* 
+background colors:
+      rgb(185, 191, 196)
+      rgb(23, 43, 58) 
+      rgb(20, 24, 35)
+      rgb(15, 32, 45)
+      rgb(11, 25, 36)      
+      rgb(11, 20, 28)
+      rgb(9, 20, 28)         
+      
+#42607d - lighter blue grey    
+#3c4858 - lighter grey  
+#1c3650 - light blue grey
+#06203a - dark blue grey
+
+text colors:
+    rgba(255, 255, 255, 0.6) - white (heading)
+    rgb(85, 94, 102) - grey (heading secondary)
+
+    rgba(255, 255, 255, 0.4) - normal text
+    rgb(181, 34, 130) - dark red
+    rgb(247, 116, 102) - bright orange
+    rgb(241, 143, 1) - orange
+    rgb(51, 147, 220) - blue
+    rgb(41, 185, 115) - green
+
+
+
+      */
+
+      html, body {
+        background-color: rgb(9, 20, 28);
+        color: #fff;
+      }
+      
+      .Toastify__toast--default {
+        background: transparent;
+        padding: 0px;
+      }
+
+      .ui.inverted.menu.top.fixed   {
+        background-color: #06203a;
+      } 
+
+      .ui.inverted.menu.top.attached   {
+        background-color: rgb(23, 43, 58);
+      }   
+
+      .ui.inverted.form label {
+        color: #ddd;
+      }
+
+      .ui.inverted.form div.dropdown {
+        background-color: rgb(23, 43, 58);
+        color: #eee;
+      }
+
+      .ui.inverted.form input[type=text] {
+        background-color: rgb(23, 43, 58);
+        color: #eee;
+      }
+
+      .ui.inverted.form textarea {
+        background-color: rgb(23, 43, 58);
+        color: #eee;
+      }
+
+      .ui.inverted.segment, 
+      .ui.inverted.tab {
+        background-color: rgb(11, 20, 28);
+        border-color: rgb(23, 43, 58);
+      }
+      
+      .ui.inverted.form {
+        background-color: rgb(11, 20, 28);
+        border-color: rgb(23, 43, 58);
+      }      
+
+      .ui.inverted.menu[class*="bottom attached"] {
+        background-color: #40404f33;
+        border: 1px solid #666;
+        border-top: none;        
+      }
+      .ui.inverted.menu[class*="top attached"] {
+        background-color: #40404f33;
+        border: 1px solid #666;
+        border-bottom: none;
+      }
+      .ui.inverted.table {
+        color: #ccc;
+      }
+      .ui.inverted.table[class*="attached"] {
+        background-color: #40404f33;
+        border: 1px solid #666;
+      }
+
+      .ui.card.entity {
+        background-color: #495285 ;
+        box-shadow: 0 1px 3px 0 #666;
+        color: #ccc;
+      }     
+      a.ui.card.entity:hover {
+        background-color: #495285 ;
+        /* box-shadow: 0 1px 3px 0 #666; */
+      }
+      .ui.card.entity  .content  .header{
+        color: #eee;
+      }
+
+      .ui.card.entity .meta{
+        color: #888;
+      }
+
+
+      .ui.card.entity > .description{
+        color: #ccc;
+      }
+
+      .ui.card.entity .extra{
+        color: #aaa;
+      } 
+
+      /* p {
+        align-content: center;
+        background-color: #495285;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 6em;
+      }
+      p > span {
+        opacity: 0.4;
+        text-align: center;
+      } */

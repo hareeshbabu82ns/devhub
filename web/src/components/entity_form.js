@@ -96,13 +96,13 @@ const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
 
   return (
     <Container fluid>
-      <Menu attached='top'>
+      <Menu attached='top' inverted={settingsData.inverted}>
         <Menu.Item>
           <Menu.Header as='h4' content={'Entity'}></Menu.Header>
         </Menu.Item>
       </Menu>
-      <Segment attached='bottom'>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+      <Segment attached='bottom' inverted={settingsData.inverted}>
+        <Form onSubmit={handleSubmit(onSubmit)} inverted={settingsData.inverted}>
           <Form.Group widths='equal'>
             <input type='text' ref={register} name='id' hidden />
             <Controller as={Form.Select} control={control} name='type'
@@ -139,7 +139,7 @@ const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
               rules={validations.defaultText} error={errors.defaultText && errors.defaultText.message}
             />
           </Form.Group>
-          <Table striped stackable>
+          <Table striped stackable inverted={settingsData.inverted}>
             <Table.Body>
               {fields.map((field, index) => (
                 <Table.Row key={field.id}>

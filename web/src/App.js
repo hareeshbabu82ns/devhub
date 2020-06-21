@@ -33,7 +33,7 @@ function AppRoutes() {
     <Router>
       <React.Fragment>
         <NavBar />
-        <Container fluid style={{ marginTop: '5em' }}>
+        <Container fluid style={{ marginTop: '5em' }} >
           <Switch>
             <Route path="/" exact>
               <Home />

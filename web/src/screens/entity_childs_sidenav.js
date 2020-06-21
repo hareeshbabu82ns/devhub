@@ -46,7 +46,7 @@ const EntityChildNavbar = ({ entityId }) => {
   // console.log(match, location, childItemType)
   return (
     <React.Fragment>
-      <Menu attached='top' fluid borderless inverted color='blue' stackable>
+      <Menu attached='top' fluid borderless inverted={settingsData.inverted} color='blue' stackable>
         <Menu.Item>
           <Menu.Header as='h4' content={title} />
         </Menu.Item>
@@ -66,7 +66,7 @@ const EntityChildNavbar = ({ entityId }) => {
           <Menu.Item icon='refresh' onClick={() => refetch()} />
         </Menu.Menu>
       </Menu>
-      <Menu vertical fluid attached='bottom'>
+      <Menu vertical fluid attached='bottom' inverted={settingsData.inverted}>
         {
           //  <Menu.Item>
           //     <Input icon='search' placeholder='Search items...' />
