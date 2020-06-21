@@ -63,6 +63,7 @@ query getEntity($by:EntitiesBy!) {
   entities(by:$by) {
     id
     defaultText
+    defaultThumbnail
     type{
       id
     }
@@ -83,6 +84,7 @@ mutation updateEntity($id: ID, $entityData: EntityContentInput!) {
   updateEntityContent(id:$id, withData: $entityData) {
     id
     defaultText
+    defaultThumbnail
     textData{
       id
       text

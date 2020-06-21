@@ -109,6 +109,7 @@ query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
   stotram:entities(by:{id:$stotramId}){
     id
     defaultText
+    defaultThumbnail
     textData(language:$language){
       id
       text
@@ -116,6 +117,7 @@ query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
     slokas:childEntities(by:{type:3}){
       id
       defaultText
+      defaultThumbnail
       type{
         id
         name

@@ -18,6 +18,7 @@ query GetEntityChildrenByType($id: ID) {
   entities(by:{id:$id}){
     id
     defaultText
+    defaultThumbnail
     childTypes{
       id
       name

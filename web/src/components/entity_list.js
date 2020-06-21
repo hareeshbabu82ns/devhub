@@ -18,6 +18,7 @@ query GetEntitiesList($type: ID, $language: ID) {
   entities: entities(by: { type: $type }) {
     id
     defaultText
+    defaultThumbnail
     textData(language: $language) {
       text
     }
@@ -29,9 +30,11 @@ query GetEntityList($parent: ID,$type:ID $language: ID) {
   subEntities: entities(by:{id:$parent}){
     id
     defaultText
+    defaultThumbnail
     entities:childEntities(by:{type:$type}){
       id
       defaultText
+      defaultThumbnail
       textData(language:$language){
         id
         text
@@ -90,6 +93,7 @@ const EntityList = ({ entityId, entityTypeName }) => {
               typeId: entityType.id,
               typeName: entityType.name,
               parentEntity: entityId,
+              defaultThumbnail: entity.defaultThumbnail
             }} />))
           }
         </Card.Group>

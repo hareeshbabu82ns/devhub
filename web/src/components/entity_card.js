@@ -5,14 +5,14 @@ import { Card, Image, Button } from 'semantic-ui-react'
 import { useRecoilValue } from 'recoil'
 import settings from '../state/settings'
 
-const EntityCard = ({ data: { id, typeId, parentEntity, typeName, text } }) => {
+const EntityCard = ({ data: { id, typeId, parentEntity, typeName, text, defaultThumbnail } }) => {
   const history = useHistory()
   const match = useRouteMatch()
   const settingsData = useRecoilValue(settings)
 
   return (
     <Card as={Link} to={`/${typeName}/${id}`} className='entity' >
-      <Image src={`https://picsum.photos/seed/${typeName}_${id}/250/250`} wrapped />
+      <Image src={defaultThumbnail.replace('$text', text)} wrapped />
       <Card.Content>
         <Card.Header>{text}</Card.Header>
         <Card.Description>

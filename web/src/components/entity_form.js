@@ -193,6 +193,7 @@ query SearchEntitiesByText($text:String) {
   entities(by:{text:$text}){
     id
     defaultText
+    defaultThumbnail
   }
 }
 `;

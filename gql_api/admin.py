@@ -14,7 +14,7 @@ class EntityTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Entity)
 class EntityAdmin(admin.ModelAdmin):
-    list_display = ['type', 'default_text', 'tags']
+    list_display = ['type', 'default_text', 'default_thumbnail', 'tags']
 
 
 @admin.register(EntityRelation)

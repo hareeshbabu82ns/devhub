@@ -142,6 +142,7 @@ type Entity{
 	fallback default Text for Entity if TextData is missing
 	"""
 	defaultText: String!
+	defaultThumbnail: String!
 	"""
 	',' delimited tags for identification    
 	"""

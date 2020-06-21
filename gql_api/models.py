@@ -20,6 +20,8 @@ class EntityType(models.Model):
 
 class Entity(models.Model):
     default_text = models.CharField(max_length=50)
+    default_thumbnail = models.URLField(
+        default='https://via.placeholder.com/250?text=$text')
     type = models.ForeignKey('EntityType', on_delete=models.CASCADE)
     tags = models.TextField(blank=True, default='')
     relations = models.ManyToManyField(
