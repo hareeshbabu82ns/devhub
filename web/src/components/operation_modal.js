@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Header, Icon, Modal } from 'semantic-ui-react'
+import { Modal } from 'semantic-ui-react'
 import { useHistory, useLocation } from 'react-router-dom'
 import EntityModalContent from './entity_modal'
+import ContentModalContent from './content_modal'
 
 
 const OperationModal = () => {
@@ -34,6 +35,13 @@ const OperationModal = () => {
         {(params.get('operation') === 'createEntity' ||
           params.get('operation') === 'editEntity') &&
           <EntityModalContent handleClose={handleClose}
+            entityId={params.get('entityId')}
+            parentEntity={params.get('parentEntity')}
+            createType={params.get('createType')} />}
+
+        {(params.get('operation') === 'createContent' ||
+          params.get('operation') === 'editContent') &&
+          <ContentModalContent handleClose={handleClose}
             entityId={params.get('entityId')}
             parentEntity={params.get('parentEntity')}
             createType={params.get('createType')} />}

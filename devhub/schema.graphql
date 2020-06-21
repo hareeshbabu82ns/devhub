@@ -2,19 +2,49 @@ scalar Date
 
 scalar DateTime
 
+type Query{
+	entityTypes: [EntityType!]!
+	languages: [Language!]!
+	entities(
+		by: EntitiesBy!
+	): [Entity!]
+	contentLines(
+		by: ContentLinesBy!
+	): [ContentLine!]
+	contentMeanings(
+		by: ContentMeaningsBy!
+	): [ContentMeaning!]
+}
+
 type Mutation{
 	deleteEntity(
 		id: ID!
 	): Boolean
 	updateEntityContent(
+		"""
+		id is optional, if creating entity
+		"""
 		id: ID
 		withData: EntityContentInput!
 	): Entity!
 	updateContent(
+		"""
+		id is optional, if creating content
+		"""
 		id: ID
 		withData: ContentLineInput
 	): ContentLine!
 	deleteContent(
+		id: ID!
+	): Boolean
+	updateContentMeaning(
+		"""
+		id is optional, if creating meaining
+		"""
+		id: ID
+		withData: ContentMeaningInput
+	): ContentMeaning!
+	deleteContentMeaning(
 		id: ID!
 	): Boolean
 }
@@ -50,7 +80,14 @@ input ContentLineInput{
 	extras: [ContentExtrasInput!]
 }
 
+input ContentMeaningsBy{
+	id: ID
+	parent: ID
+	language: ID
+}
+
 input ContentMeaningInput{
+	parentEntity: ID
 	language: ID!
 	content: String!
 }
@@ -60,26 +97,16 @@ input ContentExtrasInput{
 	content: String!
 }
 
-type Query{
-	entityTypes: [EntityType!]!
-	languages: [Language!]!
-	entities(
-		by: EntitiesBy!
-	): [Entity!]
-	contentLines(
-		by: ContentLinesBy!
-	): [ContentLine!]
-}
-
 input EntitiesBy{
 	id: ID
 	type: ID
+	text: String
 }
 
 input ContentLinesBy{
 	id: ID
 	parent: ID
-	language: ID!
+	language: ID
 }
 
 input RelatedEntitiesBy{
@@ -132,6 +159,9 @@ type Entity{
 	content(
 		language: ID!
 	): [ContentLine!]
+	contentMeaning(
+		language: ID!
+	): [ContentMeaning!]
 	childTypes: [EntityType!]
 }
 
@@ -185,7 +215,7 @@ type ContentLine{
 	content: String!
 	meaning(
 		language: ID!
-	): [ContentMeaning!]
+	): ContentMeaning
 	extras: ContentExtras
 }
 
@@ -194,8 +224,7 @@ Content related meaning
 """
 type ContentMeaning{
 	id: ID!
-	parentEntity: Entity!
-	forContent: ContentLine!
+	parent: Entity!
 	language: Language!
 	content: String!
 }
@@ -205,8 +234,7 @@ Content related extra data
 """
 type ContentExtras{
 	id: ID!
-	parentEntity: Entity!
-	forContent: ContentLine!
+	parent: Entity!
 	language: Language!
 	content: String!
 }

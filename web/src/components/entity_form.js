@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { Container, Menu, Icon, Segment, Form, Divider, Table, Button } from 'semantic-ui-react'
+import {
+  Container, Menu, Icon, Segment, Form, Divider, Table,
+  Search
+} from 'semantic-ui-react'
 import { useRecoilValue } from 'recoil'
-import _ from 'lodash'
+import { useLazyQuery, gql } from '@apollo/client';
+import _, { set } from 'lodash'
 
 import settings from '../state/settings'
 import { baseTypes } from '../state/base_types'
 
 const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
   entityId, parentEntity, createType, entityData }) => {
+
+  const [searchEtitiesByText, { loading: isParentSearchLoading,
+    data: parentSearchResultsData }] = useLazyQuery(ENTITIES_BY_TEXT);
 
   const settingsData = useRecoilValue(settings)
   const { entityTypes, languages } = useRecoilValue(baseTypes)
@@ -37,11 +44,11 @@ const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
   }
 
 
-  const { handleSubmit, register, control, errors, reset, formState, getValues } = useForm({
+  const { handleSubmit, register, control, errors, reset, formState, setValue } = useForm({
     defaultValues
   })
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+  const { fields } = useFieldArray(
     {
       control, // control props comes from useForm (optional: if you are using FormContext)
       name: "textData", // unique name for your Field Array
@@ -70,6 +77,23 @@ const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
     }
   }
 
+  let parentSearchResults = [];
+  if (parentSearchResultsData && parentSearchResultsData.entities) {
+    parentSearchResults = parentSearchResultsData.entities
+      .map(entity => ({ title: entity.defaultText, id: entity.id }))
+  }
+
+
+  const [selectedParent, setSelectedParent] = useState(parentEntity)
+  const handleParentSearchChange = (e, { value }) => {
+    setSelectedParent(value)
+    searchEtitiesByText({ variables: { text: value } })
+  }
+  const handleParentResultSelect = (e, { result }) => {
+    setSelectedParent(result.id)
+    setValue('parent', result.id)
+  }
+
   return (
     <Container fluid>
       <Menu attached='top'>
@@ -86,12 +110,28 @@ const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
               options={entityTypes.map(entityType => ({ text: entityType.name, value: entityType.id, id: entityType.id }))}
               onChange={([_, { value }]) => value}
             />
-            <Controller as={Form.Input} control={control} name='parent'
-              readOnly fluid
-              label='Parent Entity' placeholder='Parent Entity'
-            // options={lanes.map(lane => ({ text: lane.title, value: lane.id, id: lane.id }))}
-            // onChange={([_, { value }]) => value}
-            />
+            <input type='text' ref={register} name='parent' hidden />
+            {
+              // <Controller as={Form.Input} control={control} name='parent'
+              //   readOnly fluid
+              //   label='Parent Entity' placeholder='Parent Entity'
+              // // options={lanes.map(lane => ({ text: lane.title, value: lane.id, id: lane.id }))}
+              // // onChange={([_, { value }]) => value}
+              // />
+            }
+            <div className='field'>
+              <label>Parent Entity</label>
+              <Search
+                input={{ icon: 'search', iconPosition: 'right' }}
+                loading={isParentSearchLoading}
+                onResultSelect={handleParentResultSelect}
+                onSearchChange={_.debounce(handleParentSearchChange, 500, {
+                  leading: true,
+                })}
+                results={parentSearchResults}
+                value={selectedParent}
+              />
+            </div>
           </Form.Group>
           <Form.Group widths='equal'>
             <Controller as={Form.Input} control={control} name='defaultText'
@@ -128,9 +168,13 @@ const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
               inverted type='button' disabled={!entityId}>
               <Icon name='delete' /> Delete
             </Form.Button>
+            <Form.Button secondary onClick={handleClose}
+              inverted type='button'>
+              <Icon name='arrow left' /> Close
+            </Form.Button>
             <Form.Button secondary onClick={() => reset(defaultValues)}
               inverted type='reset' disabled={!formState.dirty}>
-              <Icon name='redo' /> Clear
+              <Icon name='undo' /> Reset
             </Form.Button>
             <Form.Button color='green' inverted disabled={!formState.dirty} loading={wipSubmit}>
               <Icon name='save' /> Save
@@ -143,3 +187,12 @@ const EntityForm = ({ onSubmitClicked, onDeleteClicked, handleClose,
 }
 
 export default EntityForm
+
+const ENTITIES_BY_TEXT = gql`
+query SearchEntitiesByText($text:String) {
+  entities(by:{text:$text}){
+    id
+    defaultText
+  }
+}
+`;

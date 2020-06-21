@@ -57,14 +57,14 @@ const EntityList = ({ entityId, entityTypeName }) => {
     variables.parent = Number(entityId)
   }
 
-  const { loading, error, data } = useQuery(
+  const { loading, error, data, refetch } = useQuery(
     entityId ? ENTITIES_BY_PARENT_AND_TYPE : ENTITIES_BY_TYPE,
     { variables });
 
   if (loading) return <Segment loading placeholder> Loading Content... </Segment>;
   if (error) return <Segment placeholder>Error loading Entity list</Segment>;
 
-  const entities = (entityId) ? data.subEntities[0].entities : data.entities
+  const entities = entityId ? data.subEntities[0].entities : data.entities
   const title = entityType.name
 
   return (
@@ -74,9 +74,11 @@ const EntityList = ({ entityId, entityTypeName }) => {
           <Menu.Header content={title}></Menu.Header>
         </Menu.Item>
         <Menu.Menu position='right'>
+          <Menu.Item icon='refresh' onClick={() => refetch()} />
           <Menu.Item icon='add'
             onClick={() => history.push(
-              match.url + `?operation=createEntity&parentEntity=${entityId}&createType=${entityType.id}`)} />
+              match.url + `?operation=createEntity` +
+              `&parentEntity=${entityId ? entityId : ''}&createType=${entityType.id}`)} />
         </Menu.Menu>
       </Menu>
       <Segment attached='bottom'>

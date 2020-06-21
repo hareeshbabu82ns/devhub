@@ -74,8 +74,7 @@ class ContentLine(models.Model):
 
 
 class ContentMeaning(models.Model):
-    parent = models.ForeignKey('ContentLine', on_delete=models.CASCADE)
-    entity = models.ForeignKey('Entity', on_delete=models.CASCADE)
+    parent = models.ForeignKey('Entity', on_delete=models.CASCADE)
     language = models.ForeignKey('Language', on_delete=models.CASCADE)
     content = models.TextField()
 
@@ -84,8 +83,7 @@ class ContentMeaning(models.Model):
 
 
 class ContentExtras(models.Model):
-    parent = models.ForeignKey('ContentLine', on_delete=models.CASCADE)
-    entity = models.ForeignKey('Entity', on_delete=models.CASCADE)
+    parent = models.ForeignKey('Entity', on_delete=models.CASCADE)
     language = models.ForeignKey('Language', on_delete=models.CASCADE)
     content = models.TextField()
 

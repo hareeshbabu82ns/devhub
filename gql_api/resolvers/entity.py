@@ -16,10 +16,10 @@ def resolve_entities(*_, by=None):
     if type:
         q = q.filter(type=type)
 
-    # parent = by.get('parent')
-    # if parent:
-    #     q = q.filter(from_entity=parent)
-    # print(q)
+    text = by.get('text')
+    if text:
+        q = q.filter(default_text__contains=text)
+
     return q
 
 
@@ -74,4 +74,11 @@ def resolve_content(parent, *_, language=None):
     if not language:
         return Exception('Language parameter missing')
     return ContentLine.objects.filter(
+        parent=parent.id, language=language)
+
+
+def resolve_content_meaning(parent, *_, language=None):
+    if not language:
+        return Exception('Language parameter missing')
+    return ContentMeaning.objects.filter(
         parent=parent.id, language=language)

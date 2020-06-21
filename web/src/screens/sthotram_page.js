@@ -5,7 +5,7 @@
     M
 */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import ReactMarkdown from 'react-markdown'
 
@@ -13,26 +13,32 @@ import {
   Container,
   Segment,
   Menu,
-  Table
+  Table,
+  Button,
+  Divider
 } from 'semantic-ui-react'
 import { gql, useQuery } from '@apollo/client'
 import {
   useRouteMatch,
+  useHistory,
 } from "react-router-dom";
 import _ from 'lodash'
 
 import settings from '../state/settings'
-import { C_ENTITY_TYPE_STOTRAM } from '../utils/constants'
+import { C_ENTITY_TYPE_STOTRAM, C_ENTITY_TYPE_SLOKAM } from '../utils/constants'
 import { baseTypes } from '../state/base_types'
 import EntityList from '../components/entity_list'
 
 const SthotramPage = () => {
-  const match = useRouteMatch();
+  const history = useHistory()
+  const match = useRouteMatch()
+  const entityId = match.params.stotramId
+  const [showMeanings, toggleMeanings] = useState(false)
 
-  const { language, fontSize } = useRecoilValue(settings)
+  const { language, meaningLanguage, fontSize } = useRecoilValue(settings)
   const setSetting = useSetRecoilState(settings)
   const { entityTypes } = useRecoilValue(baseTypes)
-  const entityType = entityTypes.find((types) => types.name === C_ENTITY_TYPE_STOTRAM)
+  const entityType = entityTypes.find((types) => types.name === C_ENTITY_TYPE_SLOKAM)
 
   const updateFontSize = (by) => {
     const newFontSize = fontSize + by
@@ -42,10 +48,11 @@ const SthotramPage = () => {
 
   const variables = {
     stotramId: Number(match.params.stotramId),
-    language: Number(language)
+    language: Number(language),
+    meaningLanguage: Number(meaningLanguage)
   }
 
-  const { loading, error, data } = useQuery(FETCH_STOTRAM_CONTENT, { variables });
+  const { loading, error, data, refetch } = useQuery(FETCH_STOTRAM_CONTENT, { variables });
 
   if (loading) return <Segment loading> Loading Content... </Segment>;
   if (error) return <Segment>Error loading Base Data</Segment>;
@@ -60,7 +67,13 @@ const SthotramPage = () => {
         <Menu.Menu position='right'>
           <Menu.Item onClick={() => updateFontSize(-0.5)} >A-</Menu.Item>
           <Menu.Item onClick={() => updateFontSize(0.5)} >A+</Menu.Item>
-          <Menu.Item icon='add' />
+          <Menu.Item onClick={() => refetch()} icon='refresh' ></Menu.Item>
+          <Menu.Item onClick={() => toggleMeanings((curr) => !curr)}
+            icon='book' active={showMeanings} ></Menu.Item>
+          <Menu.Item icon='add'
+            onClick={() => history.push(
+              match.url + `?operation=createContent&parentEntity=${entityId}` +
+              `&createType=${entityType.id}`)} />
         </Menu.Menu>
       </Menu>
       <Table attached striped size='large'>
@@ -68,7 +81,20 @@ const SthotramPage = () => {
           {stotram.slokas.map(slokam => (
             <Table.Row key={slokam.id} >
               <Table.Cell>
-                <ReactMarkdown source={slokam.content[0].content} escapeHtml={false} />
+                <ReactMarkdown source={_.get(slokam, 'content[0].content',
+                  `**${slokam.defaultText}** has **no content**`)} escapeHtml={false} />
+                {showMeanings &&
+                  <div style={{ marginLeft: '0.5em', borderLeft: '1px solid blue', paddingLeft: '0.5em' }}>
+                    <ReactMarkdown source={_.get(slokam, 'contentMeaning[0].content', '**no meaning**')} escapeHtml={false} />
+                  </div>
+                }
+              </Table.Cell>
+              <Table.Cell textAlign='right'>
+                <Button.Group size='mini' basic>
+                  <Button icon='edit' onClick={() => history.push(
+                    match.url + `?operation=createContent&parentEntity=${entityId}` +
+                    `&entityId=${slokam.id}&createType=${entityType.id}`)} />
+                </Button.Group>
               </Table.Cell>
             </Table.Row>
           ))}
@@ -78,14 +104,8 @@ const SthotramPage = () => {
   )
 }
 
-// const SlokamCard = ({ slokam }) => {
-//   return (
-
-//   )
-// }
-
 const FETCH_STOTRAM_CONTENT = gql`
-query GetStotramContents($stotramId:ID,$language:ID!){
+query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
   stotram:entities(by:{id:$stotramId}){
     id
     defaultText
@@ -105,6 +125,10 @@ query GetStotramContents($stotramId:ID,$language:ID!){
         text
       }
       content(language:$language){
+        id
+        content
+      }
+      contentMeaning(language:$meaningLanguage){
         id
         content
       }

@@ -39,9 +39,9 @@ class ContentLineAdmin(admin.ModelAdmin):
 
 @admin.register(ContentMeaning)
 class ContentMeaningAdmin(admin.ModelAdmin):
-    list_display = ['parent', 'entity', 'language', 'content']
+    list_display = ['parent', 'language', 'content']
 
 
 @admin.register(ContentExtras)
 class ContentExtrasAdmin(admin.ModelAdmin):
-    list_display = ['parent', 'entity', 'language', 'content']
+    list_display = ['parent', 'language', 'content']

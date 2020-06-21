@@ -5,9 +5,9 @@ import _ from 'lodash'
 
 import { toast } from 'react-toastify'
 
-import EntityForm from './entity_form'
+import ContentForm from './content_form'
 
-const EntityModalContent = (props) => {
+const ContentModalContent = (props) => {
 
   const entityId = props.entityId ? props.entityId : 0
   const { loading, error, data } = useQuery(FETCH_ENTITY, {
@@ -53,7 +53,7 @@ const EntityModalContent = (props) => {
     return <Segment placeholder>Error loading Entity {entityId}</Segment>
 
   return (
-    <EntityForm {...props} entityData={_.get(data, 'entities[0]')}
+    <ContentForm {...props} entityData={_.get(data, 'entities[0]')}
       onSubmitClicked={onSave} onDeleteClicked={onDelete} />
   )
 }
@@ -97,4 +97,4 @@ mutation deleteEntity($id: ID!) {
 }
 `;
 
-export default EntityModalContent
+export default ContentModalContent

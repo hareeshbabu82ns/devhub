@@ -19,7 +19,8 @@ const EntityCard = ({ data: { id, typeId, parentEntity, typeName, text } }) => {
           onClick={(e) => {
             e.preventDefault()
             history.push(
-              match.url + `?operation=editEntity&parentEntity=${parentEntity}&entityId=${id}`)
+              match.url + `?operation=editEntity` +
+              `&parentEntity=${parentEntity ? parentEntity : ''}&entityId=${id}`)
           }} />
       </Card.Content>
     </Card>
