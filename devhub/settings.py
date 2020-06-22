@@ -16,8 +16,10 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ENV = os.environ.get('PY_ENV', 'local')
-DATA_DIR = BASE_DIR if ENV == 'local' else '/data'
+DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR)
 print(f'app running in "{ENV}" mode')
+print(f'app running from "{BASE_DIR}" dir')
+print(f'app data store "{DATA_DIR}" dir')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -27,7 +29,7 @@ SECRET_KEY = os.environ.get(
     'SECRET_KEY', '(e4lq7e@r97ygh#2@8c0qx4p7t6xs96h4vcv@k&$7k)4oo@&at')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = bool(os.environ.get("DEBUG", ENV == 'local'))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", '*').split(" ")
 
@@ -56,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'devhub.urls'
@@ -85,7 +88,7 @@ WSGI_APPLICATION = 'devhub.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "NAME": os.environ.get("SQL_DATABASE", os.path.join(DATA_DIR, "db.sqlite3")),
         "USER": os.environ.get("SQL_USER", "user"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
@@ -132,6 +135,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'web', 'build', 'static')
+    os.path.join(BASE_DIR, 'web', 'build', 'static'),
+    os.path.join(BASE_DIR, 'web', 'build')
 ]
