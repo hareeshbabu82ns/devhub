@@ -19,3 +19,7 @@ $> npm run build
 ```sh
 $> python manage.py runserver
 ```
+* run scripts `needs django-extensions package` 
+```sh
+$> python manage.py runscript <script> --script-args <args...>
+```
