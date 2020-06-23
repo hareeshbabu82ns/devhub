@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ENV = os.environ.get('PY_ENV', 'local')
-DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR)
+DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR if ENV == 'local' else '/data')
 print(f'app running in "{ENV}" mode')
 print(f'app running from "{BASE_DIR}" dir')
 print(f'app data store "{DATA_DIR}" dir')

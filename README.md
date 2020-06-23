@@ -44,3 +44,29 @@ $ docker exec -d devhub python manage.py migrate
 ```sh
 $ docker build -f ./Dockerfile -t devhub:latest ./
 ```
+
+* deploying to local docker environment
+```sh
+# build docker image
+$> docker build -f ./Dockerfile -t devhub:latest ./
+# to transport image to different environment
+$> docker save -o devhub.tar hello_django:latest
+$> scp devhub.tar user@remote:/mnt/tmp
+# in remote server
+$> docker load -i devhub.tar
+
+$> mkdir /tmp
+$> chown -R <user>:<group> /tmp
+$> chmod +777 /tmp
+
+# run image with /data volume mount
+$> docker run -d -p '23842:8000/tcp' --name='devhub' \
+    -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" \
+    --net='proxynet' -v '/tmp':'/data':'rw,slave' \
+    devhub
+    
+# first time only    
+$ docker exec -d devhub python manage.py flush --no-input
+$ docker exec -d devhub python manage.py migrate
+$ docker exec -d devhub python manage.py loaddata init_data
+```
