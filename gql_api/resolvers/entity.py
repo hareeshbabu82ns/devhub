@@ -16,9 +16,13 @@ def resolve_entities(*_, by=None):
     if type:
         q = q.filter(type=type)
 
+    text_like = by.get('textLike')
+    if text_like:
+        q = q.filter(default_text__contains=text_like)
+
     text = by.get('text')
-    if text:
-        q = q.filter(default_text__contains=text)
+    if not text_like and text:
+        q = q.filter(default_text=text)
 
     return q
 

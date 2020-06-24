@@ -190,7 +190,7 @@ export default EntityForm
 
 const ENTITIES_BY_TEXT = gql`
 query SearchEntitiesByText($text:String) {
-  entities(by:{text:$text}){
+  entities(by:{textLike:$text}){
     id
     defaultText
     defaultThumbnail

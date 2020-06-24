@@ -1,8 +1,7 @@
 /*
-  SthotramPage (TODOs)
-    show child Slokas -> Content
+  SingleChildPage (TODOs)
+    show child Item -> Content
     provide show/hide for Meanings
-    M
 */
 
 import React, { useState } from 'react'
@@ -29,10 +28,10 @@ import { C_ENTITY_TYPE_STOTRAM, C_ENTITY_TYPE_SLOKAM } from '../utils/constants'
 import { baseTypes } from '../state/base_types'
 import EntityList from '../components/entity_list'
 
-const SthotramPage = () => {
+const SingleChildContentPage = () => {
   const history = useHistory()
   const match = useRouteMatch()
-  const entityId = match.params.stotramId
+  const entityId = match.params.entityId
   const [showMeanings, toggleMeanings] = useState(false)
 
   const { language, meaningLanguage, fontSize, inverted } = useRecoilValue(settings)
@@ -47,7 +46,7 @@ const SthotramPage = () => {
   }
 
   const variables = {
-    stotramId: Number(match.params.stotramId),
+    entityId: Number(match.params.entityId),
     language: Number(language),
     meaningLanguage: Number(meaningLanguage)
   }
@@ -57,12 +56,12 @@ const SthotramPage = () => {
   if (loading) return <Segment loading> Loading Content... </Segment>;
   if (error) return <Segment>Error loading Base Data</Segment>;
 
-  const stotram = data.stotram[0]
+  const entity = data.entities[0]
   return (
     <Container fluid style={{ padding: '0 2em' }}>
       <Menu color={'blue'} inverted={inverted} attached={'top'}>
         <Menu.Item as='h4' header>
-          {!_.isEmpty(_.get(stotram.textData[0], 'text')) ? stotram.textData[0].text : stotram.defaultText}
+          {!_.isEmpty(_.get(entity.textData[0], 'text')) ? entity.textData[0].text : entity.defaultText}
         </Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item onClick={() => updateFontSize(-0.5)} >A-</Menu.Item>
@@ -78,7 +77,7 @@ const SthotramPage = () => {
       </Menu>
       <Table attached striped size='large' inverted={inverted}>
         <Table.Body style={{ fontSize: `${fontSize}em` }}>
-          {stotram.slokas.map(slokam => (
+          {entity.childEntities.map(slokam => (
             <Table.Row key={slokam.id} >
               <Table.Cell>
                 <ReactMarkdown className='ReactMarkdown__content--default'
@@ -105,8 +104,8 @@ const SthotramPage = () => {
 }
 
 const FETCH_STOTRAM_CONTENT = gql`
-query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
-  stotram:entities(by:{id:$stotramId}){
+query GetStotramContents($entityId:ID,$language:ID!,$meaningLanguage:ID!){
+  entities(by:{id:$entityId}){
     id
     defaultText
     defaultThumbnail
@@ -114,7 +113,7 @@ query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
       id
       text
     }
-    slokas:childEntities(by:{type:3}){
+    childEntities{
       id
       defaultText
       defaultThumbnail
@@ -139,4 +138,4 @@ query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
 }
 `;
 
-export default SthotramPage
+export default SingleChildContentPage

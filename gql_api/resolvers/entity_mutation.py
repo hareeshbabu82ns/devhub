@@ -6,7 +6,14 @@ from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityT
 
 @transaction.atomic()
 def mutation_delete_entity(*_, id=None):
-    res = Entity.objects.get(pk=id).delete()
+    entity = Entity.objects.get(pk=id)
+    if entity.type.name in ['Stotram']:
+        # delete all childs
+        q = EntityRelation.objects.select_related('to_entity').filter(
+            from_entity=entity.id, from_type=entity.type.id)
+        [rel.to_entity.delete() for rel in q]
+
+    res = entity.delete()
     if res and res[0] > 0:
         return True
     else:

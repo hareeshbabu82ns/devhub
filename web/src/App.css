@@ -54,7 +54,19 @@ text colors:
         background-color: rgb(9, 20, 28);
         color: #fff;
       }
-      
+
+      .ReactMarkdown__content--default > p {
+        line-height: 1.8em;
+      }
+      .ReactMarkdown__meaning--default { 
+        margin-left: 0.5em;
+        border-left: 1px solid #aaa;
+        color: #999;
+        padding-left: 0.5em;
+      }
+      .ReactMarkdown__meaning--default > p { 
+        line-height: 1.8em;
+      }      
       .Toastify__toast--default {
         background: transparent;
         padding: 0px;

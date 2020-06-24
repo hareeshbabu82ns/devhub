@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Ganesha",
+    "textData": {
+      "SAN": {
+        "text": "गणेश"
+      },
+      "TEL": {
+        "text": "గణేశ"
+      },
+      "TAM": {
+        "text": "கணேஶ"
+      },
+      "IAST": {
+        "text": "gaṇeśa"
+      },
+      "SLP1": {
+        "text": "gaReSa"
+      }
+    }
+  },
+  {
+    "text": "Vishnu",
+    "textData": {
+      "SAN": {
+        "text": "विष्णु"
+      },
+      "TEL": {
+        "text": "విష్ణు"
+      },
+      "TAM": {
+        "text": "விஷ்ணு"
+      },
+      "IAST": {
+        "text": "viṣṇu"
+      },
+      "SLP1": {
+        "text": "vizRu"
+      }
+    }
+  },
+  {
+    "text": "Hanuman",
+    "textData": {
+      "SAN": {
+        "text": "हनुमान्"
+      },
+      "TEL": {
+        "text": "హనుమాన్"
+      },
+      "TAM": {
+        "text": "ஹநுமாந்"
+      },
+      "IAST": {
+        "text": "hanumān"
+      },
+      "SLP1": {
+        "text": "hanumAn"
+      }
+    }
+  }
+]

@@ -101,6 +101,7 @@ input EntitiesBy{
 	id: ID
 	type: ID
 	text: String
+	textLike: String
 }
 
 input ContentLinesBy{

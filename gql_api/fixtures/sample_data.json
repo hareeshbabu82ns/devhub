@@ -1,0 +1,144 @@
+[
+  {
+    "model": "gql_api.entity",
+    "pk": 1,
+    "fields": {
+      "type": 1,
+      "default_text": "Ganesha",
+      "tags": ""
+    }
+  },
+  {
+    "model": "gql_api.entity",
+    "pk": 2,
+    "fields": {
+      "type": 1,
+      "default_text": "Govinda",
+      "tags": ""
+    }
+  },
+  {
+    "model": "gql_api.entity",
+    "pk": 3,
+    "fields": {
+      "type": 2,
+      "default_text": "Annamaya",
+      "tags": ""
+    }
+  },
+  {
+    "model": "gql_api.entity",
+    "pk": 4,
+    "fields": {
+      "type": 2,
+      "default_text": "Veda Vyasa",
+      "tags": ""
+    }
+  },
+  {
+    "model": "gql_api.entityrelation",
+    "pk": 1,
+    "fields": {
+      "from_entity": 1,
+      "from_type": 1,
+      "to_entity": 4,
+      "to_type": 2
+    }
+  },
+  {
+    "model": "gql_api.entityrelation",
+    "pk": 2,
+    "fields": {
+      "from_entity": 2,
+      "from_type": 1,
+      "to_entity": 3,
+      "to_type": 2
+    }
+  },
+  {
+    "model": "gql_api.entitytext",
+    "pk": 1,
+    "fields": {
+      "parent": 1,
+      "type": 1,
+      "language": 1,
+      "text": "गणेष",
+      "description": ""
+    }
+  },
+  {
+    "model": "gql_api.entitytext",
+    "pk": 2,
+    "fields": {
+      "parent": 2,
+      "type": 1,
+      "language": 1,
+      "text": "गोविन्द",
+      "description": ""
+    }
+  },
+  {
+    "model": "gql_api.entity",
+    "pk": 5,
+    "fields": {
+      "type": 7,
+      "default_text": "Bhaja Govindam"
+    }
+  },
+  {
+    "model": "gql_api.entityrelation",
+    "pk": 3,
+    "fields": {
+      "from_entity": 2,
+      "from_type": 1,
+      "to_entity": 5,
+      "to_type": 7
+    }
+  },
+  {
+    "model": "gql_api.entitytext",
+    "pk": 3,
+    "fields": {
+      "text": "भज गोविन्दं",
+      "language": 1,
+      "parent": 5,
+      "type": 7
+    }
+  },
+  {
+    "model": "gql_api.entity",
+    "pk": 6,
+    "fields": {
+      "type": 3,
+      "default_text": "Slokam 1"
+    }
+  },
+  {
+    "model": "gql_api.entityrelation",
+    "pk": 4,
+    "fields": {
+      "from_entity": 5,
+      "from_type": 7,
+      "to_entity": 6,
+      "to_type": 3
+    }
+  },
+  {
+    "model": "gql_api.contentline",
+    "pk": 1,
+    "fields": {
+      "content": "भजगोविन्दं भजगोविन्दं \n गोविन्दं भजमूढमते । \n सम्प्राप्ते सन्निहिते काले \n नहि नहि रक्षति डुकृञ्करणे ॥ १॥ ",
+      "language": 1,
+      "parent": 6
+    }
+  },
+  {
+    "model": "gql_api.contentmeaning",
+    "pk": 1,
+    "fields": {
+      "content": "Worship Govinda, worship Govinda worship Govinda, Oh fool ! Rules of grammar will not save you at the time of your death.",
+      "language": 3,
+      "parent": 6
+    }
+  }
+]

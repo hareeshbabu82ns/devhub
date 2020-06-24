@@ -43,6 +43,7 @@ RUN addgroup -S app && adduser -S app -G app
 # create the appropriate directories
 ENV HOME=/home/app
 ENV APP_HOME=/home/app/web
+ENV APP_WEB_BUILD=/home/app/web/web/build
 ENV DATA_DIR=/data
 RUN mkdir $APP_HOME
 RUN mkdir $DATA_DIR
@@ -59,6 +60,12 @@ COPY ./entrypoint.prod.sh $APP_HOME
 
 # copy project
 COPY . $APP_HOME
+
+# copy assets to web static folder
+COPY ./web/build/favicon.png $APP_WEB_BUILD/static
+COPY ./web/build/sun_128.png $APP_WEB_BUILD/static
+COPY ./web/build/sun_512.png $APP_WEB_BUILD/static
+COPY ./web/build/manifest.json $APP_WEB_BUILD/static
 
 # chown all the files to the app user
 RUN chown -R app:app $APP_HOME
