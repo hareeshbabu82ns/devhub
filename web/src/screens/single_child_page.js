@@ -113,7 +113,7 @@ query GetStotramContents($entityId:ID,$language:ID!,$meaningLanguage:ID!){
       id
       text
     }
-    childEntities{
+    childEntities(by:{hasContentInLanguage:$language}){
       id
       defaultText
       defaultThumbnail

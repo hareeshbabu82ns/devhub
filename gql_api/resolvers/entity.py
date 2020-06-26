@@ -38,9 +38,17 @@ def resolve_children(parent, *_, by=None):
         from_entity=parent.id, from_type=parent.type.id)
 
     if by:
-        type = by.get('type')
-        if type:
-            q = q.filter(to_type=type)
+        filterBy = {}
+        to_type = by.get('type')
+        if to_type:
+            filterBy['to_type'] = to_type
+
+        hasContentInLanguage = by.get('hasContentInLanguage')
+        if hasContentInLanguage:
+            filterBy['to_entity__contentline__language'] = hasContentInLanguage
+
+        # filters with AND condition goes into single filter()
+        q = q.filter(**filterBy)
 
     return [rel.to_entity for rel in q]
 

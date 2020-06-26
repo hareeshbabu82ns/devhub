@@ -114,7 +114,7 @@ query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
       id
       text
     }
-    slokas:childEntities(by:{type:3}){
+    slokas:childEntities(by:{type:3, hasContentInLanguage:$language}){
       id
       defaultText
       defaultThumbnail

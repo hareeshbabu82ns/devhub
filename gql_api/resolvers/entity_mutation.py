@@ -47,6 +47,7 @@ def mutation_update_entity_content(*_, id=None, withData):
     entity.type = entityType
     entity.default_text = withData.get('defaultText', entity.default_text)
     entity.tags = withData.get('tags', entity.tags)
+    entity.order = withData.get('order', entity.order)
     entity.save()
 
     relation = None

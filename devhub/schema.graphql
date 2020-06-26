@@ -53,6 +53,7 @@ input EntityContentInput{
 	parentId: ID
 	defaultText: String
 	type: ID
+	order: Int
 	tags: String
 	textData: [EntityTextDataInput!]
 	metaData: [EntityMetaDataInput!]
@@ -112,6 +113,7 @@ input ContentLinesBy{
 
 input RelatedEntitiesBy{
 	type: ID
+	hasContentInLanguage: ID
 }
 
 """
@@ -139,6 +141,7 @@ Base Entity of the system ex Slokam, Adhyaayam, Grandham etc.
 type Entity{
 	id: ID!
 	type: EntityType!
+	order: Int
 	"""
 	fallback default Text for Entity if TextData is missing
 	"""
