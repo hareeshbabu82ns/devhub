@@ -58,6 +58,8 @@ input EntityContentInput{
 	textData: [EntityTextDataInput!]
 	metaData: [EntityMetaDataInput!]
 	content: [ContentLineInput!]
+	meaning: [ContentMeaningInput!]
+	extras: [ContentExtrasInput!]
 }
 
 input EntityMetaDataInput{
@@ -77,8 +79,6 @@ input ContentLineInput{
 	parentEntity: ID
 	language: ID!
 	content: String!
-	meaning: [ContentMeaningInput!]
-	extras: [ContentExtrasInput!]
 }
 
 input ContentMeaningsBy{

@@ -114,16 +114,23 @@ def mutation_update_entity_content(*_, id=None, withData):
             contentObj.content = content.get('content')
             contentObj.parent = entity
             contentObj.save()
-            # create content meaning
-            contentMeaning = content.get('meaning')
-            if contentMeaning:
-                contentMeaningObj = ContentMeaning()
-                contentMeaningObj.parent = contentObj
-                contentMeaningObj.entity = entity
-                contentMeaningObj.language = Language(
-                    contentMeaning.get('language'))
-                contentMeaningObj.content = contentMeaning.get('content')
-                contentMeaningObj.save()
-            # TODO: create content extras
+        # create content meaning
+        contentMeanings = withData.get('meaning', [])
+        for contentMeaning in contentMeanings:
+            contentMeaningObj = ContentMeaning()
+            contentMeaningObj.parent = entity
+            contentMeaningObj.language = Language(
+                contentMeaning.get('language'))
+            contentMeaningObj.content = contentMeaning.get('content')
+            contentMeaningObj.save()
+        # create content extras
+        contentExtras = withData.get('extras', [])
+        for contentExtra in contentExtras:
+            contentExtrasObj = ContentExtras()
+            contentExtrasObj.parent = entity
+            contentExtrasObj.language = Language(
+                contentExtra.get('language'))
+            contentExtrasObj.content = contentExtra.get('content')
+            contentExtrasObj.save()
 
     return entity
