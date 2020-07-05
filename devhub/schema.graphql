@@ -14,9 +14,19 @@ type Query{
 	contentMeanings(
 		by: ContentMeaningsBy!
 	): [ContentMeaning!]
+	bookmarks(
+		by: BookmarkByInput
+	): [Bookmark!]
 }
 
 type Mutation{
+	updateBookmark(
+		id: ID
+		withData: BookmarkUpdateInput!
+	): Bookmark!
+	deleteBookmark(
+		id: ID!
+	): Boolean
 	deleteEntity(
 		id: ID!
 	): Boolean
@@ -47,6 +57,28 @@ type Mutation{
 	deleteContentMeaning(
 		id: ID!
 	): Boolean
+}
+
+type Bookmark{
+	id: ID
+	entity: Entity
+	url: String
+}
+
+input BookmarkByInput{
+	id: ID
+	entity: ID
+	url: String
+}
+
+input BookmarkUpdateInput{
+	entity: ID
+	url: String
+}
+
+input BookmarkInput{
+	entity: ID!
+	url: String
 }
 
 input EntityContentInput{

@@ -122,6 +122,27 @@
     "model": "gql_api.entitytype",
     "pk": 9,
     "fields": {
+      "name": "Sarga"
+    }
+  },
+  {
+    "model": "gql_api.entitytype",
+    "pk": 10,
+    "fields": {
+      "name": "Puranam"
+    }
+  },
+  {
+    "model": "gql_api.entitytype",
+    "pk": 11,
+    "fields": {
+      "name": "Itihasam"
+    }
+  },
+  {
+    "model": "gql_api.entitytype",
+    "pk": 12,
+    "fields": {
       "name": "Others"
     }
   }

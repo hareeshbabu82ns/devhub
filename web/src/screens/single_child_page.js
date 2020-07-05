@@ -14,23 +14,28 @@ import {
   Menu,
   Table,
   Button,
-  Divider
+  Message,
+  Label,
 } from 'semantic-ui-react'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery, useMutation } from '@apollo/client'
 import {
   useRouteMatch,
   useHistory,
+  useLocation,
 } from "react-router-dom";
+import { toast } from 'react-toastify'
 import _ from 'lodash'
 
 import settings from '../state/settings'
-import { C_ENTITY_TYPE_STOTRAM, C_ENTITY_TYPE_SLOKAM } from '../utils/constants'
+import { C_ENTITY_TYPE_SLOKAM } from '../utils/constants'
 import { baseTypes } from '../state/base_types'
-import EntityList from '../components/entity_list'
 
 const SingleChildContentPage = () => {
   const history = useHistory()
   const match = useRouteMatch()
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  const markedItem = params.get('markedItem')
   const entityId = match.params.entityId
   const [showMeanings, toggleMeanings] = useState(false)
 
@@ -38,6 +43,17 @@ const SingleChildContentPage = () => {
   const setSetting = useSetRecoilState(settings)
   const { entityTypes } = useRecoilValue(baseTypes)
   const entityType = entityTypes.find((types) => types.name === C_ENTITY_TYPE_SLOKAM)
+
+  const [updateBookmark, { data: updatedBookmark }] = useMutation(UPDATE_BOOKMARK)
+
+  const onAddBookmarkClicked = async (withData) => {
+    try {
+      await updateBookmark({ variables: { withData } })
+      toast(<Message success header='Bookmark Added' />)
+    } catch (e) {
+      toast(<Message success header='Error adding Bookmark (probably already exist?)' />)
+    }
+  }
 
   const updateFontSize = (by) => {
     const newFontSize = fontSize + by
@@ -51,14 +67,14 @@ const SingleChildContentPage = () => {
     meaningLanguage: Number(meaningLanguage)
   }
 
-  const { loading, error, data, refetch } = useQuery(FETCH_STOTRAM_CONTENT, { variables });
+  const { loading, error, data, refetch } = useQuery(FETCH_ENTITY_CONTENT, { variables });
 
   if (loading) return <Segment loading> Loading Content... </Segment>;
   if (error) return <Segment>Error loading Base Data</Segment>;
 
   const entity = data.entities[0]
   return (
-    <Container fluid style={{ padding: '0 2em' }}>
+    <Container fluid style={{ padding: '0 0.5em' }}>
       <Menu color={'blue'} inverted={inverted} attached={'top'}>
         <Menu.Item as='h4' header>
           {!_.isEmpty(_.get(entity.textData[0], 'text')) ? entity.textData[0].text : entity.defaultText}
@@ -78,8 +94,14 @@ const SingleChildContentPage = () => {
       <Table attached striped size='large' inverted={inverted}>
         <Table.Body style={{ fontSize: `${fontSize}em` }}>
           {entity.childEntities.map(slokam => (
-            <Table.Row key={slokam.id} >
+            <Table.Row key={slokam.id} id={slokam.id} positive={slokam.id === markedItem} >
               <Table.Cell>
+                <Button.Group size='mini' basic inverted={inverted} floated="right">
+                  <Button icon='edit' onClick={() => history.push(
+                    match.url + `?operation=createContent&parentEntity=${entityId}` +
+                    `&entityId=${slokam.id}&createType=${entityType.id}`)} />
+                  <Button icon='bookmark' onClick={() => onAddBookmarkClicked({ entity: slokam.id })} />
+                </Button.Group>
                 <ReactMarkdown className='ReactMarkdown__content--default'
                   source={_.get(slokam, 'content[0].content',
                     `**${slokam.defaultText}** has **no content**`)} escapeHtml={true} />
@@ -88,13 +110,6 @@ const SingleChildContentPage = () => {
                     source={_.get(slokam, 'contentMeaning[0].content', '**no meaning**')} escapeHtml={true} />
                 }
               </Table.Cell>
-              <Table.Cell textAlign='right'>
-                <Button.Group size='mini' basic inverted={inverted}>
-                  <Button icon='edit' onClick={() => history.push(
-                    match.url + `?operation=createContent&parentEntity=${entityId}` +
-                    `&entityId=${slokam.id}&createType=${entityType.id}`)} />
-                </Button.Group>
-              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -102,9 +117,15 @@ const SingleChildContentPage = () => {
     </Container>
   )
 }
-
-const FETCH_STOTRAM_CONTENT = gql`
-query GetStotramContents($entityId:ID,$language:ID!,$meaningLanguage:ID!){
+const UPDATE_BOOKMARK = gql`
+mutation UpdateBookmark($withData:BookmarkUpdateInput!){
+  updateBookmark(withData:$withData){
+    id
+  }
+}
+`;
+const FETCH_ENTITY_CONTENT = gql`
+query GetEntityContents($entityId:ID,$language:ID!,$meaningLanguage:ID!){
   entities(by:{id:$entityId}){
     id
     defaultText

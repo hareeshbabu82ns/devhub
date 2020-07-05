@@ -14,7 +14,7 @@ import {
   Segment
 } from 'semantic-ui-react'
 
-import { C_ENTITY_TYPE_STOTRAM, C_ENTITY_TYPE_DANDAKAM } from './utils/constants'
+import { C_ENTITY_TYPE_STOTRAM, C_ENTITY_TYPE_DANDAKAM, C_ENTITY_TYPE_SARGA } from './utils/constants'
 import { gql, useQuery } from '@apollo/client'
 import { useSetRecoilState } from 'recoil'
 import NavBar from './screens/nav_bar'
@@ -52,8 +52,11 @@ function AppRoutes() {
             <Route path="/sanscript">
               <SanscriptHome />
             </Route>
-            <Route path={`/${C_ENTITY_TYPE_STOTRAM}/:stotramId`}>
-              <SthotramPage />
+            <Route path={`/${C_ENTITY_TYPE_STOTRAM}/:entityId`}>
+              <SingleChildContentPage />
+            </Route>
+            <Route path={`/${C_ENTITY_TYPE_SARGA}/:entityId`}>
+              <SingleChildContentPage />
             </Route>
             <Route path={`/${C_ENTITY_TYPE_DANDAKAM}/:entityId`}>
               <SingleChildContentPage />

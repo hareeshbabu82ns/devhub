@@ -71,7 +71,10 @@ text colors:
         background: transparent;
         padding: 0px;
       }
-
+      .ui.table.inverted tr.positive {
+        background: #323a21 !important;
+        color:#759b75 !important
+      }
       .ui.inverted.menu.top.fixed   {
         background-color: #06203a;
       } 

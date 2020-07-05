@@ -15,23 +15,27 @@ import {
   Menu,
   Table,
   Button,
-  Divider
+  Message,
 } from 'semantic-ui-react'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery, useMutation } from '@apollo/client'
 import {
   useRouteMatch,
   useHistory,
+  useLocation,
 } from "react-router-dom";
+import { toast } from 'react-toastify'
 import _ from 'lodash'
 
 import settings from '../state/settings'
-import { C_ENTITY_TYPE_STOTRAM, C_ENTITY_TYPE_SLOKAM } from '../utils/constants'
+import { C_ENTITY_TYPE_SLOKAM } from '../utils/constants'
 import { baseTypes } from '../state/base_types'
-import EntityList from '../components/entity_list'
 
 const SthotramPage = () => {
   const history = useHistory()
   const match = useRouteMatch()
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  const markedItem = params.get('markedItem')
   const entityId = match.params.stotramId
   const [showMeanings, toggleMeanings] = useState(false)
 
@@ -39,6 +43,17 @@ const SthotramPage = () => {
   const setSetting = useSetRecoilState(settings)
   const { entityTypes } = useRecoilValue(baseTypes)
   const entityType = entityTypes.find((types) => types.name === C_ENTITY_TYPE_SLOKAM)
+
+  const [updateBookmark, { data: updatedBookmark }] = useMutation(UPDATE_BOOKMARK)
+
+  const onAddBookmarkClicked = async (withData) => {
+    try {
+      await updateBookmark({ variables: { withData } })
+      toast(<Message success header='Bookmark Added' />)
+    } catch (e) {
+      toast(<Message success header='Error adding Bookmark (probably already exist?)' />)
+    }
+  }
 
   const updateFontSize = (by) => {
     const newFontSize = fontSize + by
@@ -79,7 +94,7 @@ const SthotramPage = () => {
       <Table attached striped size='large' inverted={inverted}>
         <Table.Body style={{ fontSize: `${fontSize}em` }}>
           {stotram.slokas.map(slokam => (
-            <Table.Row key={slokam.id} >
+            <Table.Row key={slokam.id} id={slokam.id} positive={slokam.id === markedItem}>
               <Table.Cell>
                 <ReactMarkdown className='ReactMarkdown__content--default'
                   source={_.get(slokam, 'content[0].content',
@@ -94,6 +109,7 @@ const SthotramPage = () => {
                   <Button icon='edit' onClick={() => history.push(
                     match.url + `?operation=createContent&parentEntity=${entityId}` +
                     `&entityId=${slokam.id}&createType=${entityType.id}`)} />
+                  <Button icon='bookmark' onClick={() => { onAddBookmarkClicked({ entity: slokam.id }) }} />
                 </Button.Group>
               </Table.Cell>
             </Table.Row>
@@ -104,6 +120,13 @@ const SthotramPage = () => {
   )
 }
 
+const UPDATE_BOOKMARK = gql`
+mutation UpdateBookmark($withData:BookmarkUpdateInput!){
+  updateBookmark(withData:$withData){
+    id
+  }
+}
+`;
 const FETCH_STOTRAM_CONTENT = gql`
 query GetStotramContents($stotramId:ID,$language:ID!,$meaningLanguage:ID!){
   stotram:entities(by:{id:$stotramId}){

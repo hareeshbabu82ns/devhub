@@ -129,3 +129,17 @@ class ContentExtras(models.Model):
 
     def __str__(self):
         return f'{self.id} {self.parent} {self.language}'
+
+
+class Bookmarks(models.Model):
+    entity = models.ForeignKey('Entity', on_delete=models.CASCADE)
+    url = models.URLField(blank=True, default='')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['entity'], name='Bookmark_Unique_Entity')
+        ]
+
+    def __str__(self):
+        return f'{self.id} {self.entity} {self.url}'

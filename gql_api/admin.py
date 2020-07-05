@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Entity, EntityType, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning
+from .models import Entity, EntityType, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning, Bookmarks
 
 
 @admin.register(Language)
@@ -46,3 +46,8 @@ class ContentMeaningAdmin(admin.ModelAdmin):
 @admin.register(ContentExtras)
 class ContentExtrasAdmin(admin.ModelAdmin):
     list_display = ['parent', 'language', 'content']
+
+
+@admin.register(Bookmarks)
+class BookmarksAdmin(admin.ModelAdmin):
+    list_display = ['entity', 'url']

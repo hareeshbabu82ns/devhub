@@ -1,5 +1,5 @@
 
-from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning
+from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning, Bookmarks
 
 
 def resolve_entities(*_, by=None):
@@ -94,3 +94,24 @@ def resolve_content_meaning(parent, *_, language=None):
         return Exception('Language parameter missing')
     return ContentMeaning.objects.filter(
         parent=parent.id, language=language)
+
+
+def resolve_bookmarks(*_, by=None):
+    q = Bookmarks.objects
+
+    if not by:
+        return q.all()
+
+    id = by.get('id')
+    if id:
+        q = q.filter(id=id)
+
+    entity = by.get('entity')
+    if entity:
+        q = q.filter(entity=entity)
+
+    url = by.get('url')
+    if url:
+        q = q.filter(default_text__contains=url)
+
+    return q

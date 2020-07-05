@@ -84,3 +84,14 @@ def resolve_language(*_):
 
 
 types.append(languageType)
+
+# Bookmark
+bookmarkType = ObjectType('Bookmark')
+
+query.set_field("bookmarks", entity_resolvers.resolve_bookmarks)
+
+mutation.set_field("updateBookmark",
+                   entity_mutations.mutation_update_bookmark)
+mutation.set_field("deleteBookmark",
+                   entity_mutations.mutation_delete_bookmark)
+types.append(bookmarkType)

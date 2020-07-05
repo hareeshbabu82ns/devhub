@@ -1,7 +1,7 @@
 
 from django.db import transaction
 
-from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning
+from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning, Bookmarks
 
 
 @transaction.atomic()
@@ -132,5 +132,44 @@ def mutation_update_entity_content(*_, id=None, withData):
                 contentExtra.get('language'))
             contentExtrasObj.content = contentExtra.get('content')
             contentExtrasObj.save()
+
+    return entity
+
+
+@transaction.atomic()
+def mutation_delete_bookmark(*_, id=None):
+    entity = Bookmarks.objects.get(pk=id)
+    res = entity.delete()
+    if res and res[0] > 0:
+        return True
+    else:
+        return False
+
+
+@transaction.atomic()
+def mutation_update_bookmark(*_, id=None, withData):
+    if not withData:
+        return Exception('data parameter missing')
+
+    # check for Parent Entity
+    parentId = withData.get('entity')
+    parentEntity = None
+    if parentId:
+        parentEntity = Entity.objects.get(pk=parentId)
+        if not parentEntity:
+            return Exception(f"Parent Entity {parentId} does not exist")
+
+    if id:
+        # fetch Entity
+        entity = Bookmarks.objects.get(pk=id)
+        if not entity:
+            return Exception(f"Bookmark {id} does not exist")
+    else:
+        # create new Entity
+        entity = Bookmarks()
+
+    entity.entity = parentEntity
+    entity.url = withData.get('url', entity.url)
+    entity.save()
 
     return entity
