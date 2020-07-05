@@ -47,7 +47,7 @@ const EntityChildNavbar = ({ entityId }) => {
   // console.log(match, location, childItemType)
   return (
     <React.Fragment>
-      <Menu attached='top' fluid borderless inverted={settingsData.inverted} color='blue' stackable>
+      <Menu attached='top' fluid borderless inverted={settingsData.inverted} color='blue'>
         <Menu.Item>
           <Menu.Header as='h4' content={title} />
         </Menu.Item>
@@ -56,7 +56,7 @@ const EntityChildNavbar = ({ entityId }) => {
             <Dropdown.Menu>
               {
                 entityTypes.map(entityType => (
-                  <Dropdown.Item onClick={() => history.push(
+                  <Dropdown.Item key={entityType.id} onClick={() => history.push(
                     match.url + `?operation=createEntity` +
                     `&parentEntity=${entityId ? entityId : ''}&createType=${entityType.id}`)}
                   >{entityType.name}</Dropdown.Item>

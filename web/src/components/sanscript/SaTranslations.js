@@ -60,7 +60,7 @@ const SaTranslations = () => {
   }
 
   return (
-    <div style={{ marginRight: "2em" }}>
+    <div style={{ margin: "0 0.5em" }}>
       <Menu color={'teal'} inverted={settingsData.inverted} attached={'top'}>
         <Menu.Item as='h4' header>
           Translations

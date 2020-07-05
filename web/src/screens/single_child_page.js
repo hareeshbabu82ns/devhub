@@ -74,7 +74,7 @@ const SingleChildContentPage = () => {
 
   const entity = data.entities[0]
   return (
-    <Container fluid style={{ padding: '0 0.5em' }}>
+    <div style={{ padding: '0 0.5em' }}>
       <Menu color={'blue'} inverted={inverted} attached={'top'}>
         <Menu.Item as='h4' header>
           {!_.isEmpty(_.get(entity.textData[0], 'text')) ? entity.textData[0].text : entity.defaultText}
@@ -114,7 +114,7 @@ const SingleChildContentPage = () => {
           ))}
         </Table.Body>
       </Table>
-    </Container>
+    </div>
   )
 }
 const UPDATE_BOOKMARK = gql`

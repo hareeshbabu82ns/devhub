@@ -43,7 +43,7 @@ const BookmarkList = () => {
   }
 
   return (
-    <Container fluid style={{ padding: '0 1em' }}>
+    <div fluid style={{ padding: '0 0.5em' }}>
       <Menu attached='top' inverted={settingsData.inverted}>
         <Menu.Item>
           <Menu.Header content='Bookmarks'></Menu.Header>
@@ -67,7 +67,7 @@ const BookmarkList = () => {
           }
         </Card.Group>
       </Segment>
-    </Container>
+    </div>
   )
 }
 

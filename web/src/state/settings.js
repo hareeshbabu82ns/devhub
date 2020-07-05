@@ -7,6 +7,7 @@ const settings = atom({
     meaningLanguage: '3', //english
     fontSize: 2, //in em
     inverted: true,
+    appSideBarVisible: false,
   }
 })
 
