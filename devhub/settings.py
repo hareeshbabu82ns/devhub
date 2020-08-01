@@ -21,6 +21,8 @@ print(f'app running in "{ENV}" mode')
 print(f'app running from "{BASE_DIR}" dir')
 print(f'app data store "{DATA_DIR}" dir')
 
+AUTH_API = os.environ.get('AUTH_API', '')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 

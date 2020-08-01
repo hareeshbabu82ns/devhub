@@ -1,9 +1,9 @@
 from ariadne import ObjectType
 
 from devhub.gql_root_types import query, mutation
-from .models import EntityType, Language
+from .models import EntityType, Language, Settings
 
-from gql_api.resolvers import entity as entity_resolvers, content as content_resolvers, entity_mutation as entity_mutations, content_mutations
+from gql_api.resolvers import entity as entity_resolvers, content as content_resolvers, entity_mutation as entity_mutations, content_mutations, others as other_resolvers, others_mutations
 
 types = []
 
@@ -95,3 +95,22 @@ mutation.set_field("updateBookmark",
 mutation.set_field("deleteBookmark",
                    entity_mutations.mutation_delete_bookmark)
 types.append(bookmarkType)
+
+# Settings
+settingType = ObjectType('Settings')
+
+mutation.set_field("updateSettings",
+                   others_mutations.mutation_update_user_settings)
+# mutation.set_field("deleteSetting",
+#                    entity_mutations.mutation_delete_setting)
+types.append(settingType)
+
+# User
+userType = ObjectType('User')
+
+userType.set_field(
+    "settings", other_resolvers.resolve_user_settings)
+
+query.set_field("me", other_resolvers.resolve_me)
+
+types.append(userType)

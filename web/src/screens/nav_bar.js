@@ -9,6 +9,7 @@ import logo from '../sun_128.png';
 import { Link } from 'react-router-dom'
 import settings from '../state/settings'
 import { baseTypes } from '../state/base_types'
+import { Media } from '../utils/media_context'
 
 const NavBar = () => {
   // const settingsData = useRecoilValue(settings)
@@ -23,39 +24,49 @@ const NavBar = () => {
   const toggleSideBar = () => {
     setSetting(oldSetting => ({ ...oldSetting, appSideBarVisible: !oldSetting.appSideBarVisible }))
   }
+
+  const LanguageDDLB = (<Dropdown item text={currentLang.iso}>
+    <Dropdown.Menu>
+      {languages.map(language => (
+        <Dropdown.Item key={language.id}
+          onClick={() => updateLanguage(language.id)}>{language.iso}</Dropdown.Item>))}
+    </Dropdown.Menu>
+  </Dropdown>)
+
   return (
-    <Menu fixed='top' inverted={inverted} >
-      <Container fluid>
-        <Responsive as={React.Fragment} minWidth={Responsive.onlyMobile.maxWidth} key='wide-screens'>
-          <Menu.Item as={Link} to={'/'} header>
-            <Image size='mini' src={logo} style={{ marginRight: '1.0em' }} />
+    <React.Fragment>
+      <Media greaterThanOrEqual="computer" key='wide-screens'>
+        <Menu fixed='top' inverted={inverted} >
+          <Container fluid>
+            <Menu.Item as={Link} to={'/'} header>
+              <Image size='mini' src={logo} style={{ marginRight: '1.0em' }} />
             Aadhyaathma Kendram
           </Menu.Item>
-          <Menu.Item as={Link} to={'/gods'}>Gods</Menu.Item>
-          <Menu.Item as={Link} to={'/authors'}>Authors</Menu.Item>
-          <Menu.Item as={Link} to={'/sanscript'}>Sanscript</Menu.Item>
-        </Responsive>
-        <Responsive as={React.Fragment} {...Responsive.onlyMobile} key='on-mobiles'>
-          <Menu.Item header onClick={() => { toggleSideBar() }}>
-            <Image size='mini' src={logo} style={{ marginRight: '1.0em' }} /> Aadhyaathma Kendram
-          </Menu.Item>
-        </Responsive>
+            <Menu.Item as={Link} to={'/gods'}>Gods</Menu.Item>
+            <Menu.Item as={Link} to={'/authors'}>Authors</Menu.Item>
+            <Menu.Item as={Link} to={'/sanscript'}>Sanscript</Menu.Item>
 
-        <Menu.Menu position='right'>
-          <Dropdown item text={currentLang.iso}>
-            <Dropdown.Menu>
-              {languages.map(language => (
-                <Dropdown.Item key={language.id}
-                  onClick={() => updateLanguage(language.id)}>{language.iso}</Dropdown.Item>))}
-            </Dropdown.Menu>
-          </Dropdown>
-          <Responsive as={React.Fragment} minWidth={Responsive.onlyMobile.maxWidth} key='wide-screens'>
-            <Menu.Item as={Link} to={'/settings'} icon={'cog'} />
-            <Menu.Item as={Link} to={'/login'} icon={'user'} />
-          </Responsive>
-        </Menu.Menu>
-      </Container>
-    </Menu>
+            <Menu.Menu position='right'>
+              {LanguageDDLB}
+              <Menu.Item as={Link} to={'/settings'} icon={'cog'} />
+              <Menu.Item as={Link} to={'/login'} icon={'user'} />
+            </Menu.Menu>
+          </Container>
+        </Menu>
+      </Media>
+      <Media lessThan="computer" key='on-mobiles'>
+        <Menu fixed='top' inverted={inverted} >
+          <Container fluid>
+            <Menu.Item header onClick={() => { toggleSideBar() }}>
+              <Image size='mini' src={logo} style={{ marginRight: '1.0em' }} /> Aadhyaathma Kendram
+          </Menu.Item>
+            <Menu.Menu position='right'>
+              {LanguageDDLB}
+            </Menu.Menu>
+          </Container>
+        </Menu>
+      </Media>
+    </React.Fragment>
   )
 }
 export default NavBar

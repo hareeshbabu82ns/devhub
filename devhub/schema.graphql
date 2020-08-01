@@ -3,17 +3,24 @@ scalar Date
 scalar DateTime
 
 type Query{
+	me: User!
+
 	entityTypes: [EntityType!]!
+
 	languages: [Language!]!
+
 	entities(
 		by: EntitiesBy!
 	): [Entity!]
+
 	contentLines(
 		by: ContentLinesBy!
 	): [ContentLine!]
+
 	contentMeanings(
 		by: ContentMeaningsBy!
 	): [ContentMeaning!]
+    
 	bookmarks(
 		by: BookmarkByInput
 	): [Bookmark!]
@@ -24,12 +31,15 @@ type Mutation{
 		id: ID
 		withData: BookmarkUpdateInput!
 	): Bookmark!
+
 	deleteBookmark(
 		id: ID!
 	): Boolean
+
 	deleteEntity(
 		id: ID!
 	): Boolean
+
 	updateEntityContent(
 		"""
 		id is optional, if creating entity
@@ -37,6 +47,7 @@ type Mutation{
 		id: ID
 		withData: EntityContentInput!
 	): Entity!
+
 	updateContent(
 		"""
 		id is optional, if creating content
@@ -44,9 +55,11 @@ type Mutation{
 		id: ID
 		withData: ContentLineInput
 	): ContentLine!
+
 	deleteContent(
 		id: ID!
 	): Boolean
+
 	updateContentMeaning(
 		"""
 		id is optional, if creating meaining
@@ -54,9 +67,15 @@ type Mutation{
 		id: ID
 		withData: ContentMeaningInput
 	): ContentMeaning!
+
 	deleteContentMeaning(
 		id: ID!
 	): Boolean
+
+	updateSettings(
+		user: ID!
+		content: String!
+	): Settings!
 }
 
 type Bookmark{
@@ -274,6 +293,24 @@ type ContentExtras{
 	parent: Entity!
 	language: Language!
 	content: String!
+}
+
+type User{
+	"""
+	user name
+	"""
+	id: ID!
+	displayName: String
+	settings: Settings
+}
+
+"""
+user specific Settings
+"""
+type Settings{
+	id: ID!
+	user: ID!
+	content: String
 }
 schema{
 	query: Query,

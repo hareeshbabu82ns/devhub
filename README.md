@@ -3,6 +3,13 @@
 A Hub for Devotional content, with meanings and extra information which is presented in simple ui
 
 ### Running
+
+### Authentication
+* used [Authelia](https://www.authelia.com/)
+  * /api/state - returns 'data.username'
+  * /api/user/info - returns 'data.display_name'
+* exposing the api under /graphql/me
+
 #### React UI
 * as developent server
 ```sh
@@ -30,7 +37,7 @@ $ docker build -f ./Dockerfile.dev -t devhub:latest ./
 $ docker run -d \
     -p 8006:8000  --name devhub \
     -e "SECRET_KEY=please_change_me" -e "DEBUG=1" -e "DJANGO_ALLOWED_HOSTS=*" \
-    --env-file .env.dev \
+    -e "DATA_DIR=/tmp" --env-file .env.dev \
     devhub
 ```
 
@@ -50,7 +57,7 @@ $ docker build -f ./Dockerfile -t devhub:latest ./
 # build docker image
 $> docker build -f ./Dockerfile -t devhub:latest ./
 # to transport image to different environment
-$> docker save -o devhub.tar hello_django:latest
+$> docker save -o devhub.tar devhub:latest
 $> scp devhub.tar user@remote:/mnt/tmp
 # in remote server
 $> docker load -i devhub.tar

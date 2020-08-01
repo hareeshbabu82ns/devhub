@@ -10,13 +10,17 @@ import { RecoilRoot } from 'recoil'
 
 import client from './state/gql_client'
 
+import { MediaContextProvider } from './utils/media_context'
+
 ReactDOM.render(
   <React.StrictMode>
-    <RecoilRoot>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
-    </RecoilRoot>
+    <MediaContextProvider>
+      <RecoilRoot>
+        <ApolloProvider client={client}>
+          <App />
+        </ApolloProvider>
+      </RecoilRoot>
+    </MediaContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

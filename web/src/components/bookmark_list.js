@@ -23,7 +23,7 @@ const BookmarkList = () => {
   const settingsData = useRecoilValue(settings)
   const { entityTypes } = useRecoilValue(baseTypes)
 
-  const [deleteBookmark, { data: deletedMookmark }] = useMutation(DELETE_BOOKMARK)
+  const [deleteBookmark, { data: deletedBookmark }] = useMutation(DELETE_BOOKMARK)
 
   const { loading, error, data, refetch } = useQuery(BOOKMARKS_LIST);
 

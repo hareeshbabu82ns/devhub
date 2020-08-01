@@ -132,14 +132,29 @@ class ContentExtras(models.Model):
 
 
 class Bookmarks(models.Model):
+    user = models.CharField(max_length=50, blank=False, default='local')
     entity = models.ForeignKey('Entity', on_delete=models.CASCADE)
     url = models.URLField(blank=True, default='')
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['entity'], name='Bookmark_Unique_Entity')
+                fields=['user', 'entity'], name='Bookmark_Unique_Entity')
         ]
 
     def __str__(self):
-        return f'{self.id} {self.entity} {self.url}'
+        return f'{self.id} {self.entity} {self.user} {self.url}'
+
+
+class Settings(models.Model):
+    user = models.CharField(max_length=50, blank=False, default='local')
+    content = models.TextField(blank=True, default='')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user'], name='Settings_Unique_User')
+        ]
+
+    def __str__(self):
+        return f'{self.id} {self.user}'

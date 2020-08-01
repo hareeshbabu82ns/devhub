@@ -29,6 +29,9 @@ import SingleChildContentPage from './screens/single_child_page'
 import OperationModal from './components/operation_modal'
 import SanscriptHome from './components/sanscript/SanscriptHome'
 
+import { Media } from './utils/media_context'
+
+import user from './state/user'
 import settings from './state/settings'
 import { baseTypes } from './state/base_types'
 
@@ -39,10 +42,10 @@ function AppRoutes() {
     <Router>
       <React.Fragment>
         <NavBar />
-        <Responsive as={React.Fragment} minWidth={Responsive.onlyMobile.maxWidth} key='wide-screens'>
+        <Media greaterThanOrEqual="computer" key='wide-screens'>
           <AppRouteSwitches />
-        </Responsive>
-        <Responsive as={React.Fragment} {...Responsive.onlyMobile} key='on-mobiles'>
+        </Media>
+        <Media lessThan="computer" key='on-mobiles'>
           <Sidebar.Pushable as={React.Fragment}>
             <Sidebar visible={appSideBarVisible}
               onHide={() => setSetting(oldSetting => ({ ...oldSetting, appSideBarVisible: false }))}
@@ -53,9 +56,9 @@ function AppRoutes() {
               <AppRouteSwitches />
             </Sidebar.Pusher>
           </Sidebar.Pushable>
-        </Responsive>
+        </Media>
       </React.Fragment>
-    </Router>
+    </Router >
   );
 }
 
@@ -106,18 +109,32 @@ query {
     id
     iso
     description
-  }  
+  }
+  me{
+    id
+    displayName
+    settings{
+      id
+      user
+      content
+    }
+  }
 }
 `;
+
 function App() {
   const setBaseTypes = useSetRecoilState(baseTypes)
+  const setSettings = useSetRecoilState(settings)
+  const setUser = useSetRecoilState(user)
 
   const { loading, error, data } = useQuery(FETCH_BASE_TYPES);
 
   if (loading) return <Segment loading> Loading Content... </Segment>;
   if (error) return <Segment>Error loading Base Data</Segment>;
 
-  setBaseTypes(() => ({ ...data }))
+  setBaseTypes(() => ({ entityTypes: data.entityTypes, languages: data.languages }))
+  setUser(() => ({ id: data.me.id, displayName: data.me.displayName }))
+  setSettings(() => ({ ...JSON.parse(data.me.settings.content) }))
 
   return (
     <React.Fragment>

@@ -92,7 +92,7 @@ text colors:
         color: #eee;
       }
 
-      .ui.inverted.form input[type=text] {
+      .ui.inverted.form input[type] {
         background-color: rgb(23, 43, 58);
         color: #eee;
       }
