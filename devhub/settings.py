@@ -61,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'devhub.authelia_middleware.AutheliaMiddleware',
 ]
 
 ROOT_URLCONF = 'devhub.urls'

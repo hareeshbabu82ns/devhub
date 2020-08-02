@@ -19,7 +19,7 @@ def mutation_update_user_settings(*_, user=None, content=None):
 
     try:
         settings = Settings.objects.filter(user=user)[0]
-    except:
+    except Exception:
         settings = Settings()
         # no settings, create defaults
         settings.user = user

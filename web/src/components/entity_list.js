@@ -71,7 +71,7 @@ const EntityList = ({ entityId, entityTypeName }) => {
   const title = entityType.name
 
   return (
-    <div fluid style={{ padding: '0 0.5em' }}>
+    <div style={{ padding: '0 0.5em' }}>
       <Menu attached='top' inverted={settingsData.inverted}>
         <Menu.Item>
           <Menu.Header content={title}></Menu.Header>

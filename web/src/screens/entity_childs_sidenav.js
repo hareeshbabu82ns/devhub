@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Menu, Segment, Dropdown } from 'semantic-ui-react'
 import { useRecoilValue } from 'recoil'
 import {
@@ -38,6 +38,15 @@ const EntityChildNavbar = ({ entityId }) => {
 
   const { loading, error, data, refetch } = useQuery(ENTITY_CHILD_TYPES,
     { variables: { id: Number(entityId), language: Number(settingsData.language) } });
+
+  // useEffect(() => {
+  //   if (data && data.entities && data.entities[0].childTypes.length == 1) {
+  //     // console.log('data changed')
+  //     const type = data.entities[0].childTypes[0]
+  //     history.push(`${match.url}/${type.id}_${type.name}`)
+  //   }
+  //   // data.entities[0].childTypes
+  // }, [data])
 
   if (loading) return <Segment loading placeholder> Loading Content... </Segment>;
   if (error) return <Segment placeholder>Error loading Child Types list</Segment>;

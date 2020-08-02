@@ -46,7 +46,7 @@ function AppRoutes() {
           <AppRouteSwitches />
         </Media>
         <Media lessThan="computer" key='on-mobiles'>
-          <Sidebar.Pushable as={React.Fragment}>
+          <Sidebar.Pushable>
             <Sidebar visible={appSideBarVisible}
               onHide={() => setSetting(oldSetting => ({ ...oldSetting, appSideBarVisible: false }))}
               vertical animation='overlay'>
