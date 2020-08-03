@@ -23,7 +23,9 @@ class AutheliaMiddleware:
         user = request.session.get(AUTHELIA_USER_KEY)
         if not user:
             logger.warn('fetching auth user')
-            self.user = self.fetch_authelia_user(request)
+            user = self.fetch_authelia_user(request)
+            if user:
+                self.user = user
             request.session[AUTHELIA_USER_KEY] = self.user
 
         response = self.get_response(request)
@@ -34,7 +36,7 @@ class AutheliaMiddleware:
         return response
 
     def fetch_authelia_user(self, request):
-        user = {'id': '', 'display_name': ''}
+        user = None
         if AUTH_API:
             r = requests.get(AUTH_API + '/api/state', cookies=request.COOKIES)
             if r.status_code == 200:

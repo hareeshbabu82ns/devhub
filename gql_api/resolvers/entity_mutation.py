@@ -3,6 +3,8 @@ from django.db import transaction
 
 from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning, Bookmarks
 
+from devhub.authelia_middleware import AUTHELIA_USER_KEY
+
 
 @transaction.atomic()
 def mutation_delete_entity(*_, id=None):
@@ -147,9 +149,11 @@ def mutation_delete_bookmark(*_, id=None):
 
 
 @transaction.atomic()
-def mutation_update_bookmark(*_, id=None, withData):
+def mutation_update_bookmark(_, info, id=None, withData=None):
     if not withData:
         return Exception('data parameter missing')
+
+    user = info.context.session.get(AUTHELIA_USER_KEY)
 
     # check for Parent Entity
     parentId = withData.get('entity')
@@ -164,9 +168,13 @@ def mutation_update_bookmark(*_, id=None, withData):
         entity = Bookmarks.objects.get(pk=id)
         if not entity:
             return Exception(f"Bookmark {id} does not exist")
+
+        if entity.user != user['id']:
+            return Exception(f"Bookmark {id} is not from User {user['id']}")
     else:
         # create new Entity
         entity = Bookmarks()
+        entity.user = user['id']
 
     entity.entity = parentEntity
     entity.url = withData.get('url', entity.url)

@@ -80,6 +80,7 @@ type Mutation{
 
 type Bookmark{
 	id: ID
+	user: String!
 	entity: Entity
 	url: String
 }

@@ -1,6 +1,8 @@
 
 from gql_api.models import EntityType, Entity, Language, EntityRelation, EntityText, EntityMeta, ContentLine, ContentExtras, ContentMeaning, Bookmarks
 
+from devhub.authelia_middleware import AUTHELIA_USER_KEY
+
 
 def resolve_entities(*_, by=None):
     if not by:
@@ -96,11 +98,14 @@ def resolve_content_meaning(parent, *_, language=None):
         parent=parent.id, language=language)
 
 
-def resolve_bookmarks(*_, by=None):
+def resolve_bookmarks(_, info, by=None):
     q = Bookmarks.objects
 
+    user = info.context.session.get(AUTHELIA_USER_KEY)
+    q = q.filter(user=user['id'])
+
     if not by:
-        return q.all()
+        return q
 
     id = by.get('id')
     if id:

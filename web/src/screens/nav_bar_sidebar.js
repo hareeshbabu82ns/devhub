@@ -25,6 +25,7 @@ const NavBar = () => {
         <Image size='mini' src={logo} style={{ marginRight: '1.0em' }} avatar />
         <span>Aadhyaathma Kendram</span>
       </Menu.Item>
+      <Menu.Item as={Link} to={'/'}>Home</Menu.Item>
       <Menu.Item as={Link} to={'/gods'}>Gods</Menu.Item>
       <Menu.Item as={Link} to={'/authors'}>Authors</Menu.Item>
       <Menu.Item as={Link} to={'/sanscript'}>Sanscript</Menu.Item>

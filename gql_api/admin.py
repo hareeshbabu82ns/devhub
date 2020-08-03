@@ -50,4 +50,4 @@ class ContentExtrasAdmin(admin.ModelAdmin):
 
 @admin.register(Bookmarks)
 class BookmarksAdmin(admin.ModelAdmin):
-    list_display = ['entity', 'url']
+    list_display = ['entity', 'url', 'user']
