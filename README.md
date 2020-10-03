@@ -69,6 +69,7 @@ $> chmod +777 /tmp
 # run image with /data volume mount
 $> docker run -d -p '23842:8000/tcp' --name='devhub' \
     -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" \
+    -e SECRET_KEY="----" \
     --net='proxynet' -v '/tmp':'/data':'rw,slave' \
     devhub
     

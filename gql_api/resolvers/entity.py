@@ -52,7 +52,15 @@ def resolve_children(parent, *_, by=None):
         # filters with AND condition goes into single filter()
         q = q.filter(**filterBy)
 
-    return [rel.to_entity for rel in q]
+    res = [rel.to_entity for rel in q]
+
+    res.sort(key=entity_sort_by_order)
+    return res
+
+
+def entity_sort_by_order(entity):
+    # print(entity.order, type(entity.order))
+    return entity.order
 
 
 def resolve_parents(parent, *_, by=None):
