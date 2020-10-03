@@ -2,6 +2,13 @@
 -----
 A Hub for Devotional content, with meanings and extra information which is presented in simple ui
 
+### Setting for Development
+```sh
+$> python3 -m venv venv
+$> source venv
+$> pip install -r requirements.txt
+```
+
 ### Running
 
 ### Authentication
