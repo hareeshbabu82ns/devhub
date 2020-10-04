@@ -28,6 +28,16 @@ query searchEntitiesByDefaultText($text:String!,$type:ID!){
   }
 }
 """
+
+mutation_update_entity = """
+mutation updateEntity($id:ID,$entityData: EntityContentInput!) {
+  updatedEntity:updateEntityContent(id:$id, withData: $entityData) {
+    id
+    defaultText
+  }
+}
+"""
+
 mutation_create_entity = """
 mutation createEntity($entityData: EntityContentInput!) {
   newEntity:updateEntityContent(withData: $entityData) {
@@ -150,7 +160,7 @@ class EntityContentLoader():
         item_lines = ''
         item_line_counter = 0
         lines_per_item = int(data.get('lines_per_item', 0))
-        lines_per_item_half = lines_per_item//2
+        lines_per_item_half = lines_per_item // 2
         while line:
             line = line.rstrip()
             if not line:
@@ -197,7 +207,7 @@ class EntityContentLoader():
                 # print('content created: ', newContent)
                 pass
 
-    def create_entity_content(self, index, parent, content_info, content_lines, meaning_lines,  skip_existence_check=False):
+    def create_entity_content(self, index, parent, content_info, content_lines, meaning_lines, skip_existence_check=False):
         entityData = {
             "text": f'{parent["defaultText"]}_{content_info["type"]}_{index}',
             "type": content_info['type'],
@@ -220,7 +230,7 @@ class EntityContentLoader():
         # check if language exist
         lang = self.get_language_by_iso(content_info['language'])
         if not lang:
-            print(f'language {contentKey} not found')
+            print('language not found')
             return None
 
         contentData = {
@@ -231,7 +241,8 @@ class EntityContentLoader():
 
         # "variables":{"withData":{"parentEntity":"34393","content":"IAST content","language":"5"}},
         print('creating entity content:', contentData)
-        newEntity = self.client.execute(
+        # newEntity =
+        self.client.execute(
             query=mutation_create_content, variables={'withData': contentData})['data']['updateContent']
         # return newEntity
 
@@ -239,7 +250,7 @@ class EntityContentLoader():
         lang = self.get_language_by_iso(content_info.get(
             'meaningLanguage', content_info.get('language', '')))
         if not lang:
-            print(f'language {contentKey} not found')
+            print('language not found')
             return None
 
         # create content meaning
@@ -255,7 +266,8 @@ class EntityContentLoader():
 
             # "variables":{"withData":{"parentEntity":"34393","content":"IAST content","language":"5"}},
             print('creating entity meaning:', contentData)
-            newEntity = self.client.execute(
+            # newEntity =
+            self.client.execute(
                 query=mutation_create_content_meaning, variables={'withData': contentData})['data']['updateContentMeaning']
             # return newEntity
 
@@ -271,9 +283,62 @@ class EntityContentLoader():
         except Exception:
             return None
 
+    def update_entity(self, entityData, parentEntity=None):
+        if not entityData['id']:
+            return None
+
+        # prepare text data
+        textDatas = entityData.get('textData', {})
+        textData = []
+        for textKey in textDatas.keys():
+            # check if language exist
+            lang = self.get_language_by_iso(textKey)
+            if not lang:
+                print(f'language {textKey} not found')
+                continue
+            text = {
+                'language': lang['id'],
+                'text': entityData['textData'][textKey]['text']
+            }
+            textData.append(text)
+
+        contents = entityData.get('content', {})
+        contentData = []
+        for contentKey in contents.keys():
+            # check if language exist
+            lang = self.get_language_by_iso(contentKey)
+            if not lang:
+                print(f'language {contentKey} not found')
+                continue
+            text = {
+                'language': lang['id'],
+                'content': entityData['content'][contentKey]
+            }
+            contentData.append(text)
+
+        entityDataUpd = {}
+
+        if parentEntity:
+            entityDataUpd['parentId'] = parentEntity['id']
+        if entityData.get('type', None):
+            entityDataUpd['type'] = parentEntity['type']
+        if entityData.get('text', None):
+            entityDataUpd['defaultText'] = parentEntity['text']
+        if entityData.get('order', None):
+            entityDataUpd['order'] = parentEntity['order']
+        if len(textData) > 0:
+            entityDataUpd['textData'] = textData
+        if len(contentData) > 0:
+            entityDataUpd['contentData'] = content_data
+
+        print('updating entity with:', entityDataUpd)
+        entity = self.client.execute(
+            query=mutation_update_entity, variables={'id': entityData['id'], 'entityData': entityDataUpd})['data']['updatedEntity']
+        return entity
+
     def create_entity(self, entityData, parentEntity=None, entityTypeName=None, skip_existence_check=False):
 
-        if skip_existence_check == False:
+        if not skip_existence_check:
             # check if the entity already exist
             entity = self.get_entity_by_name(
                 entityData['text'], entityData.get('type', entityTypeName))

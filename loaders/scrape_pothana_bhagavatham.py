@@ -38,10 +38,10 @@ def run(url=None, driver_location="/usr/local/bin/chromedriver",
             url = HOME_PAGE_URL + \
                 SKANDA_URL_TEMPLATE.replace('${skanda}', skanda)
             # GHATTAS[kanda_index]
-            for ghatta in range(0, GHATTAS[kanda_index]-1):
+            for ghatta in range(0, GHATTAS[kanda_index] - 1):
                 done_sarga = True
                 done_sarga = scrape_sarga(driver=driver, base_url=url, out_dir=out_dir,
-                                          kanda_index=kanda_index, sarga_index=ghatta+1)
+                                          kanda_index=kanda_index, sarga_index=ghatta + 1)
                 if not done_sarga:
                     break
             kanda_index += 1
@@ -69,7 +69,7 @@ def scrape_sarga(driver=None, base_url=None, out_dir=None, kanda_index=None, sar
 
     soup = BeautifulSoup(driver.page_source, features="html.parser").body
 
-    page_title = f'skandam_{kanda_index}_ghattam_{sarga_index}'
+    # page_title = f'skandam_{kanda_index}_ghattam_{sarga_index}'
 
     outData = {}
 
@@ -103,7 +103,7 @@ def scrape_sarga(driver=None, base_url=None, out_dir=None, kanda_index=None, sar
                 sloka = verce_locator.next_sibling.p
             else:
                 sloka = verce_locator.find_next_sibling('p', class_='SanSloka')
-        except:
+        except Exception:
             sloka = verce_locator
 
         if sloka and sloka.audio:
@@ -119,7 +119,7 @@ def scrape_sarga(driver=None, base_url=None, out_dir=None, kanda_index=None, sar
                     'div', class_='mejs-audio')
                 if audioCtrl:
                     slokam['audio'] = audioCtrl.find('audio')['src']
-        except:
+        except Exception:
             slokam['audio'] = ''
 
         # if not sloka:
@@ -198,7 +198,7 @@ if __name__ == "__main__":
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ho:f", [
-                                   "out-dir=",  "foreground"])
+                                   "out-dir=", "foreground"])
     except getopt.GetoptError:
         print('scrape_valmiki_ramayan.net.py -o <output-dir> ')
         sys.exit(2)

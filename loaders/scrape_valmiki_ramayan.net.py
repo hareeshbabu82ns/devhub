@@ -30,21 +30,21 @@ def run(url=None, driver_location="/usr/local/bin/chromedriver",
         driver_location if driver_location else "/usr/local/bin/chromedriver", options=options)
 
     try:
-        # kanda_index = 0
-        # for kanda in KANDAS:
-        #     url = HOME_PAGE_URL + KANDA_URL_TEMPLATE.replace('${kanda}', kanda)
-        #     for sarga in range(1, 150):
-        #         done_sarga = True
-        #         done_sarga = scrape_sarga(driver=driver, base_url=url, out_dir=out_dir,
-        #                                   kanda_index=kanda_index, sarga_index=sarga)
-        #         if not done_sarga:
-        #             break
-        #     kanda_index += 1
+        kanda_index = 0
+        for kanda in KANDAS:
+            url = HOME_PAGE_URL + KANDA_URL_TEMPLATE.replace('${kanda}', kanda)
+            for sarga in range(1, 150):
+                done_sarga = True
+                done_sarga = scrape_sarga(driver=driver, base_url=url, out_dir=out_dir,
+                                          kanda_index=kanda_index, sarga_index=sarga)
+                if not done_sarga:
+                    break
+            kanda_index += 1
 
         # testing individual sarga
-        url = HOME_PAGE_URL + KANDA_URL_TEMPLATE.replace('${kanda}', KANDAS[0])
-        done_sarga = scrape_sarga(driver=driver, base_url=url, out_dir=out_dir,
-                                  kanda_index=0, sarga_index=18)
+        # url = HOME_PAGE_URL + KANDA_URL_TEMPLATE.replace('${kanda}', KANDAS[0])
+        # done_sarga = scrape_sarga(driver=driver, base_url=url, out_dir=out_dir,
+        #                           kanda_index=0, sarga_index=18)
     finally:
         driver.quit()
 
@@ -100,7 +100,7 @@ def scrape_sarga(driver=None, base_url=None, out_dir=None, kanda_index=None, sar
                 sloka = verce_locator.next_sibling.p
             else:
                 sloka = verce_locator.find_next_sibling('p', class_='SanSloka')
-        except:
+        except Exception:
             sloka = verce_locator.find_next_sibling('p', class_='SanSloka')
 
         if sloka and sloka.audio:
@@ -119,7 +119,7 @@ def scrape_sarga(driver=None, base_url=None, out_dir=None, kanda_index=None, sar
                     'div', class_='mejs-audio')
                 if audioCtrl:
                     slokam['audio'] = audioCtrl.find('audio')['src']
-        except:
+        except Exception:
             slokam['audio'] = ''
 
         if not sloka:
@@ -179,7 +179,7 @@ if __name__ == "__main__":
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ho:f", [
-                                   "out-dir=",  "foreground"])
+                                   "out-dir=", "foreground"])
     except getopt.GetoptError:
         print('scrape_valmiki_ramayan.net.py -o <output-dir> ')
         sys.exit(2)

@@ -5,3 +5,5 @@ web/src
 web/public
 db.sqlite3
 devhub.tar
+loaders/venv
+loaders/data

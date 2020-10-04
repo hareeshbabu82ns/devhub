@@ -48,33 +48,33 @@ god_data = {
     "text": "Raama",
     "type": "God",
     "textData": {
-            "TEL": {
-                "text": "రామ"
-            },
+        "TEL": {
+            "text": "రామ"
+        },
         "SAN": {
-                "text": "राम"
-                },
+            "text": "राम"
+        },
         "IAST": {
-                "text": "rāma"
-                }
+            "text": "rāma"
+        }
     }
 }
 epic_data = {
     "text": "Pothana Bhagavatham",
     "type": "Puranam",
     "textData": {
-            "TEL": {
-                "text": "పోతన భాగవతం"
-            },
+        "TEL": {
+            "text": "పోతన భాగవతం"
+        },
         "SAN": {
-                "text": "पोतन भागवतं"
-                },
+            "text": "पोतन भागवतं"
+        },
         "IAST": {
-                "text": "potana bhāgavataṃ"
-                },
+            "text": "potana bhāgavataṃ"
+        },
         "SLP1": {
-                "text": "potana BAgavataM"
-                }
+            "text": "potana BAgavataM"
+        }
     }
 }
 
@@ -118,7 +118,7 @@ def run(out_dir='./data/pothana_bhagavatham'):
             }
 
             json_file = out_dir + '/' + SKANDAM_DELIMITER + \
-                SKANDAS[index] + GHATTAM_DELIMITER+str(sarga_index)+'.json'
+                SKANDAS[index] + GHATTAM_DELIMITER + str(sarga_index) + '.json'
             print(f'Parsing Sarga File: {json_file}')
             try:
                 with open(json_file, 'r') as f:
@@ -146,7 +146,7 @@ def run(out_dir='./data/pothana_bhagavatham'):
                         print('Slokam Created: ', slokam_entity['id'],
                               slokam_entity['defaultText'])
                         break  # for testing only
-            except:
+            except Exception:
                 pass  # try next file
 
             break  # for testing only

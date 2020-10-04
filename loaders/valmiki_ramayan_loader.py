@@ -6,8 +6,9 @@ languageSlokam = 'SAN'
 languageMeaning = 'ENG'
 
 KANDAS = ['baala', 'ayodhya', 'aranya', 'kish', 'sundara', 'yuddha']
-KANDAS_DATA = [{'code': 'baala', 'sargas': 77, 'title': 'Bala Kanda', 'descr': 'The Youthful Majesties'},  {'code': 'ayodhya', 'sargas': 119, 'title': 'Ayodhya Kanda', 'descr': 'Book Of Ayodhya'},  {'code': 'aranya', 'sargas': 75, 'title': 'Aranya Kanda', 'descr': 'The Forest Trek'},  {
-    'code': 'kish', 'sargas': 67, 'title': 'Kishkindha Kanda', 'descr': 'The Empire of Holy Monkeys'},  {'code': 'sundara', 'sargas': 68, 'title': 'Sundara Kanda', 'descr': 'Book Of Beauty'},  {'code': 'yuddha', 'sargas': 128, 'title': 'Yuddha Kanda', 'descr': 'Book Of War'}]
+KANDAS_DATA = [{'code': 'baala', 'sargas': 77, 'title': 'Bala Kanda', 'descr': 'The Youthful Majesties'},
+               {'code': 'ayodhya', 'sargas': 119, 'title': 'Ayodhya Kanda', 'descr': 'Book Of Ayodhya'}, {'code': 'aranya', 'sargas': 75, 'title': 'Aranya Kanda', 'descr': 'The Forest Trek'}, {
+    'code': 'kish', 'sargas': 67, 'title': 'Kishkindha Kanda', 'descr': 'The Empire of Holy Monkeys'}, {'code': 'sundara', 'sargas': 68, 'title': 'Sundara Kanda', 'descr': 'Book Of Beauty'}, {'code': 'yuddha', 'sargas': 128, 'title': 'Yuddha Kanda', 'descr': 'Book Of War'}]
 SARGA_DELIMITER = '_sarga_'
 
 # create god
@@ -15,40 +16,40 @@ god_data = {
     "text": "Raama",
     "type": "God",
     "textData": {
-            "TEL": {
-                "text": "రామ"
-            },
+        "TEL": {
+            "text": "రామ"
+        },
         "SAN": {
-                "text": "राम"
-                },
+            "text": "राम"
+        },
         "IAST": {
-                "text": "rāma"
-                }
+            "text": "rāma"
+        }
     }
 }
 epic_data = {
     "text": "Ramayanam",
     "type": "Puranam",
     "textData": {
-            "TEL": {
-                "text": "రామాయణమ్"
-            },
+        "TEL": {
+            "text": "రామాయణమ్"
+        },
         "SAN": {
-                "text": "रामायणम्"
-                },
+            "text": "रामायणम्"
+        },
         "IAST": {
-                "text": "rāmāyaṇam"
-                },
+            "text": "rāmāyaṇam"
+        },
         "SLP1": {
-                "text": "rAmAyaRam"
-                }
+            "text": "rAmAyaRam"
+        }
     }
 }
 
 
 def run(out_dir='./data/valmiki_ramayan'):
-    # url = "http://localhost:8000/graphql/"
-    url = "http://192.168.0.31:23842/graphql/"  # only for loading to Prod
+    url = "http://localhost:8000/graphql/"
+    # url = "http://192.168.0.31:23842/graphql/"  # only for loading to Prod
 
     headers = {}
     # only for loading to Prod
@@ -74,9 +75,18 @@ def run(out_dir='./data/valmiki_ramayan'):
         }
         kanda_entity = loader.create_entity(
             entityData=kanda_data, parentEntity=puranam_entity)
-        print('Kanda Created: ', kanda_entity)
+        if kanda_entity['id'] > puranam_entity['id']:
+            print('Kanda Created: ', kanda_entity)
+        else:  # kanda already exists
+            print(
+                f'Kanda {kanda_entity["id"]} Updated with parent {puranam_entity["id"]}')
+            kanda_rel = {
+                'id': kanda_entity['id']
+            }
+            kanda_entity = loader.update_entity(
+                entityData=kanda_rel, parentEntity=puranam_entity)
 
-        for sarga_index in range(1, kanda.get('sargas', 0)+1):
+        for sarga_index in range(1, kanda.get('sargas', 0) + 1):
             # for sarga_index in range(kanda.get('sargas', 0), kanda.get('sargas', 0)+1):
             sarga_data = {
                 "text": kanda.get('title') + SARGA_DELIMITER + str(sarga_index),
@@ -84,7 +94,7 @@ def run(out_dir='./data/valmiki_ramayan'):
             }
 
             json_file = out_dir + '/' + kanda.get(
-                'code')+SARGA_DELIMITER+str(sarga_index)+'.json'
+                'code') + SARGA_DELIMITER + str(sarga_index) + '.json'
             print(f'Parsing Sarga File: {json_file}')
             with open(json_file, 'r') as f:
                 jsonData = json.load(f)

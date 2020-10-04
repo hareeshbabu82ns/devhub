@@ -9,17 +9,25 @@ from devhub.authelia_middleware import AUTHELIA_USER_KEY
 @transaction.atomic()
 def mutation_delete_entity(*_, id=None):
     entity = Entity.objects.get(pk=id)
-    if entity.type.name in ['Stotram']:
-        # delete all childs
-        q = EntityRelation.objects.select_related('to_entity').filter(
-            from_entity=entity.id, from_type=entity.type.id)
-        [rel.to_entity.delete() for rel in q]
+    if entity.type.name in ['Stotram', 'Puranam']:
+        delete_child_entities(entity)
 
     res = entity.delete()
     if res and res[0] > 0:
         return True
     else:
         return False
+
+
+def delete_child_entities(entity):
+    q = EntityRelation.objects.select_related('to_entity').filter(
+        from_entity=entity.id, from_type=entity.type.id)
+    entity_rel = [rel.to_entity for rel in q]
+    # print('deleting child entities:', entity_rel)
+    if len(entity_rel):
+        for child_entity in entity_rel:
+            delete_child_entities(child_entity)
+            child_entity.delete()
 
 
 @transaction.atomic()

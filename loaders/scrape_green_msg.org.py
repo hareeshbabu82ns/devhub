@@ -60,7 +60,7 @@ def run(url=None, driver_location="/usr/local/bin/chromedriver",
         # go to the page
         driver.get(url)
 
-        soup = BeautifulSoup(driver.page_source, features="html.parser")
+        BeautifulSoup(driver.page_source, features="html.parser")
 
         print('scraping done')
         # print(postContents)
