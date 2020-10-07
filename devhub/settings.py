@@ -22,6 +22,8 @@ print(f'app running from "{BASE_DIR}" dir')
 print(f'app data store "{DATA_DIR}" dir')
 
 AUTH_API = os.environ.get('AUTH_API', '')
+SANSKRIT_PARSER_API = os.environ.get(
+    'SANSKRIT_PARSER_API', 'http://localhost:9000/sanskrit_parser/v1')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/

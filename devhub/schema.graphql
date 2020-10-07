@@ -4,26 +4,40 @@ scalar DateTime
 
 type Query{
 	me: User!
-
 	entityTypes: [EntityType!]!
-
 	languages: [Language!]!
-
 	entities(
 		by: EntitiesBy!
 	): [Entity!]
-
 	contentLines(
 		by: ContentLinesBy!
 	): [ContentLine!]
-
 	contentMeanings(
 		by: ContentMeaningsBy!
 	): [ContentMeaning!]
-    
 	bookmarks(
 		by: BookmarkByInput
 	): [Bookmark!]
+	dictionaryKeySearch(
+		key: String!
+		inDictionary: Dictionaries
+		maxHits: Int = 10
+		searchContent: Boolean = false
+	): [String!]!
+	dictionaryMeanings(
+		keys: [String!]! = []
+		inDictionary: Dictionaries
+		maxHits: Int = 10
+	): [DictionaryItem!]!
+	sanskritSplits(
+		content: String!
+		maxPaths: Int = 10
+		asDevanagari: Boolean = false
+	): [[String!]]
+	sanskritSandhi(
+		splits: [String!]! = []
+		asDevanagari: Boolean = false
+	): [String!]
 }
 
 type Mutation{
@@ -31,15 +45,12 @@ type Mutation{
 		id: ID
 		withData: BookmarkUpdateInput!
 	): Bookmark!
-
 	deleteBookmark(
 		id: ID!
 	): Boolean
-
 	deleteEntity(
 		id: ID!
 	): Boolean
-
 	updateEntityContent(
 		"""
 		id is optional, if creating entity
@@ -47,7 +58,6 @@ type Mutation{
 		id: ID
 		withData: EntityContentInput!
 	): Entity!
-
 	updateContent(
 		"""
 		id is optional, if creating content
@@ -55,11 +65,9 @@ type Mutation{
 		id: ID
 		withData: ContentLineInput
 	): ContentLine!
-
 	deleteContent(
 		id: ID!
 	): Boolean
-
 	updateContentMeaning(
 		"""
 		id is optional, if creating meaining
@@ -67,11 +75,9 @@ type Mutation{
 		id: ID
 		withData: ContentMeaningInput
 	): ContentMeaning!
-
 	deleteContentMeaning(
 		id: ID!
 	): Boolean
-
 	updateSettings(
 		user: ID!
 		content: String!
@@ -107,11 +113,11 @@ input EntityContentInput{
 	type: ID
 	order: Int
 	tags: String
-	textData: [EntityTextDataInput!]
-	metaData: [EntityMetaDataInput!]
-	content: [ContentLineInput!]
-	meaning: [ContentMeaningInput!]
-	extras: [ContentExtrasInput!]
+	textData: [EntityTextDataInput!] = []
+	metaData: [EntityMetaDataInput!] = []
+	content: [ContentLineInput!] = []
+	meaning: [ContentMeaningInput!] = []
+	extras: [ContentExtrasInput!] = []
 }
 
 input EntityMetaDataInput{
@@ -312,6 +318,27 @@ type Settings{
 	id: ID!
 	user: ID!
 	content: String
+}
+
+"""
+Dictionary Tools
+"""
+type DictionaryItem{
+	id: ID!
+	fromDictionary: Dictionaries!
+	content: String!
+}
+
+type DictionaryKey{
+	id: ID!
+}
+
+enum Dictionaries{
+	ALL
+	SAN_SAN_VACASPATYAM
+	SAN_SAN_SABDA_KALPADRUMA
+	SAN_ENG_MONIER_WILLIAMS_1899
+	ENG_SAN_MONIER_WILLIAMS
 }
 schema{
 	query: Query,

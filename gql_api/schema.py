@@ -1,9 +1,10 @@
-from ariadne import ObjectType
+import enum
+from ariadne import ObjectType, EnumType
 
 from devhub.gql_root_types import query, mutation
 from .models import EntityType, Language, Settings
 
-from gql_api.resolvers import entity as entity_resolvers, content as content_resolvers, entity_mutation as entity_mutations, content_mutations, others as other_resolvers, others_mutations
+from gql_api.resolvers import entity as entity_resolvers, content as content_resolvers, entity_mutation as entity_mutations, content_mutations, others as other_resolvers, others_mutations, dictionaries as dict_resolvers, sanskrit_parser as sparser_resolvers
 
 types = []
 
@@ -114,3 +115,24 @@ userType.set_field(
 query.set_field("me", other_resolvers.resolve_me)
 
 types.append(userType)
+
+# Sanskrit Parser Tools
+query.set_field("sanskritSplits", sparser_resolvers.resolve_splits)
+query.set_field("sanskritSandhi", sparser_resolvers.resolve_sandhi)
+
+# Dictionaries
+dictionariesEnumType = EnumType("Dictionaries",
+                                {'ALL': 'all',
+                                 'SAN_SAN_VACASPATYAM': 'vcp',
+                                 'SAN_SAN_SABDA_KALPADRUMA': 'skd',
+                                 'SAN_ENG_MONIER_WILLIAMS_1899': 'mw',
+                                 'ENG_SAN_MONIER_WILLIAMS': 'mwe'})
+types.append(dictionariesEnumType)
+
+
+dictionaryType = ObjectType('DictionaryItem')
+
+query.set_field("dictionaryKeySearch", dict_resolvers.resolve_dict_key_search)
+query.set_field("dictionaryMeanings", dict_resolvers.resolve_dict_meanings)
+
+types.append(dictionaryType)

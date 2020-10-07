@@ -9,7 +9,7 @@ from devhub.authelia_middleware import AUTHELIA_USER_KEY
 @transaction.atomic()
 def mutation_delete_entity(*_, id=None):
     entity = Entity.objects.get(pk=id)
-    if entity.type.name in ['Stotram', 'Puranam']:
+    if entity.type.name in ['Stotram', 'Puranam', 'Kaandam', 'Sarga']:
         delete_child_entities(entity)
 
     res = entity.delete()

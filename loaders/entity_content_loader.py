@@ -329,7 +329,7 @@ class EntityContentLoader():
         if len(textData) > 0:
             entityDataUpd['textData'] = textData
         if len(contentData) > 0:
-            entityDataUpd['contentData'] = content_data
+            entityDataUpd['contentData'] = contentData
 
         print('updating entity with:', entityDataUpd)
         entity = self.client.execute(
