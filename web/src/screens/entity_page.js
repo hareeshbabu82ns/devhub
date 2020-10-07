@@ -7,7 +7,7 @@ EntityPage (TODOs)
   ContentExtras for customizing lines or extra information
 */
 import React from 'react'
-import { Grid, Responsive } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import {
   Switch,
   Route,

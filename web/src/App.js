@@ -12,7 +12,6 @@ import { ToastContainer } from 'react-toastify'
 import {
   Sidebar,
   Segment,
-  Responsive,
 } from 'semantic-ui-react'
 
 import { C_ENTITY_TYPE_STOTRAM, C_ENTITY_TYPE_DANDAKAM, C_ENTITY_TYPE_SARGA } from './utils/constants'

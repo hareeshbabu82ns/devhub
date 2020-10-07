@@ -107,9 +107,9 @@ const SaTranslations = () => {
             {Object.keys(schemesMap).map((segment, index) => (
               <React.Fragment key={index}>
                 <Header as='h4' color={'blue'}>{segment}</Header>
-                <Grid container columns='10' doubling>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1em', }}>
                   {_.isArray(schemesMap[segment]) && schemesMap[segment].map((element, index) =>
-                    (<Grid.Column key={index}>
+                    (
                       <Button
                         basic compact
                         inverted={settingsData.inverted}
@@ -118,8 +118,8 @@ const SaTranslations = () => {
                         labelPosition='left'
                         onClick={() => { setValue('from', getValues().from + element[0]) }}
                       />
-                    </Grid.Column>))}
-                </Grid>
+                    ))}
+                </div>
               </React.Fragment>
             ))}
           </Segment>
