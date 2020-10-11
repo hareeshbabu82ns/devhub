@@ -22,11 +22,13 @@ type Query{
 		key: String!
 		inDictionary: Dictionaries
 		maxHits: Int = 10
+		asDevanagari: Boolean = false
 		searchContent: Boolean = false
-	): [String!]!
+	): [DictionaryKey!]!
 	dictionaryMeanings(
 		keys: [String!]! = []
 		inDictionary: Dictionaries
+		asDevanagari: Boolean = false
 		maxHits: Int = 10
 	): [DictionaryItem!]!
 	sanskritSplits(
@@ -325,12 +327,14 @@ Dictionary Tools
 """
 type DictionaryItem{
 	id: ID!
+	key: String!
 	fromDictionary: Dictionaries!
 	content: String!
 }
 
 type DictionaryKey{
 	id: ID!
+	devanagari: String
 }
 
 enum Dictionaries{

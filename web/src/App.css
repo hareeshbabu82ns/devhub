@@ -157,6 +157,12 @@ text colors:
         color: #aaa;
       } 
 
+      .ui.search>.results {
+        overflow: scroll;
+        max-height: 20rem;
+        padding-bottom: 2rem;
+      }
+
       /* p {
         align-content: center;
         background-color: #495285;

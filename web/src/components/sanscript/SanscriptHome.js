@@ -11,6 +11,8 @@ import { Grid } from 'semantic-ui-react';
 
 import SanscriptSideNav from './SanscriptSideNav'
 import SaTranslations from './SaTranslations'
+import SaDictionaries from './SaDictionaries'
+import SaParser from './SaParser'
 import { Media } from '../../utils/media_context'
 
 const SanscriptHome = () => {
@@ -27,6 +29,12 @@ const SanscriptHome = () => {
             <Switch>
               <Route path={`${match.url}/translations`}>
                 <SaTranslations />
+              </Route>
+              <Route path={`${match.url}/dictionaries`}>
+                <SaDictionaries />
+              </Route>
+              <Route path={`${match.url}/parser`}>
+                <SaParser />
               </Route>
               <Route path="/">
                 <div>
@@ -47,6 +55,12 @@ const SanscriptHome = () => {
                 </Route>
                 <Route path={`${match.url}/translations`}>
                   <SaTranslations />
+                </Route>
+                <Route path={`${match.url}/dictionaries`}>
+                  <SaDictionaries />
+                </Route>
+                <Route path={`${match.url}/parser`}>
+                  <SaParser />
                 </Route>
               </Switch>
             }

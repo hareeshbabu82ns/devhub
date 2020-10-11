@@ -24,7 +24,19 @@ const SanscriptSideNav = () => {
           to={`${match.url}/translations`}
         >
           Translations
-    </Menu.Item>
+        </Menu.Item>
+        <Menu.Item
+          as={Link} name='parser'
+          to={`${match.url}/parser`}
+        >
+          Sanskrit Parser
+        </Menu.Item>
+        <Menu.Item
+          as={Link} name='dict'
+          to={`${match.url}/dictionaries`}
+        >
+          Dictionaries
+        </Menu.Item>
       </Menu>
     </React.Fragment>
   )
