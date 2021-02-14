@@ -26,6 +26,18 @@ RUN flake8 --ignore=E501,F401 .
 COPY ./requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
+###########
+# UI BUILDER #
+###########
+
+FROM node:14-alpine as build
+# RUN mkdir /home/app/web
+WORKDIR /usr/src/app
+# COPY package.json /app
+# RUN npm install yarn -g
+RUN yarn install
+# COPY . /app
+RUN yarn build
 
 #########
 # FINAL #
