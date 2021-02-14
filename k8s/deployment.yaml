@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devhub
+  namespace: default
+  labels:
+    app: devhub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devhub
+  template:
+    metadata:
+      labels:
+        app: devhub
+    spec:
+      containers:
+        - name: devhub
+          image: docker.{{server_domain}}/home/devhub:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PY_ENV
+              value: prod
+            - name: SANSKRIT_PARSER_API
+              value: https://sanskrit-parser-api/sanskrit_parser/v1
+            - name: DJANGO_ALLOWED_HOSTS
+              value: '*'
+            - name: SECRET_KEY
+              value: "{{devhub_secret_key}}"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devhub
+  namespace: default
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  selector:
+    app: devhub
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devhub-ingress
+  annotations:
+  namespace: default
+spec:
+  rules:
+  - host: devhub.{{cluster_domain}}
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: devhub
+            port: 
+              number: 80

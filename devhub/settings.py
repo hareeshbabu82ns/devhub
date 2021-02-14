@@ -23,7 +23,7 @@ print(f'app data store "{DATA_DIR}" dir')
 
 AUTH_API = os.environ.get('AUTH_API', '')
 SANSKRIT_PARSER_API = os.environ.get(
-    'SANSKRIT_PARSER_API', 'http://localhost:9000/sanskrit_parser/v1')
+    'SANSKRIT_PARSER_API', 'http://localhost:9000/sanskrit_parser/v1')  # 192.168.0.31:28374
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,6 +66,12 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'devhub.authelia_middleware.AutheliaMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = ENV == 'local'
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',
+#     'http://localhost:8000',
+# )
 
 ROOT_URLCONF = 'devhub.urls'
 
