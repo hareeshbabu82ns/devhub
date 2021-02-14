@@ -1,8 +1,6 @@
 **/node_modules
 venv
 **/__pycache__
-web/src
-web/public
 db.sqlite3
 devhub.tar
 loaders/venv
