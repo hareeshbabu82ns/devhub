@@ -33,10 +33,10 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 FROM node:14-alpine as build
 # RUN mkdir /home/app/web
 WORKDIR /usr/src/app/web
-# COPY package.json /app
+COPY ./web/package.json /usr/src/app/web
 # RUN npm install yarn -g
 RUN yarn install
-# COPY . /app
+COPY ./web /usr/src/app/web
 RUN yarn build
 
 #########
