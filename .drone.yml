@@ -45,31 +45,56 @@ steps:
 #     registry: registry.unraid:33294
 #     insecure: true
 
-- name: devhub - deploy
-  image: sinlead/drone-kubectl
-  settings:
-    kubernetes_server:
-      from_secret: k8s_server
-    kubernetes_cert:
-      from_secret: k8s_cert
-    kubernetes_token:
-      from_secret: k8s_token
-  environment:
-    CLUSTER_DOMAIN:
-      from_secret: cluster_domain
-    SERVER_DOMAIN:
-      from_secret: server_domain
-    DEVHUB_SECRET_KEY:
-      from_secret: devhub_secret_key
-  commands:
-    - sed -i "s/{{cluster_domain}}/$CLUSTER_DOMAIN/g"  ./k8s/deployment.yaml
-    - sed -i "s/{{server_domain}}/$SERVER_DOMAIN/g"  ./k8s/deployment.yaml
-    - sed -i "s/{{devhub_secret_key}}/$DEVHUB_SECRET_KEY/g"  ./k8s/deployment.yaml
-    - kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
-    - kubectl rollout restart deployment/devhub --insecure-skip-tls-verify
-  # when:
-  #   branch:
-  #   - docker
+- name: devhub - deploy - docker
+  image: docker:latest
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    environment:
+      DUSER:
+        from_secret: docker_user
+      DPASS:
+        from_secret: docker_pass
+      SERVER_DOMAIN:
+        from_secret: server_domain
+      SECRET_KEY:
+        from_secret: secret_key
+    commands:
+      - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
+      - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhub:latest -f Dockerfile .
+      - docker run -d -p '23842:8000/tcp' --name='devhub' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhub:latest
+
+# docker run -d -p '23842:8000/tcp' --name='devhub' \
+#     -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" \
+#     -e SECRET_KEY="----" \
+#     --net='proxynet' -v '/tmp':'/data':'rw,slave' \
+#     devhub
+
+# - name: devhub - deploy
+#   image: sinlead/drone-kubectl
+#   settings:
+#     kubernetes_server:
+#       from_secret: k8s_server
+#     kubernetes_cert:
+#       from_secret: k8s_cert
+#     kubernetes_token:
+#       from_secret: k8s_token
+#   environment:
+#     CLUSTER_DOMAIN:
+#       from_secret: cluster_domain
+#     SERVER_DOMAIN:
+#       from_secret: server_domain
+#     DEVHUB_SECRET_KEY:
+#       from_secret: devhub_secret_key
+#   commands:
+#     - sed -i "s/{{cluster_domain}}/$CLUSTER_DOMAIN/g"  ./k8s/deployment.yaml
+#     - sed -i "s/{{server_domain}}/$SERVER_DOMAIN/g"  ./k8s/deployment.yaml
+#     - sed -i "s/{{devhub_secret_key}}/$DEVHUB_SECRET_KEY/g"  ./k8s/deployment.yaml
+#     - kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
+#     - kubectl rollout restart deployment/devhub --insecure-skip-tls-verify
+#   # when:
+#   #   branch:
+#   #   - docker
 
 # Finally common tasks for all steps
 - name: notify

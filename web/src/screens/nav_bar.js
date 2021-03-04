@@ -72,7 +72,7 @@ const NavBar = () => {
         <Menu fixed='top' inverted={inverted} >
           <Container fluid>
             <Menu.Item header onClick={() => { toggleSideBar() }}>
-              <Image size='mini' src={logo} style={{ marginRight: '1.0em' }} /> Aadhyaathma Kendram
+              <Image size='mini' src={logo} style={{ marginRight: '1.0em' }} /> Aadhyaathma Kendram v1
           </Menu.Item>
             <Menu.Menu position='right'>
               {LanguageDDLB}
