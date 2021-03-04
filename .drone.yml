@@ -28,11 +28,30 @@ steps:
       from_secret: server_domain
   commands:
     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-    - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhub:latest -f Dockerfile .
-    - docker push docker.$SERVER_DOMAIN/home/devhub:latest
+    # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhub:latest -f Dockerfile .
+    - docker build -t docker.$SERVER_DOMAIN/home/devhub:latest -f Dockerfile . 
+    # - docker push docker.$SERVER_DOMAIN/home/devhub:latest
   # when:
   #   branch:
   #   - docker
+
+# Deploy app using ansible
+- name: apply ansible playbook
+  image: plugins/ansible:1
+  environment:
+    ansible_vault_pass:
+      from_secret: ansible_vault_pass
+  settings:
+    playbook: .ansible/playbook.yml
+    # galaxy: .ansible/requirements.yml
+    inventory: .ansible/inventory
+    private_key:
+      from_secret: unraid_ssh_key
+    vault_password:
+      from_secret: ansible_vault_pass
+  # when:
+  #   branch:
+  #   - master
 
 ## Following works when publishing from root of the repository
 # - name: build plugins/docker image
@@ -45,30 +64,24 @@ steps:
 #     registry: registry.unraid:33294
 #     insecure: true
 
-- name: devhub - deploy - docker
-  image: docker:latest
-  volumes:
-    - name: docker_sock
-      path: /var/run/docker.sock
-  environment:
-    DUSER:
-      from_secret: docker_user
-    DPASS:
-      from_secret: docker_pass
-    SERVER_DOMAIN:
-      from_secret: server_domain
-    SECRET_KEY:
-      from_secret: secret_key
-  commands:
-    - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-    - docker rm devhub
-    - docker run -d -p '23842:8000/tcp' --name='devhub' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhub:latest
-
-# docker run -d -p '23842:8000/tcp' --name='devhub' \
-#     -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" \
-#     -e SECRET_KEY="----" \
-#     --net='proxynet' -v '/tmp':'/data':'rw,slave' \
-#     devhub
+# - name: devhub - deploy - docker
+#   image: docker:latest
+#   volumes:
+#     - name: docker_sock
+#       path: /var/run/docker.sock
+#   environment:
+#     DUSER:
+#       from_secret: docker_user
+#     DPASS:
+#       from_secret: docker_pass
+#     SERVER_DOMAIN:
+#       from_secret: server_domain
+#     SECRET_KEY:
+#       from_secret: secret_key
+#   commands:
+#     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
+#     - docker rm devhub
+#     - docker run -d -p '23842:8000/tcp' --name='devhub' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhub:latest
 
 # - name: devhub - deploy
 #   image: sinlead/drone-kubectl
@@ -103,7 +116,8 @@ steps:
     channel: pipelines
     webhook:
       from_secret: pipeline_notifier
-    icon_url: https://unsplash.it/48/48/?random
+    icon_emoji: ":rocket:"
+    # icon_url: https://unsplash.it/48/48/?random
     # image_url: https://unsplash.it/256/256/?random
     template: >
       {{#if build.pull }}
@@ -111,9 +125,15 @@ steps:
       {{else}}
         *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
       {{/if}}
+
+      Repo: {{ repo.name }}
+
       Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
+      
       Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
+
       Author: {{ build.author }}
+
       <{{ build.link }}|Visit build page ↗>
   when:
     status: [ success, failure ]

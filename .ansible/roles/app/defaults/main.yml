@@ -1,0 +1,9 @@
+port_http: 23842
+app_port: 8000
+app_name: "devhub"
+server_sub_domain: "{{app_name}}"
+app_image_version: "latest"
+app_data_dir: "{{appdata_dir}}/devhub"
+app_templates_dir: "{{ app_data_dir }}/tmp_templates"
+secret_key: "{{vault_secret_key}}"
+app_image_name: "{{docker_domain}}.{{server_domain}}/home/devhub"

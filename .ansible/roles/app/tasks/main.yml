@@ -1,0 +1,48 @@
+---
+- name: create data folders
+  file:
+    path: "{{item}}"
+    state: directory
+  loop:
+  - "{{app_data_dir}}"
+
+- name: create templates folder
+  file:
+    path: "{{item}}"
+    state: directory
+  loop:
+  - "{{app_templates_dir}}"
+
+- name: copy templates
+  template:
+    src: "{{ item }}"
+    dest: "{{ app_templates_dir }}/{{ item | basename }}"
+  with_fileglob:
+    - ../templates/*
+
+- name: shutdown previous instance (if available)
+  command: docker-compose -f {{ app_templates_dir }}/docker-compose-prev.yaml down
+  ignore_errors: yes
+- name: shutdown previous instance (if available)
+  command: docker-compose -f {{ app_templates_dir }}/docker-compose.yaml down
+  ignore_errors: yes
+
+- name: start
+  command: docker-compose -f {{ app_templates_dir }}/docker-compose.yaml up -d
+
+- name: copy reverse-proxy conf
+  ansible.builtin.copy:
+    src: "{{ app_templates_dir }}/subdomain.conf"
+    remote_src: yes
+    dest: "{{reverse_proxy_conf_dir}}/{{app_name}}.subdomain.conf"
+    owner: nobody
+    group: users
+    mode: u=rw,g=r,o=r
+
+- name: Restart Reverse Proxy {{reverse_proxy_name}}
+  command: docker restart {{reverse_proxy_name}}
+
+- name: cleanup templates directory
+  file:
+    path: "{{app_templates_dir}}"
+    state: absent
