@@ -47,22 +47,22 @@ steps:
 
 - name: devhub - deploy - docker
   image: docker:latest
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    environment:
-      DUSER:
-        from_secret: docker_user
-      DPASS:
-        from_secret: docker_pass
-      SERVER_DOMAIN:
-        from_secret: server_domain
-      SECRET_KEY:
-        from_secret: secret_key
-    commands:
-      - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-      - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhub:latest -f Dockerfile .
-      - docker run -d -p '23842:8000/tcp' --name='devhub' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhub:latest
+  volumes:
+    - name: docker_sock
+      path: /var/run/docker.sock
+  environment:
+    DUSER:
+      from_secret: docker_user
+    DPASS:
+      from_secret: docker_pass
+    SERVER_DOMAIN:
+      from_secret: server_domain
+    SECRET_KEY:
+      from_secret: secret_key
+  commands:
+    - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
+    - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhub:latest -f Dockerfile .
+    - docker run -d -p '23842:8000/tcp' --name='devhub' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhub:latest
 
 # docker run -d -p '23842:8000/tcp' --name='devhub' \
 #     -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" \
