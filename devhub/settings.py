@@ -25,6 +25,9 @@ AUTH_API = os.environ.get('AUTH_API', '')
 SANSKRIT_PARSER_API = os.environ.get(
     'SANSKRIT_PARSER_API', 'http://localhost:9000/sanskrit_parser/v1')  # 192.168.0.31:28374
 
+SANSKRIT_PARSER_GQL_API = os.environ.get(
+    'SANSKRIT_PARSER_GQL_API', 'https://dz79im1xcl.execute-api.us-west-2.amazonaws.com/graphql')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
