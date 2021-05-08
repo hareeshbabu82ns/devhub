@@ -1,8 +1,9 @@
 from devhub.authelia_middleware import AUTHELIA_USER_KEY
 import requests
 import json
+from graphqlclient import GraphQLClient
 
-from devhub.settings import SANSKRIT_PARSER_API
+from devhub.settings import SANSKRIT_PARSER_API, SANSKRIT_PARSER_GQL_API
 
 import logging
 logger = logging.getLogger(__name__)
@@ -10,61 +11,98 @@ logger = logging.getLogger(__name__)
 # DICT_LIST = ['mw', 'mwe']
 DICT_LIST = ['vcp', 'skd', 'mw', 'mwe']
 
+sansClient = GraphQLClient(SANSKRIT_PARSER_GQL_API)
 
-def resolve_dict_key_search(*_, key, maxHits, inDictionary='vcp', asDevanagari=False, searchContent=False):
-    qparams = {'max_hits': maxHits}
-    if searchContent:
-        qparams['search_text'] = searchContent
-    if asDevanagari:
-        qparams['in_devanagari'] = asDevanagari
-    if inDictionary == 'all':
-        r = []
-        for in_dictionary in DICT_LIST:
-            url = f'{SANSKRIT_PARSER_API}/dict/{in_dictionary}/keys/{key}'
-            res = requests.get(url, params=qparams)
-            for val in res.json()['keys']:
-                r.append(
-                    {'id': val['key'], 'devanagari': val['devanagari']})
-        # sort and remove duplicates
-        # r = list(dict.fromkeys(r))
-        r = list({frozenset(item.items()): item for item in r}.values())
-        r.sort(key=lambda item: item['id'])
-        return r[:maxHits]
-    else:
-        url = f'{SANSKRIT_PARSER_API}/dict/{inDictionary}/keys/{key}'
-        res = requests.get(url, params=qparams)
-        return res.json()['keys']
+
+def resolve_dict_key_search(*_, key, maxHits, inDictionary='vcp',
+                            asDevanagari=False, searchContent=False, fuzzySearch=False):
+    query = '''
+        query dictionaryKeySearch(
+            $key: String!
+            $maxHits: Int
+            $searchOnlyKeys: Boolean
+            $inDictionary: [Dictionary!]
+            $outputScheme: SanscriptScheme
+            $fuzzySearch: Boolean
+        ) {
+            dictionarySearch(
+                searchWith: {
+                    search: $key
+                    searchScheme: SLP1
+                    fuzzySearch: $fuzzySearch
+                    startsWith: false
+                    endsWith: false
+                    searchOnlyKeys: $searchOnlyKeys
+                    origin: $inDictionary
+                    outputScheme: $outputScheme
+                    limit: $maxHits
+                }
+            ) {
+                key
+            }
+        }
+    '''
+    filters = {
+        'key': key,
+        'maxHits': maxHits,
+        'searchOnlyKeys': not(searchContent),
+        'inDictionary': [] if inDictionary == 'all' else [inDictionary.upper()],
+        'outputScheme': 'DEVANAGARI' if asDevanagari else 'SLP1',
+        'fuzzySearch': fuzzySearch
+    }
+    result = sansClient.execute(query, filters)
+    # print(result)
+    res = json.loads(result)['data']['dictionarySearch']
+
+    r = [{'id': val['key'], 'devanagari': val['key']}
+         for val in res]
+
+    # sort and remove duplicates
+    # r = list(dict.fromkeys(r))
+    r = list({frozenset(item.items()): item for item in r}.values())
+    r.sort(key=lambda item: item['id'])
+    return r[:maxHits]
 
 
 def resolve_dict_meanings(*_, keys, maxHits, inDictionary='vcp', asDevanagari=False):
-    qparams = {'max_hits': maxHits}
-    if asDevanagari:
-        qparams['in_devanagari'] = asDevanagari
-    headers = {'Content-type': 'application/json'}
-    if inDictionary == 'all':
-        r = []
-        for in_dictionary in DICT_LIST:
-            url = f'{SANSKRIT_PARSER_API}/dict/{in_dictionary}/meanings'
-            res = requests.post(url, params=qparams,
-                                data=json.dumps({'keys': keys}), headers=headers)
-            # print(url, res.json())
-            for val in res.json()['keys']:
-                r.append(
-                    {'id': f'{in_dictionary}_{val["lnum"]}', 'key': val['key'], 'from_dictionary': in_dictionary, 'content': val['data']})
-        # sort and remove duplicates
-        # r = list(dict.fromkeys(r))
-        # print(r)
-        # r = list({frozenset(item.items()): item for item in r}.values())
-        r.sort(key=lambda item: item['key'])
-        return r[:maxHits]
-    else:
-        url = f'{SANSKRIT_PARSER_API}/dict/{inDictionary}/meanings'
-        res = requests.post(url, params=qparams,
-                            data=json.dumps({'keys': keys}), headers=headers)
-        data = res.json()
+    query = '''
+        query dictionaryMeaningSearch(
+            $key: String!
+            $maxHits: Int
+            $inDictionary: [Dictionary!]
+            $outputScheme: SanscriptScheme
+        ) {
+            dictionarySearch(
+                searchWith: {
+                    search: $key
+                    searchScheme: SLP1
+                    fuzzySearch: false
+                    startsWith: false
+                    endsWith: false
+                    searchOnlyKeys: true
+                    origin: $inDictionary
+                    outputScheme: $outputScheme
+                    limit: $maxHits
+                }
+            ) {
+                id
+                key
+                description
+                origin
+            }
+        }
+    '''
+    filters = {
+        'key': keys[0],
+        'maxHits': maxHits,
+        'inDictionary': [] if inDictionary == 'all' else [inDictionary.upper()],
+        'outputScheme': 'DEVANAGARI' if asDevanagari else 'SLP1',
+    }
+    result = sansClient.execute(query, filters)
+    # print(result)
+    res = json.loads(result)['data']['dictionarySearch']
 
-        r = []
-        for val in data['keys']:
-            r.append(
-                {'id': f'{inDictionary}_{val["lnum"]}', 'key': val['key'], 'from_dictionary': inDictionary, 'content': val['data']})
-        return r[:maxHits]
+    r = [{'id': val['id'], 'key': val['key'], 'from_dictionary': val['origin'], 'content': val['description']}
+         for val in res]
+
+    return r[:maxHits]

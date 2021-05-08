@@ -24,6 +24,7 @@ type Query{
 		maxHits: Int = 10
 		asDevanagari: Boolean = false
 		searchContent: Boolean = false
+		fuzzySearch: Boolean = false
 	): [DictionaryKey!]!
 	dictionaryMeanings(
 		keys: [String!]! = []

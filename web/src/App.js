@@ -63,7 +63,7 @@ function AppRoutes() {
 
 function AppRouteSwitches() {
   return (
-    <div style={{ margin: '5em 0.5em 0.5em 0.5em' }} >
+    <div style={{ margin: '5em 0.5em 0.5em 0.5em', minHeight: '90vh' }} >
       <Switch>
         <Route path="/" exact>
           <Home />

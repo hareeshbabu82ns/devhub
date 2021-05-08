@@ -28,7 +28,7 @@ const SaTranslations = () => {
     { key: 'wx', text: 'WX', value: 'wx' },
   ]
 
-  const defaultValues = { fromDDLB: 'devanagari', toDDLB: 'iast', from: 'संस्कृतम्', to: '' } // संस्कृतम्
+  const defaultValues = { fromDDLB: 'devanagari', toDDLB: 'slp1', from: 'संस्कृतम्', to: '' } // संस्कृतम्
 
   let [schemesMap, setSchemesMap] = useState(mapSchemes(defaultValues.fromDDLB, defaultValues.toDDLB))
 
@@ -109,16 +109,16 @@ const SaTranslations = () => {
                 <Header as='h4' color={'blue'}>{segment}</Header>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1em', }}>
                   {_.isArray(schemesMap[segment]) && schemesMap[segment].map((element, index) =>
-                    (
-                      <Button
-                        basic compact
-                        inverted={settingsData.inverted}
-                        content={element[1]}
-                        label={{ basic: true, content: element[0] }}
-                        labelPosition='left'
-                        onClick={() => { setValue('from', getValues().from + element[0]) }}
-                      />
-                    ))}
+                  (
+                    <Button
+                      basic compact
+                      inverted={settingsData.inverted}
+                      content={element[1]}
+                      label={{ basic: true, content: element[0] }}
+                      labelPosition='left'
+                      onClick={() => { setValue('from', getValues().from + element[0]) }}
+                    />
+                  ))}
                 </div>
               </React.Fragment>
             ))}
