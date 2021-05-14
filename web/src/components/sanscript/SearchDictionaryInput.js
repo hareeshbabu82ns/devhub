@@ -4,9 +4,10 @@ import { Search, List } from 'semantic-ui-react'
 import { useLazyQuery, gql } from '@apollo/client';
 
 
-const resultRenderer = ({ title, devanagari }) => <List.Item>{title}{devanagari ? ' - ' + devanagari : ''}</List.Item>
+const resultRenderer = ({ id, title, devanagari }) =>
+  <List.Item key={id}>{title}{devanagari ? ' - ' + devanagari : ''}</List.Item>
 
-function SearchDictionaryInput({ maxHits, inDictionary, searchInContent, asDevanagari, onChange }) {
+function SearchDictionaryInput({ maxHits, inDictionary, searchInContent, outputScheme, startsWith, endsWith, onChange }) {
 
   const [value, setValue] = React.useState('')
   const [results, setResults] = React.useState([])
@@ -27,19 +28,20 @@ function SearchDictionaryInput({ maxHits, inDictionary, searchInContent, asDevan
       }
       searchDict({
         variables: {
+          ...data,
           key: data.value, maxHits: Number(data.maxHits),
           fromDictionary: data.inDictionary,
-          searchInContent: data.searchInContent,
-          asDevanagari: data.asDevanagari
+          // searchInContent: data.searchInContent,
+          // outputScheme: data.outputScheme
         }
       })
     }, 300)
   }, [])
 
   React.useEffect(() => {
-    console.log(data)
+    // console.log(data)
     if (data && data.keywords)
-      setResults(data.keywords.map(item => ({ ...item, 'title': item.id })))
+      setResults(_.uniqBy(data.keywords, 'key').map(item => ({ ...item, 'title': item.key })))
     else
       setResults([])
   }, [data])
@@ -54,14 +56,15 @@ function SearchDictionaryInput({ maxHits, inDictionary, searchInContent, asDevan
       style={{ borderRadius: '5rem' }}
       loading={loading}
       onResultSelect={(e, data) => {
-        setValue(data.result.id)
+        setValue(data.result.key)
         if (onChange)
           onChange(data.result)
       }}
       placeholder={'Search for Keywords'}
       onSearchChange={(e, data) => handleSearchChange(e, {
         value: data.value,
-        inDictionary, maxHits, searchInContent, asDevanagari
+        inDictionary, maxHits, searchInContent,
+        outputScheme, startsWith, endsWith,
       })}
       resultRenderer={resultRenderer}
       results={results}
@@ -73,16 +76,20 @@ function SearchDictionaryInput({ maxHits, inDictionary, searchInContent, asDevan
 export default SearchDictionaryInput
 
 const SEARCH_DICT_BY_KEY = gql`
-query SearchDictKeys($fromDictionary:Dictionaries,$key:String!,$searchInContent:Boolean,$maxHits:Int,$asDevanagari:Boolean) {
-  keywords:dictionaryKeySearch(
-    inDictionary:$fromDictionary
-    searchContent:$searchInContent
-    maxHits:$maxHits
-    asDevanagari:$asDevanagari
-    key:$key
+query SearchDictKeys($fromDictionary:Dictionaries,$key:String!,$searchInContent:Boolean,$maxHits:Int,$outputScheme:SanscriptScheme, $startsWith:Boolean, $endsWith:Boolean) {
+  keywords:dictionarySearch(
+    searchWith:{
+      origin:$fromDictionary
+      fuzzySearch:$searchInContent
+      limit:$maxHits
+      outputScheme:$outputScheme
+      startsWith:$startsWith
+      endsWith:$endsWith
+      search:$key
+    }
   ){
     id
-    devanagari
+    key
   }
 }
 `;

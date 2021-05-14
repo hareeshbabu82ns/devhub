@@ -121,18 +121,14 @@ query.set_field("sanskritSplits", sparser_resolvers.resolve_splits)
 query.set_field("sanskritSandhi", sparser_resolvers.resolve_sandhi)
 
 # Dictionaries
-dictionariesEnumType = EnumType("Dictionaries",
-                                {'ALL': 'all',
-                                 'SAN_SAN_VACASPATYAM': 'vcp',
-                                 'SAN_SAN_SABDA_KALPADRUMA': 'skd',
-                                 'SAN_ENG_MONIER_WILLIAMS_1899': 'mw',
-                                 'ENG_SAN_MONIER_WILLIAMS': 'mwe'})
-types.append(dictionariesEnumType)
 
+types.append(dict_resolvers.dictionariesEnumType)
+types.append(dict_resolvers.sanscriptSchemesEnum)
 
 dictionaryType = ObjectType('DictionaryItem')
 
 query.set_field("dictionaryKeySearch", dict_resolvers.resolve_dict_key_search)
 query.set_field("dictionaryMeanings", dict_resolvers.resolve_dict_meanings)
+query.set_field("dictionarySearch", dict_resolvers.resolve_dict_search)
 
 types.append(dictionaryType)

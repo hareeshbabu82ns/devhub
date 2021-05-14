@@ -18,6 +18,11 @@ type Query{
 	bookmarks(
 		by: BookmarkByInput
 	): [Bookmark!]
+
+	dictionarySearch(
+		searchWith: DictionarySearchInput!
+	):[DictionaryItem!]
+
 	dictionaryKeySearch(
 		key: String!
 		inDictionary: Dictionaries
@@ -323,6 +328,40 @@ type Settings{
 	content: String
 }
 
+input DictionarySearchInput {
+		search: String!
+		"""
+		Search String scheme (default: SLP1)
+		"""
+		searchScheme: SanscriptScheme
+		"""
+		full text search on key and description
+		"""
+		fuzzySearch: Boolean = false
+		"""
+		Searches only in Keys, skips checking in descriptions \
+		`ignored when fuzzySearch is selected`
+		"""
+		searchOnlyKeys: Boolean = false
+		caseInsensitive: Boolean = false
+		"""
+		searches where the input is at starting position \
+		`ignored when fuzzySearch is selected`
+		"""
+		startsWith: Boolean = false
+		"""
+		searches where the input is at ending position \
+		`ignored when fuzzySearch is selected`
+		"""
+		endsWith: Boolean = false
+		origin: Dictionaries
+		"""
+		scheme for output (default: DEVANAGARI)
+		"""
+		outputScheme: SanscriptScheme
+		limit: Int = 100	
+}
+
 """
 Dictionary Tools
 """
@@ -338,12 +377,54 @@ type DictionaryKey{
 	devanagari: String
 }
 
+"""
+Sanskript Dictionary Sources
+"""
 enum Dictionaries{
-	ALL
-	SAN_SAN_VACASPATYAM
-	SAN_SAN_SABDA_KALPADRUMA
-	SAN_ENG_MONIER_WILLIAMS_1899
-	ENG_SAN_MONIER_WILLIAMS
+	"""
+	Vacaspatyam
+	"""
+	VCP
+	"""
+	Dhatu Pata
+	"""
+	DHATU_PATA
+	"""
+	Monier-Williams
+	"""
+	MW
+	"""
+	Monier-Williams English
+	"""
+	MWE
+	"""
+	Sabda-kalpadruma
+	"""
+	SKD
+}
+"""
+Sanskript Transliterate Schemes
+"""
+enum SanscriptScheme{
+	"""
+	Devanagari (Samskrutam)
+	"""
+	DEVANAGARI
+	"""
+	International Alphabet of Sanskrit Transliteration
+	"""
+	IAST
+	"""
+	Indian languages TRANSliteration
+	"""
+	ITRANS
+	"""
+	Sanskrit Library Phonetic Basic
+	"""
+	SLP1
+	TELUGU
+	TAMIL
+	KANNADA
 }
 schema{
 	query: Query,
