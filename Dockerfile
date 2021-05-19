@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python:3.8.3-alpine as builder
+FROM python:3.9-slim-buster as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -12,9 +12,11 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies
-RUN apk update \
-  && apk add postgresql-dev gcc python3-dev musl-dev
+# install package dependencies
+RUN apt-get clean \
+  && apt-get -y update
+RUN apt-get -y install python3-dev \
+  && apt-get -y install build-essential
 
 COPY . .
 
@@ -44,13 +46,14 @@ RUN ls build/
 #########
 
 # pull official base image
-FROM python:3.8.3-alpine
+FROM python:3.9-slim-buster
 
 # create directory for the app user
 # RUN mkdir -p /home/app
 
 # create the app user
-RUN addgroup -S app && adduser -S app -G app
+RUN addgroup app \
+  && useradd -g app app
 
 # create the appropriate directories
 ENV HOME=/home/app
@@ -64,7 +67,8 @@ RUN mkdir $DATA_DIR
 WORKDIR $APP_HOME
 
 # install dependencies
-RUN apk update && apk add libpq
+RUN apt-get clean \
+  && apt-get -y update
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --no-cache /wheels/*

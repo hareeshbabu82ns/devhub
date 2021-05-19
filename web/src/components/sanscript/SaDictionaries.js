@@ -134,7 +134,7 @@ const SaDictionaries = () => {
                   }
                 })} />
             </Form.Field>
-            <Form.Field width={5} inline>
+            <Form.Field width={5}>
               <Controller as={Form.Checkbox} control={control} name="fuzzySearch"
                 rules={validations.fuzzySearch} error={errors.fuzzySearch && errors.fuzzySearch.message}
                 label='Fuzzy Search' onChange={([_, { checked }]) => checked} />
