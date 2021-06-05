@@ -2,6 +2,8 @@
 -----
 A Hub for Devotional content, with meanings and extra information which is presented in simple ui
 
+### Framework - Django
+
 ### Setting for Development
 ```sh
 $> python3 -m venv venv
