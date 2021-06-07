@@ -12,10 +12,6 @@ $> pip install -r requirements.txt
 ### Running
 
 ### Authentication
-* used [Authelia](https://www.authelia.com/)
-  * /api/state - returns 'data.username'
-  * /api/user/info - returns 'data.display_name'
-* exposing the api under /graphql/me
 
 #### React UI
 * as developent server
@@ -23,19 +19,29 @@ $> pip install -r requirements.txt
 $> cd web
 $> npm start
 ```
-* serving from Django
+* serving from Flask
 ```sh
 $> cd web
 $> npm run build
 ```
-- after build, the index.html will be served as root route on django
-#### Django
+- after build, the index.html will be served as root route on Flask
+
+#### Flask
 ```sh
-$> python manage.py runserver
-```
-* run scripts `needs django-extensions package` 
-```sh
-$> python manage.py runscript <script> --script-args <args...>
+$> PYTHONPATH=. python setup.py install
+$> python app.py
+
+# run using flask module
+$> MONGO_DB_PASSWORD=pwd  \
+    MONGO_DB_HOST=192.168.0.10  \
+    MONGO_DB_PORT=3333  \
+    python -m flask run
+
+# run as gunicorn (in production)    
+$> MONGO_DB_PASSWORD=pwd  \
+    MONGO_DB_HOST=192.168.0.10  \
+    MONGO_DB_PORT=3333  \
+    gunicorn --bind 0.0.0.0:5000 wsgi:app
 ```
 
 * run Docker local
