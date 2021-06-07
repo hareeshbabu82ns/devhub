@@ -16,5 +16,5 @@ RUN pip install -r requirements.txt --src /usr/local/src
 # RUN chmod +x ./start.sh
 # CMD ["./start.sh"]
 
-EXPOSE 80
-CMD ["gunicorn", "wsgi:app", "--bind", "0.0.0.0:80"]
+EXPOSE 8000
+CMD ["gunicorn", "wsgi:app", "--bind", "0.0.0.0:8000"]
