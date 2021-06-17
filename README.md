@@ -49,8 +49,7 @@ $> MONGO_DB_PASSWORD=pwd  \
 $ docker build -f ./Dockerfile.dev -t devhub:latest ./
 $ docker run -d \
     -p 8006:8000  --name devhub \
-    -e "SECRET_KEY=please_change_me" -e "DEBUG=1" -e "DJANGO_ALLOWED_HOSTS=*" \
-    -e "DATA_DIR=/tmp" --env-file .env.dev \
+    -e "MONGO_DB_HOST=192.168.0.10" -e "MONGO_DB_PORT=3333" -e "MONGO_DB_PASSWORD=test" \
     devhub
 ```
 

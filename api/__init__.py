@@ -6,6 +6,9 @@ from flask_cors import CORS
 from flask import Flask
 from api.schema import schema
 from .database import dbConnection
+from repository.devhub_repository import DevhubRepository
+
+repository = DevhubRepository(dbConnection)
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +29,7 @@ def graphql_server():
         'request': request,
         'apiVersion': 'v1.0',
         'dbConnection': dbConnection,
+        'repository': repository,
         'extras': ''
     }
 
