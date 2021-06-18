@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from 'graphql-request';
-import { getSdk } from './src/generated/graphql_v1';
+import { getSdk, Resolvers } from './src/generated/graphql_v1';
 
 const LANG_SANSKRIT = "1";
 const LANG_TELUGU = "2";
@@ -72,3 +72,10 @@ query trans($text:String!,$languageTo:SanscriptScheme!){
 
 main();
 
+export const resolvers: Resolvers = {
+  Query: {
+    bookmarks: (parent, args) => {
+      return [{ id: "ss", user: "user" }];
+    }
+  }
+};

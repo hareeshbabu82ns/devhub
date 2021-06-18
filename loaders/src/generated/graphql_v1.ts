@@ -1,3 +1,4 @@
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { GraphQLError } from 'graphql-request/dist/types';
@@ -7,6 +8,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -1124,3 +1126,345 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+
+
+export type ResolverTypeWrapper<T> = Promise<T> | T;
+
+
+export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
+  fragment: string;
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+
+export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
+  selectionSet: string;
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+
+export type ResolverFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
+
+export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+
+export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
+}
+
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
+  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
+}
+
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
+  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
+  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+
+export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
+
+export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+  parent: TParent,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
+
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+
+export type NextResolverFn<T> = () => Promise<T>;
+
+export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+  next: NextResolverFn<TResult>,
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+/** Mapping between all available schema types and the resolvers types */
+export type ResolversTypes = {
+  Bookmark: ResolverTypeWrapper<Bookmark>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  BookmarkByInput: BookmarkByInput;
+  BookmarkInput: BookmarkInput;
+  BookmarkUpdateInput: BookmarkUpdateInput;
+  ContentExtras: ResolverTypeWrapper<ContentExtras>;
+  ContentExtrasInput: ContentExtrasInput;
+  ContentLine: ResolverTypeWrapper<ContentLine>;
+  ContentLineInput: ContentLineInput;
+  ContentLinesBy: ContentLinesBy;
+  ContentMeaning: ResolverTypeWrapper<ContentMeaning>;
+  ContentMeaningInput: ContentMeaningInput;
+  ContentMeaningsBy: ContentMeaningsBy;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  Dictionaries: Dictionaries;
+  DictionaryItem: ResolverTypeWrapper<DictionaryItem>;
+  DictionaryKey: ResolverTypeWrapper<DictionaryKey>;
+  DictionarySearchInput: DictionarySearchInput;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  EntitiesBy: EntitiesBy;
+  Entity: ResolverTypeWrapper<Entity>;
+  EntityContentInput: EntityContentInput;
+  EntityMeta: ResolverTypeWrapper<EntityMeta>;
+  EntityMetaDataInput: EntityMetaDataInput;
+  EntityRelation: ResolverTypeWrapper<EntityRelation>;
+  EntityText: ResolverTypeWrapper<EntityText>;
+  EntityTextDataInput: EntityTextDataInput;
+  EntityType: ResolverTypeWrapper<EntityType>;
+  Language: ResolverTypeWrapper<Language>;
+  Mutation: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<{}>;
+  RelatedEntitiesBy: RelatedEntitiesBy;
+  SanscriptScheme: SanscriptScheme;
+  Settings: ResolverTypeWrapper<Settings>;
+  User: ResolverTypeWrapper<User>;
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
+  Bookmark: Bookmark;
+  ID: Scalars['ID'];
+  String: Scalars['String'];
+  BookmarkByInput: BookmarkByInput;
+  BookmarkInput: BookmarkInput;
+  BookmarkUpdateInput: BookmarkUpdateInput;
+  ContentExtras: ContentExtras;
+  ContentExtrasInput: ContentExtrasInput;
+  ContentLine: ContentLine;
+  ContentLineInput: ContentLineInput;
+  ContentLinesBy: ContentLinesBy;
+  ContentMeaning: ContentMeaning;
+  ContentMeaningInput: ContentMeaningInput;
+  ContentMeaningsBy: ContentMeaningsBy;
+  Date: Scalars['Date'];
+  DateTime: Scalars['DateTime'];
+  DictionaryItem: DictionaryItem;
+  DictionaryKey: DictionaryKey;
+  DictionarySearchInput: DictionarySearchInput;
+  Boolean: Scalars['Boolean'];
+  Int: Scalars['Int'];
+  EntitiesBy: EntitiesBy;
+  Entity: Entity;
+  EntityContentInput: EntityContentInput;
+  EntityMeta: EntityMeta;
+  EntityMetaDataInput: EntityMetaDataInput;
+  EntityRelation: EntityRelation;
+  EntityText: EntityText;
+  EntityTextDataInput: EntityTextDataInput;
+  EntityType: EntityType;
+  Language: Language;
+  Mutation: {};
+  Query: {};
+  RelatedEntitiesBy: RelatedEntitiesBy;
+  Settings: Settings;
+  User: User;
+};
+
+export type BookmarkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Bookmark'] = ResolversParentTypes['Bookmark']> = {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entity?: Resolver<Maybe<ResolversTypes['Entity']>, ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ContentExtrasResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContentExtras'] = ResolversParentTypes['ContentExtras']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  parent?: Resolver<ResolversTypes['Entity'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['Language'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ContentLineResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContentLine'] = ResolversParentTypes['ContentLine']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  parentEntity?: Resolver<ResolversTypes['Entity'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['Language'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  meaning?: Resolver<Maybe<ResolversTypes['ContentMeaning']>, ParentType, ContextType, RequireFields<ContentLineMeaningArgs, 'language'>>;
+  extras?: Resolver<Maybe<ResolversTypes['ContentExtras']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ContentMeaningResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContentMeaning'] = ResolversParentTypes['ContentMeaning']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  parent?: Resolver<ResolversTypes['Entity'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['Language'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
+}
+
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+  name: 'DateTime';
+}
+
+export type DictionaryItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['DictionaryItem'] = ResolversParentTypes['DictionaryItem']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  fromDictionary?: Resolver<ResolversTypes['Dictionaries'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DictionaryKeyResolvers<ContextType = any, ParentType extends ResolversParentTypes['DictionaryKey'] = ResolversParentTypes['DictionaryKey']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  devanagari?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EntityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entity'] = ResolversParentTypes['Entity']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['EntityType'], ParentType, ContextType>;
+  order?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  defaultText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  defaultThumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tags?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  childEntities?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, RequireFields<EntityChildEntitiesArgs, never>>;
+  parentEntities?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, RequireFields<EntityParentEntitiesArgs, never>>;
+  textData?: Resolver<Maybe<Array<ResolversTypes['EntityText']>>, ParentType, ContextType, RequireFields<EntityTextDataArgs, never>>;
+  metaData?: Resolver<Maybe<Array<ResolversTypes['EntityMeta']>>, ParentType, ContextType>;
+  content?: Resolver<Maybe<Array<ResolversTypes['ContentLine']>>, ParentType, ContextType, RequireFields<EntityContentArgs, 'language'>>;
+  contentMeaning?: Resolver<Maybe<Array<ResolversTypes['ContentMeaning']>>, ParentType, ContextType, RequireFields<EntityContentMeaningArgs, 'language'>>;
+  childTypes?: Resolver<Maybe<Array<ResolversTypes['EntityType']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EntityMetaResolvers<ContextType = any, ParentType extends ResolversParentTypes['EntityMeta'] = ResolversParentTypes['EntityMeta']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  parentEntity?: Resolver<ResolversTypes['Entity'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['EntityType'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EntityRelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['EntityRelation'] = ResolversParentTypes['EntityRelation']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  fromEntity?: Resolver<ResolversTypes['Entity'], ParentType, ContextType>;
+  fromType?: Resolver<ResolversTypes['EntityType'], ParentType, ContextType>;
+  toEntity?: Resolver<ResolversTypes['Entity'], ParentType, ContextType>;
+  toType?: Resolver<ResolversTypes['EntityType'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EntityTextResolvers<ContextType = any, ParentType extends ResolversParentTypes['EntityText'] = ResolversParentTypes['EntityText']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  parentEntity?: Resolver<ResolversTypes['Entity'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['EntityType'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['Language'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EntityTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['EntityType'] = ResolversParentTypes['EntityType']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LanguageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Language'] = ResolversParentTypes['Language']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  iso?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  updateBookmark?: Resolver<ResolversTypes['Bookmark'], ParentType, ContextType, RequireFields<MutationUpdateBookmarkArgs, 'withData'>>;
+  deleteBookmark?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteBookmarkArgs, 'id'>>;
+  deleteEntity?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteEntityArgs, 'id'>>;
+  updateEntityContent?: Resolver<ResolversTypes['Entity'], ParentType, ContextType, RequireFields<MutationUpdateEntityContentArgs, 'withData'>>;
+  updateContent?: Resolver<ResolversTypes['ContentLine'], ParentType, ContextType, RequireFields<MutationUpdateContentArgs, never>>;
+  deleteContent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteContentArgs, 'id'>>;
+  updateContentMeaning?: Resolver<ResolversTypes['ContentMeaning'], ParentType, ContextType, RequireFields<MutationUpdateContentMeaningArgs, never>>;
+  deleteContentMeaning?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteContentMeaningArgs, 'id'>>;
+  updateSettings?: Resolver<ResolversTypes['Settings'], ParentType, ContextType, RequireFields<MutationUpdateSettingsArgs, 'user' | 'content'>>;
+};
+
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  entityTypes?: Resolver<Array<ResolversTypes['EntityType']>, ParentType, ContextType>;
+  languages?: Resolver<Array<ResolversTypes['Language']>, ParentType, ContextType>;
+  entities?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, RequireFields<QueryEntitiesArgs, 'by'>>;
+  contentLines?: Resolver<Maybe<Array<ResolversTypes['ContentLine']>>, ParentType, ContextType, RequireFields<QueryContentLinesArgs, 'by'>>;
+  contentMeanings?: Resolver<Maybe<Array<ResolversTypes['ContentMeaning']>>, ParentType, ContextType, RequireFields<QueryContentMeaningsArgs, 'by'>>;
+  bookmarks?: Resolver<Maybe<Array<ResolversTypes['Bookmark']>>, ParentType, ContextType, RequireFields<QueryBookmarksArgs, never>>;
+  dictionarySearch?: Resolver<Maybe<Array<ResolversTypes['DictionaryItem']>>, ParentType, ContextType, RequireFields<QueryDictionarySearchArgs, 'searchWith'>>;
+  dictionaryKeySearch?: Resolver<Array<ResolversTypes['DictionaryKey']>, ParentType, ContextType, RequireFields<QueryDictionaryKeySearchArgs, 'key' | 'maxHits' | 'asDevanagari' | 'searchContent' | 'fuzzySearch'>>;
+  dictionaryMeanings?: Resolver<Array<ResolversTypes['DictionaryItem']>, ParentType, ContextType, RequireFields<QueryDictionaryMeaningsArgs, 'keys' | 'asDevanagari' | 'maxHits'>>;
+  sanskritSplits?: Resolver<Maybe<Array<Maybe<Array<ResolversTypes['String']>>>>, ParentType, ContextType, RequireFields<QuerySanskritSplitsArgs, 'content' | 'maxPaths' | 'asDevanagari'>>;
+  sanskritSandhi?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType, RequireFields<QuerySanskritSandhiArgs, 'splits' | 'asDevanagari'>>;
+};
+
+export type SettingsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Settings'] = ResolversParentTypes['Settings']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  settings?: Resolver<Maybe<ResolversTypes['Settings']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type Resolvers<ContextType = any> = {
+  Bookmark?: BookmarkResolvers<ContextType>;
+  ContentExtras?: ContentExtrasResolvers<ContextType>;
+  ContentLine?: ContentLineResolvers<ContextType>;
+  ContentMeaning?: ContentMeaningResolvers<ContextType>;
+  Date?: GraphQLScalarType;
+  DateTime?: GraphQLScalarType;
+  DictionaryItem?: DictionaryItemResolvers<ContextType>;
+  DictionaryKey?: DictionaryKeyResolvers<ContextType>;
+  Entity?: EntityResolvers<ContextType>;
+  EntityMeta?: EntityMetaResolvers<ContextType>;
+  EntityRelation?: EntityRelationResolvers<ContextType>;
+  EntityText?: EntityTextResolvers<ContextType>;
+  EntityType?: EntityTypeResolvers<ContextType>;
+  Language?: LanguageResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
+  Settings?: SettingsResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
+};
+
+
+/**
+ * @deprecated
+ * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
+ */
+export type IResolvers<ContextType = any> = Resolvers<ContextType>;
