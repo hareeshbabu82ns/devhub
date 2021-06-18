@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import { ApolloServer } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools';
 import { resolvers } from './gql/resolvers'
@@ -14,6 +15,12 @@ const server = new ApolloServer({
 });
 
 const app = express();
+
+const allowedOrigins = ['http://localhost:3000'];
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+app.use(cors(options))
 
 // Additional middleware can be mounted at this point to run before Apollo.
 // app.use('*');
