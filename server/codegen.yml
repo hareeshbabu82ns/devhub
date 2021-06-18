@@ -1,0 +1,9 @@
+overwrite: true
+schema: "./gql/schema.graphql"
+documents: null
+generates:
+  gql/schema.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-resolvers"

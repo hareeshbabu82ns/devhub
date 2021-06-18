@@ -1,0 +1,34 @@
+type Entity {
+  text: String!
+}
+
+input EntityCreateInput {
+  text: String!
+}
+
+# Sanskript Transliterate Schemes
+enum SanscriptScheme {
+  # Devanagari (Samskrutam)
+  DEVANAGARI
+
+  # International Alphabet of Sanskrit Transliteration
+  IAST
+
+  # Indian languages TRANSliteration
+  ITRANS
+
+  # Sanskrit Library Phonetic Basic
+  SLP1
+  TELUGU
+  TAMIL
+  KANNADA
+}
+
+type Query {
+  version: String!
+}
+
+type Mutation {
+  version: String!
+  createEntity(withData: EntityCreateInput): ID!
+}

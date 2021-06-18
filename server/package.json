@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.25.1",
+    "apollo-server-express": "^2.25.1",
+    "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "graphql-import": "^1.0.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.21.5",
+    "@graphql-codegen/typescript": "^1.22.1",
+    "@graphql-codegen/typescript-graphql-request": "^3.2.1",
+    "@graphql-codegen/typescript-operations": "^1.18.0",
+    "@graphql-codegen/typescript-resolvers": "1.19.2",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  },
+  "scripts": {
+    "tsc-serve": "ts-node index.ts",
+    "gql-gen": "graphql-codegen --config codegen.yml"
+  }
+}
