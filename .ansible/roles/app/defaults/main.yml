@@ -1,5 +1,5 @@
-port_http: 23442
-app_port: 8000
+port_http: 23443
+app_port: 4000
 app_name: "devhubjs"
 server_sub_domain: "{{app_name}}"
 app_image_version: "latest"
