@@ -1,11 +1,12 @@
 import express from 'express'
 import cors from 'cors'
+import path from 'path'
 import { ApolloServer } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools';
-import { resolvers } from './gql/resolvers'
+import { resolvers } from './src/gql/resolvers'
 import { importSchema } from 'graphql-import'
 
-const typeDefs = importSchema('./gql/schema.graphql')
+const typeDefs = importSchema('./src/gql/schema.graphql')
 
 const server = new ApolloServer({
   schema: makeExecutableSchema({
@@ -16,6 +17,10 @@ const server = new ApolloServer({
 
 const app = express();
 
+// serve UI
+app.use(express.static(path.join(__dirname, '../', 'ui', 'build')));
+
+// setup CORS for local development
 const allowedOrigins = ['http://localhost:3000'];
 const options: cors.CorsOptions = {
   origin: allowedOrigins

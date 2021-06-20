@@ -1,10 +1,10 @@
 kind: pipeline
-name: devhub2
+name: devhubjs
 
 steps:
   
 ## activate tests in future  
-# - name: devhub2 - test
+# - name: devhubjs - test
 #   image: node:14-alpine
 #   commands:
 #   - yarn install
@@ -14,7 +14,7 @@ steps:
 #     - docker
 
 # For Custom Docker Registry
-- name: devhub2 - build docker image
+- name: devhubjs - build docker image
   image: docker:latest
   volumes:
     - name: docker_sock
@@ -28,9 +28,9 @@ steps:
       from_secret: server_domain
   commands:
     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-    # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhub2:latest -f Dockerfile .
-    - docker build -t docker.$SERVER_DOMAIN/home/devhub2:latest -f Dockerfile . 
-    # - docker push docker.$SERVER_DOMAIN/home/devhub2:latest
+    # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhubjs:latest -f Dockerfile .
+    - docker build -t docker.$SERVER_DOMAIN/home/devhubjs:latest -f Dockerfile . 
+    # - docker push docker.$SERVER_DOMAIN/home/devhubjs:latest
   # when:
   #   branch:
   #   - docker
@@ -59,12 +59,12 @@ steps:
 #   settings:
 #     tags:
 #       - latest
-#     # dockerfile: devhub2/Dockerfile
-#     repo: test/devhub2
+#     # dockerfile: devhubjs/Dockerfile
+#     repo: test/devhubjs
 #     registry: registry.unraid:33294
 #     insecure: true
 
-# - name: devhub2 - deploy - docker
+# - name: devhubjs - deploy - docker
 #   image: docker:latest
 #   volumes:
 #     - name: docker_sock
@@ -80,10 +80,10 @@ steps:
 #       from_secret: secret_key
 #   commands:
 #     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-#     - docker rm devhub2
-#     - docker run -d -p '23842:8000/tcp' --name='devhub2' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhub2:latest
+#     - docker rm devhubjs
+#     - docker run -d -p '23842:8000/tcp' --name='devhubjs' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhubjs:latest
 
-# - name: devhub2 - deploy
+# - name: devhubjs - deploy
 #   image: sinlead/drone-kubectl
 #   settings:
 #     kubernetes_server:
@@ -104,7 +104,7 @@ steps:
 #     - sed -i "s/{{server_domain}}/$SERVER_DOMAIN/g"  ./k8s/deployment.yaml
 #     - sed -i "s/{{devhub_secret_key}}/$DEVHUB_SECRET_KEY/g"  ./k8s/deployment.yaml
 #     - kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
-#     - kubectl rollout restart deployment/devhub2 --insecure-skip-tls-verify
+#     - kubectl rollout restart deployment/devhubjs --insecure-skip-tls-verify
 #   # when:
 #   #   branch:
 #   #   - docker

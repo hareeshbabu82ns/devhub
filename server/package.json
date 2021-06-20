@@ -21,6 +21,8 @@
     "typescript": "^4.3.4"
   },
   "scripts": {
+    "build": "tsc -b tsconfig.json",
+    "start": "node .",
     "tsc-serve": "ts-node index.ts",
     "gql-gen": "graphql-codegen --config codegen.yml"
   }

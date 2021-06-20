@@ -8,3 +8,11 @@ $> yarn gql-gen
 ```sh
 $> yarn tsc-serve
 ```
+
+## Build
+### Docker Local
+```sh
+$> docker build . -t devhubjs
+$> docker run -p 4000:4000 --name devhubjs devhubjs
+$> docker exec -it devhubjs sh
+```
