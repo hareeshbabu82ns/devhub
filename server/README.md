@@ -6,7 +6,7 @@ $> yarn gql-gen
 ### Running Locally
 * run TypeScript node
 ```sh
-$> yarn tsc-serve
+$> yarn serve
 ```
 
 ## Build
