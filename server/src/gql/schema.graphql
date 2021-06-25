@@ -26,9 +26,18 @@ enum SanscriptScheme {
 
 type Query {
   version: String!
+  me: User!
 }
 
 type Mutation {
   version: String!
+  init: String!
   createEntity(withData: EntityCreateInput): ID!
+}
+
+type User {
+  # user name
+  id: ID!
+  displayName: String
+  settings: String
 }
