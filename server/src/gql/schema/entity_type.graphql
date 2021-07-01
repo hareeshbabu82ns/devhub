@@ -1,0 +1,21 @@
+extend type Query {
+  entityTypes: [EntityType!]!
+}
+
+extend type Mutation {
+  createEntityType(withData: EntityTypeInput): ID!
+  updateEntityType(id: ID!, withData: EntityTypeInput): ID!
+  deleteEntityType(id: ID!): ID!
+}
+
+input EntityTypeInput {
+  name: String
+  description: String
+}
+
+# Type of the Entity ex. God, Author, Slokam etc.
+type EntityType {
+  id: ID!
+  name: String!
+  description: String
+}

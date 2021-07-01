@@ -12,7 +12,8 @@ export async function connectDB(): Promise<Connection> {
   const dbURL = `mongodb://${dbConfig.mdbUser}:${dbConfig.mdbPassword}@${dbConfig.mdbHost}:${dbConfig.mdbPort}/${dbConfig.mdbDB}`;
   await mongoose.connect(dbURL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false,
   });
   return mongoose.connection;
 }

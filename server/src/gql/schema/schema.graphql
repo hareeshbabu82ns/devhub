@@ -1,11 +1,3 @@
-type Entity {
-  text: String!
-}
-
-input EntityCreateInput {
-  text: String!
-}
-
 # Sanskript Transliterate Schemes
 enum SanscriptScheme {
   # Devanagari (Samskrutam)
@@ -32,7 +24,6 @@ type Query {
 type Mutation {
   version: String!
   init: String!
-  createEntity(withData: EntityCreateInput): ID!
 }
 
 type User {

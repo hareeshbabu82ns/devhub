@@ -1,0 +1,78 @@
+{
+  "languages": [
+    {
+      "iso": "SAN",
+      "name": "संस्कृतम्",
+      "description": "Sanskrit"
+    },
+    {
+      "iso": "TEL",
+      "name": "తెలుగు",
+      "description": "Telugu"
+    },
+    {
+      "iso": "ENG",
+      "name": "English",
+      "description": "English"
+    },
+    {
+      "iso": "TAM",
+      "name": "தமிழ்",
+      "description": "Tamil"
+    },
+    {
+      "iso": "IAST",
+      "name": "IAST",
+      "description": "International Alphabet of Sanskrit Transliteration"
+    },
+    {
+      "iso": "SLP1",
+      "name": "SLP1",
+      "description": "Sanskrit Library Phonetic Basic"
+    },
+    {
+      "iso": "HIN",
+      "name": "हिन्दि",
+      "description": "Hindi"
+    }
+  ],
+  "entityTypes": [
+    {
+      "name": "God"
+    },
+    {
+      "name": "Author"
+    },
+    {
+      "name": "Slokam"
+    },
+    {
+      "name": "Adhyaayam"
+    },
+    {
+      "name": "Parvam"
+    },
+    {
+      "name": "Kaandam"
+    },
+    {
+      "name": "Stotram"
+    },
+    {
+      "name": "Dandakam"
+    },
+    {
+      "name": "Sarga"
+    },
+    {
+      "name": "Puranam"
+    },
+    {
+      "name": "Itihasam"
+    },
+    {
+      "name": "Others"
+    }
+  ],
+  "entities": []
+}

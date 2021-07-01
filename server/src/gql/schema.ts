@@ -15,29 +15,76 @@ export type Scalars = {
 
 export type Entity = {
   __typename?: 'Entity';
+  id: Scalars['ID'];
   text: Scalars['String'];
 };
 
-export type EntityCreateInput = {
-  text: Scalars['String'];
+export type EntityInput = {
+  text?: Maybe<Scalars['String']>;
+};
+
+export type EntityType = {
+  __typename?: 'EntityType';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+};
+
+export type EntityTypeInput = {
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  version: Scalars['String'];
-  init: Scalars['String'];
   createEntity: Scalars['ID'];
+  createEntityType: Scalars['ID'];
+  deleteEntity: Scalars['ID'];
+  deleteEntityType: Scalars['ID'];
+  init: Scalars['String'];
+  updateEntity: Scalars['ID'];
+  updateEntityType: Scalars['ID'];
+  version: Scalars['String'];
 };
 
 
 export type MutationCreateEntityArgs = {
-  withData?: Maybe<EntityCreateInput>;
+  withData?: Maybe<EntityInput>;
+};
+
+
+export type MutationCreateEntityTypeArgs = {
+  withData?: Maybe<EntityTypeInput>;
+};
+
+
+export type MutationDeleteEntityArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteEntityTypeArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationUpdateEntityArgs = {
+  id: Scalars['ID'];
+  withData?: Maybe<EntityInput>;
+};
+
+
+export type MutationUpdateEntityTypeArgs = {
+  id: Scalars['ID'];
+  withData?: Maybe<EntityTypeInput>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  version: Scalars['String'];
+  entities: Array<Entity>;
+  entityTypes: Array<EntityType>;
   me: User;
+  version: Scalars['String'];
 };
 
 export enum SanscriptScheme {
@@ -49,13 +96,6 @@ export enum SanscriptScheme {
   Tamil = 'TAMIL',
   Kannada = 'KANNADA'
 }
-
-export type Settings = {
-  __typename?: 'Settings';
-  id: Scalars['ID'];
-  user: Scalars['ID'];
-  content?: Maybe<Scalars['String']>;
-};
 
 export type User = {
   __typename?: 'User';
@@ -143,13 +183,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Entity: ResolverTypeWrapper<Entity>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  EntityCreateInput: EntityCreateInput;
-  Mutation: ResolverTypeWrapper<{}>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  EntityInput: EntityInput;
+  EntityType: ResolverTypeWrapper<EntityType>;
+  EntityTypeInput: EntityTypeInput;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   SanscriptScheme: SanscriptScheme;
-  Settings: ResolverTypeWrapper<Settings>;
   User: ResolverTypeWrapper<User>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
@@ -157,37 +198,46 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Entity: Entity;
-  String: Scalars['String'];
-  EntityCreateInput: EntityCreateInput;
-  Mutation: {};
   ID: Scalars['ID'];
+  String: Scalars['String'];
+  EntityInput: EntityInput;
+  EntityType: EntityType;
+  EntityTypeInput: EntityTypeInput;
+  Mutation: {};
   Query: {};
-  Settings: Settings;
   User: User;
   Boolean: Scalars['Boolean'];
 };
 
 export type EntityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entity'] = ResolversParentTypes['Entity']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EntityTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['EntityType'] = ResolversParentTypes['EntityType']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  init?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createEntity?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateEntityArgs, never>>;
+  createEntityType?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateEntityTypeArgs, never>>;
+  deleteEntity?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteEntityArgs, 'id'>>;
+  deleteEntityType?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteEntityTypeArgs, 'id'>>;
+  init?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updateEntity?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationUpdateEntityArgs, 'id'>>;
+  updateEntityType?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationUpdateEntityTypeArgs, 'id'>>;
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entities?: Resolver<Array<ResolversTypes['Entity']>, ParentType, ContextType>;
+  entityTypes?: Resolver<Array<ResolversTypes['EntityType']>, ParentType, ContextType>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-};
-
-export type SettingsResolvers<ContextType = any, ParentType extends ResolversParentTypes['Settings'] = ResolversParentTypes['Settings']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -199,9 +249,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   Entity?: EntityResolvers<ContextType>;
+  EntityType?: EntityTypeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Settings?: SettingsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

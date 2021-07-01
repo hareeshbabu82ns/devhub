@@ -2,20 +2,20 @@ import express, { Express } from 'express'
 import cors from 'cors'
 import path from 'path'
 import { ApolloServer } from 'apollo-server-express'
-import { makeExecutableSchema } from 'graphql-tools';
+import { GraphQLFileLoader } from 'graphql-tools';
 import { resolvers } from './src/gql/resolvers'
-import { importSchema } from 'graphql-import'
+import { loadSchemaSync } from 'graphql-tools'
 
 import { connectDB } from './src/db/connect'
 
-const typeDefs = importSchema('./src/gql/schema.graphql')
+// const typeDefs = importSchema('./src/gql/schema')
 
-const server = new ApolloServer({
-  schema: makeExecutableSchema({
-    typeDefs,
-    resolvers
-  })
-});
+// const server = new ApolloServer({
+//   schema: makeExecutableSchema({
+//     typeDefs,
+//     resolvers
+//   })
+// });
 
 const app = express();
 
@@ -31,6 +31,12 @@ app.use(cors(options))
 
 // Additional middleware can be mounted at this point to run before Apollo.
 // app.use('*');
+
+// GraphQL Server
+const schema = loadSchemaSync("./src/gql/schema/*.graphql",
+  { loaders: [new GraphQLFileLoader()], resolvers, })
+
+const server = new ApolloServer({ schema });
 
 // Mount Apollo middleware here.
 server.applyMiddleware({ app, path: '/graphql' });

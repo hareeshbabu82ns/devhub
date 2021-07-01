@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const schema = new mongoose.Schema({
-  name: String
+  text: String
 });
 
-const Entity = mongoose.model('Entity', schema);
+const Entity = mongoose.model('Entity', schema, 'Entities');
 
 export default Entity;
