@@ -32,3 +32,52 @@ type User {
   displayName: String
   settings: String
 }
+
+# Operations allowed on Filters
+enum FilterOperation {
+  EQUALS
+  NOT_EQUALS
+  GREATER_THAN
+  GREATER_THAN_EQUALS
+  LESS_THAN
+  LESS_THAN_EQUALS
+  IN
+  NOT_IN
+  REGEX
+  ALL
+}
+
+input FilterString {
+  operation: FilterOperation = EQUALS
+  path: String
+  value: String
+  valueList: [String!]
+}
+
+input FilterInt {
+  operation: FilterOperation = EQUALS
+  path: String
+  value: Int
+  valueList: [Int!]
+}
+
+input FilterFloat {
+  operation: FilterOperation = EQUALS
+  path: String
+  value: Float
+  valueList: [Float!]
+}
+
+input FilterID {
+  operation: FilterOperation = EQUALS
+  path: String
+  value: ID
+  valueList: [ID!]
+}
+
+input FilterBoolean {
+  operation: FilterOperation = EQUALS
+  path: String
+  value: Boolean
+  valueList: [Boolean!]
+}

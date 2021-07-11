@@ -1,8 +1,11 @@
+import { GraphQLResolveInfo } from 'graphql';
 import { Resolvers, User } from './schema';
 import Entity from '../db/models/Entity';
 import UserResolvers from './resolvers/user';
 import EntityResolvers from './resolvers/entity';
 import EntityTypeResolvers from './resolvers/entity_type';
+import LanguageResolvers from './resolvers/language';
+import { getRequestedFields } from './resolvers/utils';
 
 export const resolvers: Resolvers = {
   Query: {
@@ -16,6 +19,12 @@ export const resolvers: Resolvers = {
 
     // Entity Type
     entityTypes: EntityTypeResolvers.read,
+
+    // Language Type
+    languages: async (parent, args, context, info: GraphQLResolveInfo) => {
+      const requestedFields = getRequestedFields(info);
+      return LanguageResolvers.read(args, requestedFields);
+    },
   },
 
   Mutation: {
@@ -23,6 +32,7 @@ export const resolvers: Resolvers = {
     init: async (parent, args) => {
       await UserResolvers.init();
       await EntityTypeResolvers.init();
+      await LanguageResolvers.init();
       return "data successfully initialized";
     },
 
@@ -54,5 +64,18 @@ export const resolvers: Resolvers = {
       return res;
     },
 
+    // Language Type
+    createLanguage: async (parent, args) => {
+      const res = await LanguageResolvers.create(args.withData);
+      return res;
+    },
+    updateLanguage: async (parent, args) => {
+      const res = await LanguageResolvers.update(args.id, args.withData);
+      return res;
+    },
+    deleteLanguage: async (parent, args) => {
+      const res = await LanguageResolvers.delete(args.id);
+      return res;
+    },
   },
 };

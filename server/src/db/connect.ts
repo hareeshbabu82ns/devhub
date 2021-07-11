@@ -15,5 +15,6 @@ export async function connectDB(): Promise<Connection> {
     useUnifiedTopology: true,
     useFindAndModify: false,
   });
+  mongoose.set('debug', true);
   return mongoose.connection;
 }

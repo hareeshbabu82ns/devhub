@@ -35,15 +35,89 @@ export type EntityTypeInput = {
   description?: Maybe<Scalars['String']>;
 };
 
+export type FilterBoolean = {
+  operation?: Maybe<FilterOperation>;
+  path?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['Boolean']>;
+  valueList?: Maybe<Array<Scalars['Boolean']>>;
+};
+
+export type FilterFloat = {
+  operation?: Maybe<FilterOperation>;
+  path?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['Float']>;
+  valueList?: Maybe<Array<Scalars['Float']>>;
+};
+
+export type FilterId = {
+  operation?: Maybe<FilterOperation>;
+  path?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['ID']>;
+  valueList?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type FilterInt = {
+  operation?: Maybe<FilterOperation>;
+  path?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['Int']>;
+  valueList?: Maybe<Array<Scalars['Int']>>;
+};
+
+export enum FilterOperation {
+  Equals = 'EQUALS',
+  NotEquals = 'NOT_EQUALS',
+  GreaterThan = 'GREATER_THAN',
+  GreaterThanEquals = 'GREATER_THAN_EQUALS',
+  LessThan = 'LESS_THAN',
+  LessThanEquals = 'LESS_THAN_EQUALS',
+  In = 'IN',
+  NotIn = 'NOT_IN',
+  Regex = 'REGEX',
+  All = 'ALL'
+}
+
+export type FilterString = {
+  operation?: Maybe<FilterOperation>;
+  path?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+  valueList?: Maybe<Array<Scalars['String']>>;
+};
+
+export type Language = {
+  __typename?: 'Language';
+  id: Scalars['ID'];
+  iso: Scalars['String'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+};
+
+export type LanguageInput = {
+  iso?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+};
+
+export type LanguageSearchInput = {
+  id?: Maybe<FilterId>;
+  iso?: Maybe<FilterString>;
+  name?: Maybe<FilterString>;
+  description?: Maybe<FilterString>;
+  and?: Maybe<Array<LanguageSearchInput>>;
+  or?: Maybe<Array<LanguageSearchInput>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createEntity: Scalars['ID'];
   createEntityType: Scalars['ID'];
+  createLanguage: Scalars['ID'];
   deleteEntity: Scalars['ID'];
   deleteEntityType: Scalars['ID'];
+  deleteLanguage: Scalars['ID'];
   init: Scalars['String'];
   updateEntity: Scalars['ID'];
   updateEntityType: Scalars['ID'];
+  updateLanguage: Scalars['ID'];
   version: Scalars['String'];
 };
 
@@ -58,12 +132,22 @@ export type MutationCreateEntityTypeArgs = {
 };
 
 
+export type MutationCreateLanguageArgs = {
+  withData?: Maybe<LanguageInput>;
+};
+
+
 export type MutationDeleteEntityArgs = {
   id: Scalars['ID'];
 };
 
 
 export type MutationDeleteEntityTypeArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteLanguageArgs = {
   id: Scalars['ID'];
 };
 
@@ -79,12 +163,25 @@ export type MutationUpdateEntityTypeArgs = {
   withData?: Maybe<EntityTypeInput>;
 };
 
+
+export type MutationUpdateLanguageArgs = {
+  id: Scalars['ID'];
+  withData?: Maybe<LanguageInput>;
+};
+
 export type Query = {
   __typename?: 'Query';
   entities: Array<Entity>;
   entityTypes: Array<EntityType>;
+  languages: Array<Language>;
   me: User;
   version: Scalars['String'];
+};
+
+
+export type QueryLanguagesArgs = {
+  by?: Maybe<LanguageSearchInput>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 export enum SanscriptScheme {
@@ -188,11 +285,22 @@ export type ResolversTypes = {
   EntityInput: EntityInput;
   EntityType: ResolverTypeWrapper<EntityType>;
   EntityTypeInput: EntityTypeInput;
+  FilterBoolean: FilterBoolean;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  FilterFloat: FilterFloat;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  FilterID: FilterId;
+  FilterInt: FilterInt;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  FilterOperation: FilterOperation;
+  FilterString: FilterString;
+  Language: ResolverTypeWrapper<Language>;
+  LanguageInput: LanguageInput;
+  LanguageSearchInput: LanguageSearchInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   SanscriptScheme: SanscriptScheme;
   User: ResolverTypeWrapper<User>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -203,10 +311,20 @@ export type ResolversParentTypes = {
   EntityInput: EntityInput;
   EntityType: EntityType;
   EntityTypeInput: EntityTypeInput;
+  FilterBoolean: FilterBoolean;
+  Boolean: Scalars['Boolean'];
+  FilterFloat: FilterFloat;
+  Float: Scalars['Float'];
+  FilterID: FilterId;
+  FilterInt: FilterInt;
+  Int: Scalars['Int'];
+  FilterString: FilterString;
+  Language: Language;
+  LanguageInput: LanguageInput;
+  LanguageSearchInput: LanguageSearchInput;
   Mutation: {};
   Query: {};
   User: User;
-  Boolean: Scalars['Boolean'];
 };
 
 export type EntityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entity'] = ResolversParentTypes['Entity']> = {
@@ -222,20 +340,32 @@ export type EntityTypeResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type LanguageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Language'] = ResolversParentTypes['Language']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  iso?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createEntity?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateEntityArgs, never>>;
   createEntityType?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateEntityTypeArgs, never>>;
+  createLanguage?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateLanguageArgs, never>>;
   deleteEntity?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteEntityArgs, 'id'>>;
   deleteEntityType?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteEntityTypeArgs, 'id'>>;
+  deleteLanguage?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteLanguageArgs, 'id'>>;
   init?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updateEntity?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationUpdateEntityArgs, 'id'>>;
   updateEntityType?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationUpdateEntityTypeArgs, 'id'>>;
+  updateLanguage?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationUpdateLanguageArgs, 'id'>>;
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   entities?: Resolver<Array<ResolversTypes['Entity']>, ParentType, ContextType>;
   entityTypes?: Resolver<Array<ResolversTypes['EntityType']>, ParentType, ContextType>;
+  languages?: Resolver<Array<ResolversTypes['Language']>, ParentType, ContextType, RequireFields<QueryLanguagesArgs, 'limit'>>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
@@ -250,6 +380,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = {
   Entity?: EntityResolvers<ContextType>;
   EntityType?: EntityTypeResolvers<ContextType>;
+  Language?: LanguageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
