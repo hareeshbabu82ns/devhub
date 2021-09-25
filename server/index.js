@@ -13,7 +13,7 @@ const resolvers = require('./src/gql/resolvers')
 
 
 require('dotenv').config({
-  // path: path.resolve(process.cwd(), '.env')
+  path: path.resolve(process.cwd(), '.env.local')
 })
 
 const PORT = process.env.PORT || 4000;
