@@ -11,7 +11,7 @@ COPY server/package.json ./
 RUN yarn install
 
 COPY server/ .
-RUN yarn build
+# RUN yarn build
 # RUN npm audit fix
 
 ##############

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
   iso: String,
@@ -8,4 +8,4 @@ const schema = new mongoose.Schema({
 
 const Language = mongoose.model('Language', schema, 'Languages');
 
-export default Language;
+module.exports = Language;

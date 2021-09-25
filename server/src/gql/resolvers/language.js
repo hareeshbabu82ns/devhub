@@ -1,17 +1,16 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { FilterOperation, Language, QueryLanguagesArgs } from '../schema';
-import LanguageModel from '../../db/models/Language';
-import * as initData from './init_data.json'
-import { buildQueryFilter } from './utils';
+const { GraphQLResolveInfo } = require('graphql');
+const LanguageModel = require('../../db/models/Language');
+const initData = require('./init_data.json')
+const { buildQueryFilter } = require('./utils');
 
-export default {
+module.exports = {
 
   init: async () => {
     // create default entity types
     await initData.languages.map(({ iso, name, description }) => LanguageModel.create({ iso, name, description }))
   },
 
-  read: async (args: QueryLanguagesArgs, requestedFields: Array<String>) => {
+  read: async (args, requestedFields) => {
     const query = LanguageModel.find();
 
     if (args.by) {
@@ -23,29 +22,29 @@ export default {
     const res = await query.exec();
     return res.map(mapModelToGQL);
   },
-  update: async (id: String, data: Object) => {
+  update: async (id, data) => {
     const item = await LanguageModel.findOneAndUpdate({ "_id": id }, data);
     // console.log(item)
     return item.id;
   },
-  create: async (data: Object) => {
+  create: async (data) => {
     const item = await LanguageModel.create(data);
     console.log(item)
     return item.id;
   },
-  delete: async (id: String) => {
+  delete: async (id) => {
     const item = await LanguageModel.deleteOne({ "_id": id });
     console.log(item)
-    if (item.n === 1)
-      return id as string;
+    if (item.deletedCount === 1)
+      return id;
     else
       return null;
   },
 }
 
-const mapModelToGQL = (item: any): Language => {
+const mapModelToGQL = (item) => {
   // console.log(item)
-  const type: Language = {
+  const type = {
     id: item.id,
     iso: item.get('iso'),
     name: item.get('name'),

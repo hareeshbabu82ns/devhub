@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
   text: String
@@ -6,4 +6,4 @@ const schema = new mongoose.Schema({
 
 const Entity = mongoose.model('Entity', schema, 'Entities');
 
-export default Entity;
+module.exports = Entity;

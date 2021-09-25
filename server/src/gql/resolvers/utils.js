@@ -1,13 +1,23 @@
-import { GraphQLResolveInfo, FieldNode } from 'graphql';
-import { Query, Document, FilterQuery } from 'mongoose';
-import { FilterOperation } from '../schema';
+const { Query, Document, FilterQuery } = require('mongoose');
 
-export function getRequestedFields(info: GraphQLResolveInfo): Array<String> {
+const FilterOperation = {
+  Equals: 'EQUALS',
+  NotEquals: 'NOT_EQUALS',
+  In: 'IN',
+  NotIn: 'NOT_IN',
+  LessThan: 'LESS_THAN',
+  LessThanEquals: 'LESS_THAN_EQUALS',
+  GreaterThan: 'GREATER_THAN',
+  GreaterThanEquals: 'GREATER_THAN_EQUALS',
+  Regex: 'REGEX',
+  All: 'ALL',
+}
+function getRequestedFields(info) {
   const selections = info.fieldNodes[0]?.selectionSet?.selections;
   // console.log('Requested Fields: ', selections);
 
-  const names: Array<String> = [];
-  selections.forEach(({ name: { value } }: FieldNode) => names.push(value));
+  const names = [];
+  selections.forEach(({ name: { value } }) => names.push(value));
   return names;
 }
 
@@ -30,25 +40,25 @@ const queryFilterLogicalMap = {
   'nor': Query.prototype.nor,
 }
 
-export function buildQueryFilter(
-  query: Query<Document<any, any>[], Document<any, any>, {}>,
-  filters: any) {
+function buildQueryFilter(
+  query,
+  filters) {
 
   const keys = Object.keys(filters);
   var queryTmp = query
   keys.forEach((key) => {
 
-    const value = filters[key as keyof typeof filters];
+    const value = filters[key];
 
     if (key in queryFilterLogicalMap) {
-      const filter: FilterQuery<Document<any, any>>[] = [];
-      value.forEach((filterCondition: any) => {
-        const q = new Query<Document<any, any>[], Document<any, any>, {}>();
+      const filter = [];
+      value.forEach((filterCondition) => {
+        const q = new Query();
         buildQueryFilter(q, filterCondition);
         filter.push(q.getFilter());
       });
       // queryTmp = queryTmp.and(filter);
-      queryTmp = queryFilterLogicalMap[key as keyof typeof queryFilterLogicalMap].apply(queryTmp, [filter]);
+      queryTmp = queryFilterLogicalMap[key].apply(queryTmp, [filter]);
     }
 
     const path = key === 'id' ? '_id' : value.path ? `${key}.${value.path}` : key
@@ -57,9 +67,9 @@ export function buildQueryFilter(
     // console.log(value)
 
     if ('operation' in value) {
-      const valueOperation = value['operation' as keyof typeof value] as FilterOperation;
-      const valueValue = value['value' as keyof typeof value];
-      const valueValueList = value['valueList' as keyof typeof value];
+      const valueOperation = value['operation'];
+      const valueValue = value['value'];
+      const valueValueList = value['valueList'];
       // console.log(valueOperation)
 
       switch (valueOperation) {
@@ -84,6 +94,11 @@ export function buildQueryFilter(
           break;
       }
     }
-    // query.where(key).equals(filters[key as keyof typeof filters]);
+    // query.where(key).equals(filters[key]);
   });
+}
+
+module.exports = {
+  getRequestedFields,
+  buildQueryFilter
 }

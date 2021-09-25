@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
   name: String,
@@ -7,4 +7,4 @@ const schema = new mongoose.Schema({
 
 const EntityType = mongoose.model('EntityType', schema, 'EntityTypes');
 
-export default EntityType;
+module.exports = EntityType;

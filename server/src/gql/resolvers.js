@@ -1,13 +1,10 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { Resolvers, User } from './schema';
-import Entity from '../db/models/Entity';
-import UserResolvers from './resolvers/user';
-import EntityResolvers from './resolvers/entity';
-import EntityTypeResolvers from './resolvers/entity_type';
-import LanguageResolvers from './resolvers/language';
-import { getRequestedFields } from './resolvers/utils';
+const UserResolvers = require('./resolvers/user');
+const EntityResolvers = require('./resolvers/entity');
+const EntityTypeResolvers = require('./resolvers/entity_type');
+const LanguageResolvers = require('./resolvers/language');
+const { getRequestedFields } = require('./resolvers/utils');
 
-export const resolvers: Resolvers = {
+const resolvers = {
   Query: {
     version: (parent, args) => {
       return "v1";
@@ -21,7 +18,7 @@ export const resolvers: Resolvers = {
     entityTypes: EntityTypeResolvers.read,
 
     // Language Type
-    languages: async (parent, args, context, info: GraphQLResolveInfo) => {
+    languages: async (parent, args, context, info) => {
       const requestedFields = getRequestedFields(info);
       return LanguageResolvers.read(args, requestedFields);
     },
@@ -79,3 +76,5 @@ export const resolvers: Resolvers = {
     },
   },
 };
+
+module.exports = resolvers

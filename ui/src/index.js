@@ -1,14 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+// import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-} from "@apollo/client";
+import { RecoilRoot } from 'recoil';
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import ThemeConfig from './theme/theme';
 
 const client = new ApolloClient({
   uri: '/graphql',
@@ -17,9 +14,13 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <RecoilRoot>
+      <ThemeConfig>
+        <ApolloProvider client={client}>
+          <App />
+        </ApolloProvider>
+      </ThemeConfig>
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')
 );

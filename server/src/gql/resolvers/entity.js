@@ -1,34 +1,33 @@
-import { Entity } from '../schema';
-import EntityModel from '../../db/models/Entity';
+const EntityModel = require('../../db/models/Entity');
 
-export default {
+module.exports = {
 
   read: async () => {
     const res = await EntityModel.find();
     return res.map(item => {
-      // console.log(item)
-      const type: Entity = {
+      console.log(item)
+      const type = {
         id: item.id,
         text: item.get('text'),
       }
       return type;
     });
   },
-  update: async (id: String, data: Object) => {
+  update: async (id, data) => {
     const item = await EntityModel.findOneAndUpdate({ "_id": id }, data);
     // console.log(item)
     return item.id;
   },
-  create: async (data: Object) => {
+  create: async (data) => {
     const item = await EntityModel.create(data);
     console.log(item)
     return item.id;
   },
-  delete: async (id: String) => {
+  delete: async (id) => {
     const item = await EntityModel.deleteOne({ "_id": id });
     console.log(item)
-    if (item.n === 1)
-      return id as string;
+    if (item.deletedCount === 1)
+      return id;
     else
       return null;
   },

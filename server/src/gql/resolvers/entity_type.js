@@ -1,8 +1,7 @@
-import { EntityType } from '../schema';
-import EntityTypeModel from '../../db/models/EntityType';
-import * as initData from './init_data.json'
+const EntityTypeModel = require('../../db/models/EntityType')
+const initData = require('./init_data.json')
 
-export default {
+module.exports = {
 
   init: async () => {
     // create default entity types
@@ -13,7 +12,7 @@ export default {
     const res = await EntityTypeModel.find();
     return res.map(item => {
       // console.log(item)
-      const type: EntityType = {
+      const type = {
         id: item.id,
         name: item.get('name'),
         description: item.get('description'),
@@ -21,21 +20,21 @@ export default {
       return type;
     });
   },
-  update: async (id: String, data: Object) => {
+  update: async (id, data) => {
     const item = await EntityTypeModel.findOneAndUpdate({ "_id": id }, data);
     // console.log(item)
     return item.id;
   },
-  create: async (data: Object) => {
+  create: async (data) => {
     const item = await EntityTypeModel.create(data);
     console.log(item)
     return item.id;
   },
-  delete: async (id: String) => {
+  delete: async (id) => {
     const item = await EntityTypeModel.deleteOne({ "_id": id });
     console.log(item)
-    if (item.n === 1)
-      return id as string;
+    if (item.deletedCount === 1)
+      return id;
     else
       return null;
   },

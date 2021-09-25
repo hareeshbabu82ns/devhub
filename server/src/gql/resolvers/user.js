@@ -1,11 +1,10 @@
-import { Resolvers, User } from '../schema';
-import UserModel from '../../db/models/User';
+const UserModel = require('../../db/models/User');
 
-export default {
+module.exports = {
 
   init: async () => {
     //create default admin user settings
-    const data: User = {
+    const data = {
       id: "0",
       displayName: "Admin",
       settings: "{displayLang='SAN', meaningLang='TEL'}",
@@ -16,6 +15,6 @@ export default {
   me: async () => {
     //TODO: find current user details
     const data = await UserModel.findOne({ displayName: "Admin" })
-    return data as User;
+    return data;
   }
 }
