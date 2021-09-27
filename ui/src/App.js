@@ -22,7 +22,20 @@ function VersionContent() {
   const [createEntityMutation, { data: mData, error: mError, loading: mLoading }] = useMutation(MUTATION_CREATE_ENTITY)
 
   const createEntity = async () => {
-    const res = await createEntityMutation({ variables: { data: { text: "test" } } })
+    const entityData = {
+      type: "GOD",
+      text: [
+        {
+          language: "ENG",
+          value: "Eng Val"
+        },
+        {
+          language: "SAN",
+          value: "San Val"
+        }
+      ]
+    }
+    const res = await createEntityMutation({ variables: { data: entityData } })
     console.log(res)
   }
 

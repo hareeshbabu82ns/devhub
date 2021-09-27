@@ -9,11 +9,18 @@ extend type Mutation {
 }
 
 input EntityInput {
-  text: String
+  type: EntityTypeEnum!
+  text: [LanguageValueInput]!
 }
 
 # Type of the Entity ex. God, Author, Slokam etc.
 type Entity {
   id: ID!
-  text: String!
+  type: EntityTypeEnum!
+  text(language:String = "DEFAULT"): String!
+}
+
+input LanguageValueInput {
+  language: String!
+  value: String!
 }

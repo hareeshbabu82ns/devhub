@@ -19,3 +19,18 @@ type EntityType {
   name: String!
   description: String
 }
+
+enum EntityTypeEnum {
+  GOD
+  AUTHOR
+  ITIHASAM
+  PURANAM
+  STHOTRAM
+  DANDAKAM
+  KAANDAM
+  SARGA
+  PARVAM
+  ADHYAAYAM
+  SLOKAM
+  OTHERS
+}

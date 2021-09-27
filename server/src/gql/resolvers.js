@@ -75,6 +75,8 @@ const resolvers = {
       return res;
     },
   },
+
+  ...EntityResolvers.type
 };
 
 module.exports = resolvers

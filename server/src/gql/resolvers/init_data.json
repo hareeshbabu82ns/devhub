@@ -38,39 +38,51 @@
   ],
   "entityTypes": [
     {
+      "code": "GOD",
       "name": "God"
     },
     {
+      "code": "AUTHOR",
       "name": "Author"
     },
     {
+      "code": "SLOKAM",
       "name": "Slokam"
     },
     {
+      "code": "ADHYAAYAM",
       "name": "Adhyaayam"
     },
     {
+      "code": "PARVAM",
       "name": "Parvam"
     },
     {
+      "code": "KAANDAM",
       "name": "Kaandam"
     },
     {
-      "name": "Stotram"
+      "code": "STHOTRAM",
+      "name": "Sthotram"
     },
     {
+      "code": "DANDAKAM",
       "name": "Dandakam"
     },
     {
+      "code": "SARGA",
       "name": "Sarga"
     },
     {
+      "code": "PURANAM",
       "name": "Puranam"
     },
     {
+      "code": "ITIHASAM",
       "name": "Itihasam"
     },
     {
+      "code": "OTHERS",
       "name": "Others"
     }
   ],

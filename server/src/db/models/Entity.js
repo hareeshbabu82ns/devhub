@@ -1,7 +1,14 @@
 const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
-  text: String
+  type: {
+    type: String,
+    required: true,
+  },
+  text: {
+    type: mongoose.Schema.Types.Mixed,
+    required: true,
+  },
 });
 
 const Entity = mongoose.model('Entity', schema, 'Entities');
