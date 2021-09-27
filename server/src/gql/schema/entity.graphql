@@ -11,12 +11,30 @@ extend type Mutation {
 input EntityInput {
   type: EntityTypeEnum!
   text: [LanguageValueInput]!
+
+  """ Child Entities with Data (will create new entities) """
+  children: [EntityInput!]
+
+  """ Child Entity IDs only (will just link to existing entities) """
+  childrenIDs: [ID!]
+
+  """ Parent Entities with Data (will create new entities) """
+  parents: [EntityInput!]
+
+  """ Parent Entity IDs only (will just link to existing entities) """
+  parentIDs: [ID!]
 }
 
 # Type of the Entity ex. God, Author, Slokam etc.
 type Entity {
   id: ID!
   type: EntityTypeEnum!
+
+  parents: [Entity!]
+  parentsCount: Int!
+  children: [Entity!]
+  childrenCount: Int!
+
   text(language:String = "DEFAULT"): String!
 }
 

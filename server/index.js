@@ -1,16 +1,7 @@
-
-const { ApolloServer, gql } = require('apollo-server-express');
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core');
 const express = require('express');
 const http = require('http');
 const path = require('path');
-
-const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader')
-const { loadSchemaSync } = require('@graphql-tools/load')
-const { addResolversToSchema } = require('@graphql-tools/schema')
-
-const resolvers = require('./src/gql/resolvers')
-
 
 require('dotenv').config({
   path: path.resolve(process.cwd(), '.env.local')
@@ -19,18 +10,22 @@ require('dotenv').config({
 const PORT = process.env.PORT || 4000;
 
 const connectToDB = require("./src/db/connect")
+const buildApolloServer = require("./src/gql/apollo_server")
 
+const dbConfig = {
+  mdbHost: process.env['MONGO_DB_HOST'] || 'localhost',
+  mdbPort: process.env['MONGO_DB_PORT'] || '21017',
+  mdbDB: process.env['MONGO_DB_DB'] || 'test',
+  mdbUser: process.env['MONGO_DB_USER'] || 'test',
+  mdbPassword: process.env['MONGO_DB_PASSWORD'] || '',
+}
 
 async function startApolloServer({ expressApp, schema, initContext }) {
 
-  const sql = await connectToDB()
   const httpServer = http.createServer(expressApp)
-  const server = new ApolloServer({
+  const server = await buildApolloServer({
     schema,
-    // context: initContext,
-    context: ({ req }) => ({
-      sql
-    }),
+    dbConfig,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   })
 
@@ -47,7 +42,7 @@ async function startApolloServer({ expressApp, schema, initContext }) {
 
 
 async function initContext({ req }) {
-  const sql = await connectToDB()
+  const sql = await connectToDB({ ...dbConfig })
   return {
     sql,
   }
@@ -56,12 +51,9 @@ async function initContext({ req }) {
 (async () => {
 
   // GraphQL Server
-  const schemaOnly = loadSchemaSync("./src/gql/schema/*.graphql",
-    { loaders: [new GraphQLFileLoader()] })
-  const schema = addResolversToSchema({ schema: schemaOnly, resolvers, });
 
   const expressApp = express();
-  const apolloServer = await startApolloServer({ expressApp, schema, initContext });
+  const apolloServer = await startApolloServer({ expressApp, initContext });
 
   // serve UI
   expressApp.use(express.static(path.join(__dirname, '../', 'ui', 'build')));

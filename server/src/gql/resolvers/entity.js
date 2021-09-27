@@ -16,6 +16,26 @@ function languageValuesToMap(languageValues) {
   return languageValues.reduce((p, c) => ({ ...p, [c.language]: c.value }), {})
 }
 
+async function createEntityWithData(data) {
+  const text = languageValuesToMap(data.text)
+  const itemData = {
+    type: data.type,
+    text,
+  }
+
+  // check [children] data
+  if (data.children && data.children.length > 0) {
+    // create each child
+    itemData.children = data.children.map(async (child) => createEntityWithData(child))
+      .map(child => child.id)
+  }
+
+  console.log(itemData)
+  const item = await EntityModel.create(itemData)
+  console.log(item)
+  return item
+}
+
 module.exports = {
   type: {
     Entity: {
@@ -42,15 +62,7 @@ module.exports = {
     return item.id;
   },
   create: async (data) => {
-    // const type = await getEntityType(data.type)
-    const text = languageValuesToMap(data.text)
-    const itemData = {
-      type: data.type,
-      text,
-    }
-    console.log(itemData)
-    const item = await EntityModel.create(itemData)
-    console.log(item)
+    const item = await createEntityWithData(data)
     return item.id;
   },
   delete: async (id) => {
