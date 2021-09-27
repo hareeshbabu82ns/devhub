@@ -8,8 +8,5 @@
     "*.test.js",
     "node_modules"
   ],
-  "delay": "3",
-  "execMap": {
-    "ts": "ts-node"
-  }
+  "delay": "3"
 }
