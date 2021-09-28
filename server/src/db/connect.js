@@ -5,6 +5,7 @@ async function connectDB({ mdbUser, mdbPassword, mdbHost, mdbPort, mdbDB }) {
   try {
 
     await mongoose.connect(dbURL, {
+      connectTimeoutMS: 500,
       // useNewUrlParser: true,
       // useUnifiedTopology: true,
       // useFindAndModify: false,

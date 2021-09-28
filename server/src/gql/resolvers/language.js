@@ -23,7 +23,7 @@ module.exports = {
     return res.map(mapModelToGQL);
   },
   update: async (id, data) => {
-    const item = await LanguageModel.findOneAndUpdate({ "_id": id }, data);
+    const item = await LanguageModel.findOneAndUpdate({ "_id": id }, data, { upsert: true });
     // console.log(item)
     return item.id;
   },
