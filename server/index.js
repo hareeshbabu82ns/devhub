@@ -27,6 +27,7 @@ async function startApolloServer({ expressApp, schema, initContext }) {
     schema,
     dbConfig,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    debug: false,
   })
 
   await server.start()
@@ -42,9 +43,9 @@ async function startApolloServer({ expressApp, schema, initContext }) {
 
 
 async function initContext({ req }) {
-  const sql = await connectToDB({ ...dbConfig })
+  const dbConnection = await connectToDB({ ...dbConfig })
   return {
-    sql,
+    dbConnection,
   }
 }
 

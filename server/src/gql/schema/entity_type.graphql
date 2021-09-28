@@ -1,5 +1,8 @@
 extend type Query {
-  entityTypes: [EntityType!]!
+  entityTypes(
+      by: EntityTypeSearchInput, 
+      limit: Int = 10
+  ): [EntityType!]!
 }
 
 extend type Mutation {
@@ -9,6 +12,7 @@ extend type Mutation {
 }
 
 input EntityTypeInput {
+  code: EntityTypeEnum
   name: String
   description: String
 }
@@ -16,8 +20,18 @@ input EntityTypeInput {
 # Type of the Entity ex. God, Author, Slokam etc.
 type EntityType {
   id: ID!
+  code: EntityTypeEnum!
   name: String!
   description: String
+}
+
+input EntityTypeSearchInput {
+  id: FilterID
+  code: FilterString
+  name: FilterString
+  description: FilterString
+  and: [EntityTypeSearchInput!]
+  or: [EntityTypeSearchInput!]  
 }
 
 enum EntityTypeEnum {

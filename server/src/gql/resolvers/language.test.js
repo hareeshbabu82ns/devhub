@@ -30,7 +30,7 @@ mutation ($id: ID!){
 }
 `
 
-describe('GQL - Lanuage Test', () => {
+describe('GQL - Lanuage Tests', () => {
 
   let apolloServer
 
@@ -187,8 +187,20 @@ describe('GQL - Lanuage Test', () => {
     expect(resDelete.data.deletedId).toEqual(resCreate.data.createdId)
   })
 
+  test('should fail to update language if not exist', async () => {
+    const updateWithData = {
+      description: "Test Lang Descr"
+    }
+    const resUpdate = await apolloServer.executeOperation({
+      query: UPDATE_LANGUAGE,
+      variables: { id: 'randomupdateid', withData: updateWithData }
+    })
+    expect(resUpdate.errors).toBeDefined()
+  })
+
   test('should fail to delete language if not exist', async () => {
-    const resDelete = await apolloServer.executeOperation({ query: DELETE_LANGUAGE, variables: { id: 'somerandomid' } })
+    const resDelete = await apolloServer.executeOperation({ query: DELETE_LANGUAGE, variables: { id: '6152755b9d74594e04aaa67e' } })
     expect(resDelete.errors).toBeDefined()
   })
+
 })

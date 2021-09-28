@@ -1,6 +1,7 @@
 const config = {
   verbose: true,
   collectCoverage: true,
+  maxWorkers: 1, // disable running tests in parallel
   coverageThreshold: {
     global: {
       branches: 80,

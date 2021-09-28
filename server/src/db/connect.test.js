@@ -16,10 +16,10 @@ describe('DB Connection Tests', () => {
       mdbPassword: process.env['MONGO_DB_PASSWORD'] || '',
     }
 
-    const sql = await connectToDB({ ...useDBConfig })
-    expect(sql).toBeDefined()
+    const dbConnection = await connectToDB({ ...useDBConfig })
+    expect(dbConnection).toBeDefined()
 
-    return sql.close()
+    return dbConnection.close()
   })
 
   test('it should not connect with wrong values', async () => {
@@ -36,8 +36,8 @@ describe('DB Connection Tests', () => {
     }
 
     try {
-      const sql = await connectToDB({ ...useDBConfig })
-      expect(sql).toBeUndefined()
+      const dbConnection = await connectToDB({ ...useDBConfig })
+      expect(dbConnection).toBeUndefined()
     } catch (e) {
       expect(e).toBeDefined()
     }

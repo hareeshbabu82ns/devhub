@@ -6,7 +6,7 @@ const { addResolversToSchema } = require('@graphql-tools/schema')
 const connectToDB = require("../db/connect");
 const path = require('path');
 
-async function buildApolloServer({ schema, plugins, dbConfig, envFilePath, envFile, contextValues = {} } = {}) {
+async function buildApolloServer({ schema, plugins, dbConfig, envFilePath, envFile, contextValues = {}, debug } = {}) {
 
   var useDBConfig = dbConfig
   if (!dbConfig) {
@@ -31,12 +31,12 @@ async function buildApolloServer({ schema, plugins, dbConfig, envFilePath, envFi
     useSchema = addResolversToSchema({ schema: schemaOnly, resolvers, });
   }
 
-  const sql = await connectToDB({ ...useDBConfig })
+  const dbConnection = await connectToDB({ ...useDBConfig, debug })
   const server = new ApolloServer({
     schema: useSchema,
     // context: initContext,
     context: ({ req }) => ({
-      sql,
+      dbConnection,
       ...contextValues,
     }),
     plugins,

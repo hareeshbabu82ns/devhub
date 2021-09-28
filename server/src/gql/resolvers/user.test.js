@@ -11,7 +11,7 @@ query {
 }
 `
 
-describe('GQL - User Test', () => {
+describe('GQL - User Tests', () => {
 
   let apolloServer
 

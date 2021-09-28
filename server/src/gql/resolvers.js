@@ -15,7 +15,10 @@ const resolvers = {
     entities: EntityResolvers.read,
 
     // Entity Type
-    entityTypes: EntityTypeResolvers.read,
+    entityTypes: async (parent, args, context, info) => {
+      const requestedFields = getRequestedFields(info);
+      return EntityTypeResolvers.read(args, requestedFields);
+    },
 
     // Language Type
     languages: async (parent, args, context, info) => {

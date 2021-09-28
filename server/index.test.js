@@ -3,7 +3,10 @@ const { gql } = require("apollo-server-core");
 const mongoose = require("mongoose");
 const buildApolloServer = require("./src/gql/apollo_server")
 
-describe('Apollo Server Connectivity Test', () => {
+const GET_VERSION = gql`{version}`
+const MUTATION_INIT = gql`mutation {init}`
+
+describe('Apollo Server Connectivity Tests', () => {
 
   let apolloServer
 
@@ -16,10 +19,19 @@ describe('Apollo Server Connectivity Test', () => {
   })
 
   test('version query should work', async () => {
-    const GET_VERSION = gql`{version}`
     const res = await apolloServer.executeOperation({ query: GET_VERSION })
     expect(res).toHaveProperty('data')
     expect(res.data).toMatchObject({ version: "v1" })
+  })
+
+  test('should init database', async () => {
+    // delete existing entries
+    await mongoose.connection.dropCollection('Users')
+    await mongoose.connection.dropCollection('EntityTypes')
+    await mongoose.connection.dropCollection('Languages')
+
+    const res = await apolloServer.executeOperation({ query: MUTATION_INIT })
+    expect(res.data.init.split(' ')).toContain('initialized')
   })
 
   afterAll(() => {

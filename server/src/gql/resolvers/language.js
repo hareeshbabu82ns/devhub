@@ -1,4 +1,3 @@
-const { GraphQLResolveInfo } = require('graphql');
 const LanguageModel = require('../../db/models/Language');
 const initData = require('./init_data.json')
 const { buildQueryFilter } = require('./utils');
@@ -7,7 +6,8 @@ module.exports = {
 
   init: async () => {
     // create default entity types
-    await initData.languages.map(({ iso, name, description }) => LanguageModel.create({ iso, name, description }))
+    const asyncList = initData.languages.map(({ iso, name, description }) => LanguageModel.create({ iso, name, description }))
+    await Promise.all(asyncList)
   },
 
   read: async (args, requestedFields) => {
@@ -23,22 +23,22 @@ module.exports = {
     return res.map(mapModelToGQL);
   },
   update: async (id, data) => {
-    const item = await LanguageModel.findOneAndUpdate({ "_id": id }, data, { upsert: true });
+    const item = await LanguageModel.findOneAndUpdate({ "_id": id }, { $set: { ...data } });
     // console.log(item)
     return item.id;
   },
   create: async (data) => {
     const item = await LanguageModel.create(data);
-    console.log(item)
+    // console.log(item)
     return item.id;
   },
   delete: async (id) => {
     const item = await LanguageModel.deleteOne({ "_id": id });
-    console.log(item)
+    // console.log(item)
     if (item.deletedCount === 1)
       return id;
     else
-      return null;
+      throw `Nothing deleted with matching id: ${id}`;
   },
 }
 
