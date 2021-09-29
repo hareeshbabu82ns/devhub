@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const EntityModel = require('../../db/models/Entity');
+const { buildQueryFilter } = require('./utils');
+
 
 const LANGUAGE_DEFAULT_INPUT = "DEFAULT"
 const LANGUAGE_DEFAULT_ISO = "SAN"
@@ -17,22 +19,18 @@ function languageValuesToMap(languageValues) {
 }
 
 async function createEntityWithData(data) {
-  const text = languageValuesToMap(data.text)
-  const itemData = {
-    type: data.type,
-    text,
-  }
+  const itemData = mapInputToModel(data)
 
   // check [children] data
   if (data.children && data.children.length > 0) {
     // create each child
-    itemData.children = data.children.map(async (child) => createEntityWithData(child))
-      .map(child => child.id)
+    const allAsyncs = data.children.map(async (child) => createEntityWithData(child))
+    itemData.children = (await Promise.all(allAsyncs)).map(child => child.id)
   }
 
-  console.log(itemData)
+  // console.log(itemData)
   const item = await EntityModel.create(itemData)
-  console.log(item)
+  // console.log(item)
   return item
 }
 
@@ -44,20 +42,21 @@ module.exports = {
       }
     }
   },
-  read: async () => {
-    const res = await EntityModel.find();
-    return res.map(item => {
-      console.log(item)
-      const type = {
-        id: item.id,
-        type: item.get('type'),
-        text: item.get('text'),
-      }
-      return type;
-    });
+  read: async (args, requestedFields) => {
+    const query = EntityModel.find();
+
+    if (args.by) {
+      buildQueryFilter(query, args.by);
+    }
+    query.limit(args.limit);
+
+    query.select(requestedFields.join(' '));
+    const res = await query.exec();
+    return res.map(mapModelToGQL);
   },
   update: async (id, data) => {
-    const item = await EntityModel.findOneAndUpdate({ "_id": id }, data);
+    const itemData = mapInputToModel(data)
+    const item = await EntityModel.findOneAndUpdate({ "_id": id }, { $set: { ...itemData } });
     // console.log(item)
     return item.id;
   },
@@ -67,10 +66,30 @@ module.exports = {
   },
   delete: async (id) => {
     const item = await EntityModel.deleteOne({ "_id": id });
-    console.log(item)
+    // console.log(item)
     if (item.deletedCount === 1)
       return id;
     else
-      return null;
+      throw `Nothing deleted with matching id: ${id}`;
   },
+}
+
+const mapModelToGQL = (item) => {
+  // console.log(item.toJSON())
+  const type = {
+    id: item.id,
+    type: item.get('type'),
+    text: item.get('text'),
+  }
+  return type;
+}
+
+const mapInputToModel = (item) => {
+  // console.log(item.toJSON())
+  const text = languageValuesToMap(item.text)
+  const itemData = {
+    type: item.type,
+    text,
+  }
+  return itemData;
 }

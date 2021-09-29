@@ -14,11 +14,11 @@ async function buildApolloServer({ schema, plugins, dbConfig, envFilePath, envFi
       path: envFilePath || path.resolve(process.cwd(), './', envFile || '.env.local')
     })
     useDBConfig = {
-      mdbHost: process.env['MONGO_DB_HOST'] || 'localhost',
-      mdbPort: process.env['MONGO_DB_PORT'] || '21017',
-      mdbDB: process.env['MONGO_DB_DB'] || 'test',
-      mdbUser: process.env['MONGO_DB_USER'] || 'test',
-      mdbPassword: process.env['MONGO_DB_PASSWORD'] || '',
+      mdbHost: process.env['MONGO_DB_HOST'],
+      mdbPort: process.env['MONGO_DB_PORT'],
+      mdbDB: process.env['MONGO_DB_DB'],
+      mdbUser: process.env['MONGO_DB_USER'],
+      mdbPassword: process.env['MONGO_DB_PASSWORD'],
     }
     // console.log(useDBConfig)
   }

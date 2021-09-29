@@ -12,7 +12,10 @@ const resolvers = {
     me: UserResolvers.me,
 
     // Entity 
-    entities: EntityResolvers.read,
+    entities: async (parent, args, context, info) => {
+      const requestedFields = getRequestedFields(info);
+      return EntityResolvers.read(args, requestedFields);
+    },
 
     // Entity Type
     entityTypes: async (parent, args, context, info) => {

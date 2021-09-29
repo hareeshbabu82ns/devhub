@@ -1,5 +1,8 @@
 extend type Query {
-  entities: [Entity!]!
+  entities(
+      by: EntitySearchInput, 
+      limit: Int = 10
+  ): [Entity!]!
 }
 
 extend type Mutation {
@@ -9,8 +12,8 @@ extend type Mutation {
 }
 
 input EntityInput {
-  type: EntityTypeEnum!
-  text: [LanguageValueInput]!
+  type: EntityTypeEnum
+  text: [LanguageValueInput]
 
   """ Child Entities with Data (will create new entities) """
   children: [EntityInput!]
@@ -36,6 +39,14 @@ type Entity {
   childrenCount: Int!
 
   text(language:String = "DEFAULT"): String!
+}
+
+input EntitySearchInput {
+  id: FilterID
+  type: FilterString
+  text: FilterString
+  and: [EntitySearchInput!]
+  or: [EntitySearchInput!]  
 }
 
 input LanguageValueInput {
