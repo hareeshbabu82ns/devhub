@@ -35,7 +35,7 @@ type Entity {
 
   parents: [Entity!]
   parentsCount: Int!
-  children: [Entity!]
+  children(type: [EntityTypeEnum!]): [Entity!]
   childrenCount: Int!
 
   text(language:String = "DEFAULT"): String!

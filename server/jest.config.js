@@ -16,7 +16,7 @@ const config = {
   collectCoverageFrom: [
     // "<rootDir>/index.js",
     "<rootDir>/src/**/*.js",
-    // "!<rootDir>/**/*.test.utils.js",
+    "!<rootDir>/**/*.test.utils.js",
     "!<rootDir>/**/*.queries.js",
   ]
 };

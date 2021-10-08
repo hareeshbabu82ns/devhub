@@ -6,30 +6,31 @@ const { buildQueryFilter } = require('./utils');
 const LANGUAGE_DEFAULT_INPUT = "DEFAULT"
 const LANGUAGE_DEFAULT_ISO = "SAN"
 
-async function getEntityType({ id, name }) {
-  const EntityTypeModel = mongoose.model('EntityType')
-  if (id)
-    return EntityTypeModel.findById(id)
-
-  return EntityTypeModel.findOne({ name })
-}
-
 function languageValuesToMap(languageValues) {
   return languageValues.reduce((p, c) => ({ ...p, [c.language]: c.value }), {})
 }
 
-async function createEntityWithData(data) {
+async function createEntityWithData({ data, session }) {
   const itemData = mapInputToModel(data)
+
+  // console.log(itemData)
+  const item = (await EntityModel.create([itemData], { session }))[0]
 
   // check [children] data
   if (data.children && data.children.length > 0) {
-    // create each child
-    const allAsyncs = data.children.map(async (child) => createEntityWithData(child))
-    itemData.children = (await Promise.all(allAsyncs)).map(child => child.id)
+    // create child entities
+    const parentIds = { [itemData.type]: [item.id] }
+    const childrenData = data.children.map(c => mapInputToModel({ ...c, parentIds }))
+    const childItems = await EntityModel.create(childrenData, { session })
+
+    // update childs to entity
+    const childIds = childItems.reduce((p, { id, type }) => ({ ...p, [type]: [...(p[type] || []), id] }), {})
+    item.children = childIds
+    await item.save({ session })
   }
 
-  // console.log(itemData)
-  const item = await EntityModel.create(itemData)
+  // await session.commitTransaction()
+  session.endSession()
   // console.log(item)
   return item
 }
@@ -37,9 +38,24 @@ async function createEntityWithData(data) {
 module.exports = {
   type: {
     Entity: {
-      text: async (parent, { language }) => {
-        return parent.text[language === LANGUAGE_DEFAULT_INPUT ? LANGUAGE_DEFAULT_ISO : language]
-      }
+      text: async ({ text }, { language }) => {
+        return text[language === LANGUAGE_DEFAULT_INPUT ? LANGUAGE_DEFAULT_ISO : language]
+      },
+      children: async ({ children = {} }, { type = [] }, info) => {
+        const query = EntityModel.find()
+        const typeKeys = type.length ? Object.keys(children).filter(t => type.includes(t)) : Object.keys(children)
+        const childIds = typeKeys.reduce((p, c) => [...p, ...children[c]], [])
+        buildQueryFilter(query, { id: { operation: 'IN', valueList: childIds } })
+        const res = await query.exec();
+        return res.map(mapModelToGQL)
+      },
+      parents: async ({ parents = {} }, args, info) => {
+        const query = EntityModel.find()
+        const parentIds = Object.keys(parents).reduce((p, c) => [...p, ...parents[c]], [])
+        buildQueryFilter(query, { id: { operation: 'IN', valueList: parentIds } })
+        const res = await query.exec();
+        return res.map(mapModelToGQL)
+      },
     }
   },
   read: async (args, requestedFields) => {
@@ -61,8 +77,16 @@ module.exports = {
     return item.id;
   },
   create: async (data) => {
-    const item = await createEntityWithData(data)
-    return item.id;
+    const session = await EntityModel.startSession()
+    // session.startTransaction() //TODO: needs replicaSet on DB server
+    try {
+      const item = await createEntityWithData({ data, session })
+      return item.id;
+    } catch (e) {
+      // await session.abortTransaction()
+      session.endSession()
+      throw e
+    }
   },
   delete: async (id) => {
     const item = await EntityModel.deleteOne({ "_id": id });
@@ -80,6 +104,8 @@ const mapModelToGQL = (item) => {
     id: item.id,
     type: item.get('type'),
     text: item.get('text'),
+    children: item.get('children'),
+    parents: item.get('parents'),
   }
   return type;
 }
@@ -90,6 +116,8 @@ const mapInputToModel = (item) => {
   const itemData = {
     type: item.type,
     text,
+    parents: item.parentIds ? { ...item.parentIds } : {},
+    children: item.childIds ? { ...item.childIds } : {},
   }
   return itemData;
 }

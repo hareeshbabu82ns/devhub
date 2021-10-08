@@ -9,8 +9,8 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
     required: true,
   },
-  parents: [mongoose.Types.ObjectId],
-  children: [mongoose.Types.ObjectId]
+  parents: mongoose.Schema.Types.Mixed,
+  children: mongoose.Schema.Types.Mixed
 });
 
 const Entity = mongoose.model('Entity', schema, 'Entities');

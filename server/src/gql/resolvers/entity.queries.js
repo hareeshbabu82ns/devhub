@@ -1,11 +1,16 @@
 const { gql } = require("apollo-server-core");
 
 const GET_ENTITIES_BY = gql`
-query ($entitiesBy: EntitySearchInput) {
+query ($entitiesBy: EntitySearchInput,
+  $childrenType: [EntityTypeEnum!]) {
   entities(by: $entitiesBy){
     id
     type
     text(language:"ENG")
+    children(type: $childrenType){
+      id
+      text(language:"ENG")
+    }
   }
 }
 `

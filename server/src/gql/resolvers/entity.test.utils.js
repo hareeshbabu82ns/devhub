@@ -71,7 +71,7 @@ const testData = {
         value: "SLOKAM"
       }
     },
-    byAndRegex: {
+    byAnd: {
       and: [
         {
           type: {
@@ -88,7 +88,7 @@ const testData = {
         }
       ]
     },
-    byOrRegex: {
+    byOr: {
       or: [
         {
           type: {
@@ -115,6 +115,34 @@ const testData = {
         value: "^G"
       }
     },
+  },
+  createWithChildren: {
+    simple: {
+      type: "GOD",
+      text: [
+        { language: "SAN", value: "GOD with Children San" },
+        { language: "ENG", value: "GOD with Children Eng" },
+        { language: "TEL", value: "GOD with Children Tel" },
+      ],
+      children: [
+        {
+          type: "PURANAM",
+          text: [
+            { language: "SAN", value: "simple1 San" },
+            { language: "ENG", value: "simple1 Eng" },
+            { language: "TEL", value: "simple1 Tel" },
+          ],
+        },
+        {
+          type: "SLOKAM",
+          text: [
+            { language: "SAN", value: "simple1 Sloka1 San" },
+            { language: "ENG", value: "simple1 Sloka1 Eng" },
+            { language: "TEL", value: "simple1 Sloka1 Tel" },
+          ],
+        },
+      ],
+    }
   }
 }
 

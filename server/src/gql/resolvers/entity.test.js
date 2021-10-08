@@ -42,7 +42,7 @@ describe('GQL - Entity Type Tests', () => {
   test('fetch by entity type - logical - AND', async () => {
     const res = await apolloServer.executeOperation({
       query: GET_ENTITIES_BY,
-      variables: { entitiesBy: testData.search.byAndRegex },
+      variables: { entitiesBy: testData.search.byAnd },
     })
     expect(res.data.entities.length).toBeGreaterThan(0)
     expect(res.data.entities[0].type).toEqual("SLOKAM")
@@ -51,7 +51,7 @@ describe('GQL - Entity Type Tests', () => {
   test('fetch by entity type - logical - OR', async () => {
     const res = await apolloServer.executeOperation({
       query: GET_ENTITIES_BY,
-      variables: { entitiesBy: testData.search.byOrRegex },
+      variables: { entitiesBy: testData.search.byOr },
     })
     expect(res.data.entities.length).toBeGreaterThan(0)
     expect(res.data.entities.filter(e => e.type === "GOD")[0].type).toEqual("GOD")
@@ -159,6 +159,36 @@ describe('GQL - Entity Type Tests', () => {
       variables: { id: '6152755b9d74594e04aaa67e' }
     })
     expect(resDelete.errors).toBeDefined()
+  })
+
+  test('should create and delete entity with children', async () => {
+    const withData = testData.createWithChildren.simple
+    // create entity
+    const resCreate = await apolloServer.executeOperation({
+      query: CREATE_ENTITY,
+      variables: { withData },
+    })
+    // console.log(resCreate)
+    expect(resCreate.data.createdId).toBeDefined()
+    // push it for cleanup
+    createdIds.push(resCreate.data.createdId)
+
+    // read entity to validate
+    const entitiesBy = {
+      id: {
+        value: resCreate.data.createdId
+      }
+    }
+    const resSearch = await apolloServer.executeOperation({
+      query: GET_ENTITIES_BY,
+      variables: { entitiesBy }
+    })
+    console.log(resSearch)
+    expect(resSearch.data.entities[0].text).toEqual(
+      withData.text.filter(text => text.language === "ENG")[0].value)
+    expect(resSearch.data.entities[0].children[0].text).toEqual(
+      withData.children[0].text.filter(text => text.language === "ENG")[0].value
+    )
   })
 
 })
