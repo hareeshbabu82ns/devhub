@@ -1,0 +1,90 @@
+{
+  "languages": [
+    {
+      "iso": "SAN",
+      "name": "संस्कृतम्",
+      "description": "Sanskrit"
+    },
+    {
+      "iso": "TEL",
+      "name": "తెలుగు",
+      "description": "Telugu"
+    },
+    {
+      "iso": "ENG",
+      "name": "English",
+      "description": "English"
+    },
+    {
+      "iso": "TAM",
+      "name": "தமிழ்",
+      "description": "Tamil"
+    },
+    {
+      "iso": "IAST",
+      "name": "IAST",
+      "description": "International Alphabet of Sanskrit Transliteration"
+    },
+    {
+      "iso": "SLP1",
+      "name": "SLP1",
+      "description": "Sanskrit Library Phonetic Basic"
+    },
+    {
+      "iso": "HIN",
+      "name": "हिन्दि",
+      "description": "Hindi"
+    }
+  ],
+  "entityTypes": [
+    {
+      "code": "GOD",
+      "name": "God"
+    },
+    {
+      "code": "AUTHOR",
+      "name": "Author"
+    },
+    {
+      "code": "SLOKAM",
+      "name": "Slokam"
+    },
+    {
+      "code": "ADHYAAYAM",
+      "name": "Adhyaayam"
+    },
+    {
+      "code": "PARVAM",
+      "name": "Parvam"
+    },
+    {
+      "code": "KAANDAM",
+      "name": "Kaandam"
+    },
+    {
+      "code": "STHOTRAM",
+      "name": "Sthotram"
+    },
+    {
+      "code": "DANDAKAM",
+      "name": "Dandakam"
+    },
+    {
+      "code": "SARGA",
+      "name": "Sarga"
+    },
+    {
+      "code": "PURANAM",
+      "name": "Puranam"
+    },
+    {
+      "code": "ITIHASAM",
+      "name": "Itihasam"
+    },
+    {
+      "code": "OTHERS",
+      "name": "Others"
+    }
+  ],
+  "entities": []
+}

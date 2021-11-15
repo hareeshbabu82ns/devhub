@@ -1,0 +1,35 @@
+extend type Query {
+  languages(
+      by: LanguageSearchInput, 
+      limit: Int = 10
+    ): [Language!]!
+}
+
+extend type Mutation {
+  createLanguage(withData: LanguageInput): ID!
+  updateLanguage(id: ID!, withData: LanguageInput): ID!
+  deleteLanguage(id: ID!): ID!
+}
+
+input LanguageInput {
+  iso: String
+  name: String
+  description: String
+}
+
+# Type of the Entity ex. God, Author, Slokam etc.
+type Language {
+  id: ID!
+  iso: String!
+  name: String!
+  description: String
+}
+
+input LanguageSearchInput {
+  id: FilterID
+  iso: FilterString
+  name: FilterString
+  description: FilterString
+  and: [LanguageSearchInput!]
+  or: [LanguageSearchInput!]
+}

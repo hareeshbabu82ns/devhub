@@ -1,0 +1,55 @@
+extend type Query {
+  entities(
+      by: EntitySearchInput, 
+      limit: Int = 10
+  ): [Entity!]!
+}
+
+extend type Mutation {
+  createEntity(withData: EntityInput): ID!
+  updateEntity(id: ID!, withData: EntityInput): ID!
+  deleteEntity(id: ID!): ID!
+}
+
+input EntityInput {
+  type: EntityTypeEnum
+  text: [LanguageValueInput]
+
+  """ Child Entities with Data (will create new entities) """
+  children: [EntityInput!]
+
+  """ Child Entity IDs only (will just link to existing entities) """
+  childrenIDs: [ID!]
+
+  """ Parent Entities with Data (will create new entities) """
+  parents: [EntityInput!]
+
+  """ Parent Entity IDs only (will just link to existing entities) """
+  parentIDs: [ID!]
+}
+
+# Type of the Entity ex. God, Author, Slokam etc.
+type Entity {
+  id: ID!
+  type: EntityTypeEnum!
+
+  parents: [Entity!]
+  parentsCount: Int!
+  children(type: [EntityTypeEnum!]): [Entity!]
+  childrenCount: Int!
+
+  text(language:String = "DEFAULT"): String!
+}
+
+input EntitySearchInput {
+  id: FilterID
+  type: FilterString
+  text: FilterString
+  and: [EntitySearchInput!]
+  or: [EntitySearchInput!]  
+}
+
+input LanguageValueInput {
+  language: String!
+  value: String!
+}

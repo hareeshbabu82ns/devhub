@@ -1,0 +1,51 @@
+query searchDictMeanings($fromDictionary:Dictionaries,$keys:String!,$maxHits:Int, $inputScheme:SanscriptScheme, $outputScheme:SanscriptScheme,$fuzzySearch:Boolean) {
+  meanings:  dictionarySearch(
+    searchWith: {
+      origin:$fromDictionary
+      limit: $maxHits
+      fuzzySearch:$fuzzySearch
+      searchScheme: $inputScheme
+      outputScheme: $outputScheme
+      startsWith: true
+      endsWith: true
+      # searchOnlyKeys: true
+      search:$keys
+    }
+  ){
+    id
+    key
+    content
+  }
+}
+
+query sanskritSandhi($asDevanagari:Boolean,$splits:[String!]!) {
+  joins:  sanskritSandhi(
+    asDevanagari:$asDevanagari
+    splits:$splits
+  )
+}
+
+query sanskritSplits($asDevanagari:Boolean,$content:String!,$maxPaths:Int) {
+  splits:  sanskritSplits(
+    asDevanagari:$asDevanagari
+    maxPaths: $maxPaths
+    content:$content
+  )
+}
+
+query SearchDictKeys($fromDictionary:Dictionaries,$key:String!,$searchInContent:Boolean,$maxHits:Int,$outputScheme:SanscriptScheme, $startsWith:Boolean, $endsWith:Boolean) {
+  keywords:dictionarySearch(
+    searchWith:{
+      origin:$fromDictionary
+      fuzzySearch:$searchInContent
+      limit:$maxHits
+      outputScheme:$outputScheme
+      startsWith:$startsWith
+      endsWith:$endsWith
+      search:$key
+    }
+  ){
+    id
+    key
+  }
+}

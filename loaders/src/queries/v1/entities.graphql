@@ -1,0 +1,182 @@
+query getEntitiesList($type: ID, $language: ID) {
+  entities: entities(by: { type: $type }) {
+    id
+    defaultText
+    defaultThumbnail
+    textData(language: $language) {
+      text
+      __typename
+    }
+    __typename
+  }
+}
+
+query getEntitiesByParent($parent: ID,$type:ID $language: ID) {
+  subEntities: entities(by:{id:$parent}){
+    id
+    defaultText
+    defaultThumbnail
+    entities:childEntities(by:{type:$type}){
+      id
+      defaultText
+      defaultThumbnail
+      textData(language:$language){
+        id
+        text
+      }
+    }
+  }
+}
+
+query getEntity($by:EntitiesBy!) {
+  entities(by:$by) {
+    id
+    defaultText
+    defaultThumbnail
+    type{
+      id
+    }
+    textData{
+      id
+      language{
+        id
+        iso
+      }
+      text
+      description
+    }
+  }
+}
+
+mutation updateEntity($id: ID, $entityData: EntityContentInput!) {
+  updateEntityContent(id:$id, withData: $entityData) {
+    id
+    defaultText
+    defaultThumbnail
+    textData{
+      id
+      text
+      description
+    }
+  }
+}
+
+mutation deleteEntity($id: ID!) {
+  deleteEntity(id:$id)
+}
+
+query searchEntitiesByText($text:String) {
+  entities(by:{textLike:$text}){
+    id
+    defaultText
+    defaultThumbnail
+  }
+}
+
+query getEntityChildrenByType($id: ID) {
+  entities(by:{id:$id}){
+    id
+    defaultText
+    defaultThumbnail
+    childTypes{
+      id
+      name
+    }
+  }
+}
+
+query getContentsOfEntity($parent:ID!,$language:ID!){
+  contentLines(by:{parent:$parent,language:$language}){
+    id
+    language{
+      id
+    }
+    content
+  }
+}
+
+query getEntityContents($entityId:ID,$language:ID!,$meaningLanguage:ID!){
+  entities(by:{id:$entityId}){
+    id
+    defaultText
+    defaultThumbnail
+    textData(language:$language){
+      id
+      text
+    }
+    childEntities(by:{hasContentInLanguage:$language}){
+      id
+      defaultText
+      defaultThumbnail
+      type{
+        id
+        name
+      }
+      textData(language:$language){
+        id
+        text
+      }
+      content(language:$language){
+        id
+        content
+      }
+      contentMeaning(language:$meaningLanguage){
+        id
+        content
+      }
+    }
+  }
+}
+
+mutation updateContent($withData:ContentLineInput){
+  updateContent(withData:$withData){
+    id
+    language{
+      id
+    }
+    content
+  }
+}
+
+mutation deleteContent($id:ID!){
+  deleteContent(id:$id)
+}
+
+query getContentMeaningsOfEntity($parent:ID!,$language:ID!){
+  contentMeanings(by:{parent:$parent,language:$language}){
+    id
+    language{
+      id
+    }
+    content
+  }
+}
+
+mutation updateContentMeaning($withData:ContentMeaningInput){
+  updateContentMeaning(withData:$withData){
+    id
+    language{
+      id
+    }
+    content
+  }
+}
+
+mutation deleteContentMeaning($id:ID!){
+  deleteContentMeaning(id:$id)
+}
+
+query getLanguages{
+  languages{
+    id
+    name
+  }
+}
+
+query getEntityTypes{
+    entityTypes{
+    id
+    name
+    description
+  }
+}

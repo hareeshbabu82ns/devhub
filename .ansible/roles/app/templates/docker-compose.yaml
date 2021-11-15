@@ -3,7 +3,7 @@ services:
 
   {{app_name}}:
     container_name: {{app_name}}
-    image: {{docker_domain}}.{{server_domain}}/home/devhub:{{app_image_version}}
+    image: {{docker_domain}}.{{server_domain}}/home/{{app_name}}:{{app_image_version}}
     env_file:
       - "{{ app_templates_dir }}/common.env"
       - "{{ app_templates_dir }}/current.env"
