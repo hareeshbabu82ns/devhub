@@ -3,7 +3,7 @@ ssh_user: "{{ vault_ssh_user }}"
 
 docker_network: "proxynet"
 tmp_dir: "/tmp"
-appdata_dir: "/mnt/user/appdata"
+appdata_dir: "/media/data"
 
 reverse_proxy_name: "swag"
 reverse_proxy_dir: "{{appdata_dir}}/{{reverse_proxy_name}}"
