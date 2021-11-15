@@ -46,7 +46,7 @@ steps:
     # galaxy: .ansible/requirements.yml
     inventory: .ansible/inventory
     private_key:
-      from_secret: unraid_ssh_key
+      from_secret: host_ssh_key
     vault_password:
       from_secret: ansible_vault_pass
   # when:
