@@ -11,8 +11,8 @@ services:
       - "{{app_data_dir}}:/data:rw"
     ports:
       - '{{port_http}}:{{app_port}}/tcp'
-    networks:
-      - "{{docker_network}}"
+    # networks:
+    #   - "{{docker_network}}"
     restart: unless-stopped
     # labels:
     #   - "traefik.enable=true"
