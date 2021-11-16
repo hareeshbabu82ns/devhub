@@ -1,45 +1,24 @@
 const { expect, test } = require("@jest/globals");
-const { gql } = require("apollo-server-core");
 const mongoose = require("mongoose");
 const buildApolloServer = require("../apollo_server")
-
-const GET_ENTITY_TYPES_BY = gql`
-query ($entityTypesBy: EntityTypeSearchInput) {
-  entityTypes(by: $entityTypesBy){
-    id
-    code
-    name
-    description
-  }
-}
-`
-const CREATE_ENTITY_TYPE = gql`
-mutation ($withData: EntityTypeInput) {
-  createdId: createEntityType(withData: $withData)
-}
-`
-
-const UPDATE_ENTITY_TYPE = gql`
-mutation ($id: ID!, $withData: EntityTypeInput){
-  updatedId: updateEntityType(id: $id, withData: $withData)
-}
-`
-
-const DELETE_ENTITY_TYPE = gql`
-mutation ($id: ID!){
-  deletedId: deleteEntityType(id: $id)
-}
-`
+const { testData, initEntityTypes, cleanupEntityTypes } = require('./entity_type.test.utils')
+const { GET_ENTITY_TYPES_BY, CREATE_ENTITY_TYPE, UPDATE_ENTITY_TYPE, DELETE_ENTITY_TYPE } = require('./entity_type.queries')
 
 describe('GQL - Entity Type Tests', () => {
 
   let apolloServer
+  const createdIds = []
 
   beforeAll(async () => {
-    apolloServer = await buildApolloServer()
+    apolloServer = await buildApolloServer({ debug: false })
+    const ids = await initEntityTypes({ apolloServer, testData: testData.createEntityTypes })
+    createdIds.push(...ids)
   })
 
-  afterAll(() => {
+  afterAll(async () => {
+    const ids = await cleanupEntityTypes({ apolloServer, ids: createdIds })
+    const finalIds = createdIds.filter(id => !ids.includes(id))
+    expect(finalIds.length).toEqual(0)
     return mongoose.disconnect()
   })
 

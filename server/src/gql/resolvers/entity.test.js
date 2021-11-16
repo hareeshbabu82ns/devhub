@@ -1,5 +1,4 @@
 const { expect, test } = require("@jest/globals");
-const { gql } = require("apollo-server-core");
 const mongoose = require("mongoose");
 const buildApolloServer = require("../apollo_server")
 const { testData, initEntities, cleanupEntities } = require('./entity.test.utils')
