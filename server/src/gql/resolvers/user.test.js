@@ -1,25 +1,25 @@
 const { expect, test } = require("@jest/globals");
-const { gql } = require("apollo-server-core");
 const mongoose = require("mongoose");
 const buildApolloServer = require("../apollo_server")
-
-const GET_CURRENT_USER = gql`
-query {
-  me {
-    displayName
-  }
-}
-`
+const { testData, initUsers, cleanupUsers } = require('./user.test.utils')
+const { GET_CURRENT_USER } = require('./user.queries')
 
 describe('GQL - User Tests', () => {
 
   let apolloServer
+  const createdIds = []
 
   beforeAll(async () => {
-    apolloServer = await buildApolloServer()
+    apolloServer = await buildApolloServer({ debug: false })
+    const ids = await initUsers({ apolloServer, testData: testData.createUsers })
+    createdIds.push(...ids)
   })
 
-  afterAll(() => {
+
+  afterAll(async () => {
+    const ids = await cleanupUsers({ apolloServer, ids: createdIds })
+    const finalIds = createdIds.filter(id => !ids.includes(id))
+    expect(finalIds.length).toEqual(0)
     return mongoose.disconnect()
   })
 

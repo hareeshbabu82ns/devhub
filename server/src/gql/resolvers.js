@@ -9,7 +9,13 @@ const resolvers = {
     version: (parent, args) => {
       return "v1";
     },
+
+    // User 
     me: UserResolvers.me,
+    users: async (parent, args, context, info) => {
+      const requestedFields = getRequestedFields(info);
+      return UserResolvers.read(args, requestedFields);
+    },
 
     // Entity 
     entities: async (parent, args, context, info) => {
@@ -37,6 +43,20 @@ const resolvers = {
       await EntityTypeResolvers.init();
       await LanguageResolvers.init();
       return "data successfully initialized";
+    },
+
+    // User
+    createUser: async (parent, args) => {
+      const res = await UserResolvers.create(args.withData);
+      return res;
+    },
+    updateUser: async (parent, args) => {
+      const res = await UserResolvers.update(args.id, args.withData);
+      return res;
+    },
+    deleteUser: async (parent, args) => {
+      const res = await UserResolvers.delete(args.id);
+      return res;
     },
 
     // Entity

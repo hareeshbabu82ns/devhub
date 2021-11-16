@@ -2,6 +2,7 @@ const { expect, test } = require("@jest/globals");
 const { gql } = require("apollo-server-core");
 const mongoose = require("mongoose");
 const buildApolloServer = require("./src/gql/apollo_server")
+const { cleanupCollections } = require('./index.test.utils')
 
 const GET_VERSION = gql`{version}`
 const MUTATION_INIT = gql`mutation {init}`
@@ -11,7 +12,7 @@ describe('Apollo Server Connectivity Tests', () => {
   let apolloServer
 
   beforeAll(async () => {
-    apolloServer = await buildApolloServer()
+    apolloServer = await buildApolloServer({ debug: false })
   })
 
   test('server should be initialized', () => {
@@ -25,16 +26,13 @@ describe('Apollo Server Connectivity Tests', () => {
   })
 
   test('should init database', async () => {
-    // delete existing entries
-    await mongoose.connection.dropCollection('Users')
-    await mongoose.connection.dropCollection('EntityTypes')
-    await mongoose.connection.dropCollection('Languages')
-
+    await cleanupCollections()
     const res = await apolloServer.executeOperation({ query: MUTATION_INIT })
     expect(res.data.init.split(' ')).toContain('initialized')
   })
 
-  afterAll(() => {
+  afterAll(async () => {
+    await cleanupCollections()
     return mongoose.disconnect()
   })
 

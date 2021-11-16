@@ -18,19 +18,11 @@ enum SanscriptScheme {
 
 type Query {
   version: String!
-  me: User!
 }
 
 type Mutation {
   version: String!
   init: String!
-}
-
-type User {
-  # user name
-  id: ID!
-  displayName: String
-  settings: String
 }
 
 # Operations allowed on Filters

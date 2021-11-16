@@ -1,0 +1,34 @@
+extend type Query {
+  me: User!
+  users(
+      by: UserSearchInput, 
+      limit: Int = 10
+    ): [User!]!
+}
+
+extend type Mutation {
+  createUser(withData: UserInput): ID!
+  updateUser(id: ID!, withData: UserInput): ID!
+  deleteUser(id: ID!): ID!
+}
+
+input UserInput {
+  displayName: String
+  settings: String
+}
+
+# Type of Users
+type User {
+  # user name
+  id: ID!
+  displayName: String
+  settings: String
+}
+
+input UserSearchInput {
+  id: FilterID
+  displayName: FilterString
+  settings: FilterString
+  and: [UserSearchInput!]
+  or: [UserSearchInput!]
+}

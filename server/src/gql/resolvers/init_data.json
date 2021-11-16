@@ -1,4 +1,11 @@
 {
+  "users": [
+    {
+      "id": "0",
+      "displayName": "Admin",
+      "settings": "{displayLang='SAN', meaningLang='TEL'}"
+    }
+  ],
   "languages": [
     {
       "iso": "SAN",
