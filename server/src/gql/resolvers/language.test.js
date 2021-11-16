@@ -2,43 +2,25 @@ const { expect, test } = require("@jest/globals");
 const { gql } = require("apollo-server-core");
 const mongoose = require("mongoose");
 const buildApolloServer = require("../apollo_server")
-
-const GET_LANGUAGES_BY = gql`
-query ($languagesBy: LanguageSearchInput) {
-  languages(by: $languagesBy){
-    iso
-    name
-    description
-  }
-}
-`
-const CREATE_LANGUAGE = gql`
-mutation ($withData: LanguageInput) {
-  createdId: createLanguage(withData: $withData)
-}
-`
-
-const UPDATE_LANGUAGE = gql`
-mutation ($id: ID!, $withData: LanguageInput){
-  updatedId: updateLanguage(id: $id, withData: $withData)
-}
-`
-
-const DELETE_LANGUAGE = gql`
-mutation ($id: ID!){
-  deletedId: deleteLanguage(id: $id)
-}
-`
+const { testData, initLanguages, cleanupLanguages } = require('./language.test.utils')
+const { CREATE_LANGUAGE, GET_LANGUAGES_BY,
+  UPDATE_LANGUAGE, DELETE_LANGUAGE } = require('./language.queries')
 
 describe('GQL - Lanuage Tests', () => {
 
   let apolloServer
+  const createdIds = []
 
   beforeAll(async () => {
-    apolloServer = await buildApolloServer()
+    apolloServer = await buildApolloServer({ debug: false })
+    const ids = await initLanguages({ apolloServer, testData: testData.createLanguages })
+    createdIds.push(...ids)
   })
 
-  afterAll(() => {
+  afterAll(async () => {
+    const ids = await cleanupLanguages({ apolloServer, ids: createdIds })
+    const finalIds = createdIds.filter(id => !ids.includes(id))
+    expect(finalIds.length).toEqual(0)
     return mongoose.disconnect()
   })
 
