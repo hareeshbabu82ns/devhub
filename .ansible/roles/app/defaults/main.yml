@@ -1,9 +1,6 @@
-port_http: 23443
 app_port: 4000
 app_name: "devhubjs"
-server_sub_domain: "{{app_name}}.local"
 app_image_version: "latest"
-app_data_dir: "{{appdata_dir}}/{{app_name}}"
-app_templates_dir: "{{ app_data_dir }}/tmp_templates"
+app_fqdn: "{{app_name}}.kube.local.io"
+app_image_name: "{{docker_domain}}.{{server_domain}}/home/{{app_name}}:{{app_image_version}}"
 secret_key: "{{vault_secret_key}}"
-app_image_name: "{{docker_domain}}.{{server_domain}}/home/{{app_name}}"

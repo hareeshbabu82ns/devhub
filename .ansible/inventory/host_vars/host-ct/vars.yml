@@ -1,20 +1,13 @@
 ssh_user: "{{ vault_ssh_user }}"
-# ssh_pass: "{{ vault_ssh_pass }}"
 
-docker_network: "proxynet"
-tmp_dir: "/tmp"
-appdata_dir: "/media/data"
-
-reverse_proxy_name: "swag"
-reverse_proxy_dir: "{{appdata_dir}}/{{reverse_proxy_name}}"
-reverse_proxy_conf_dir: "{{reverse_proxy_dir}}/nginx/proxy-confs"
-
-docker_domain: "docker"
 server_domain: "{{vault_server_domain}}"
+docker_fdqn: "docker.{{vault_server_domain}}"
+
+git_tag: "latest"
 
 secret_key: "{{vault_secret_key}}"
 
-mongodb_host: "{{ansible_host}}"
+mongodb_host: "docker-ct.local.io"
 mongodb_port: "{{vault_mongodb_port}}"
 mongodb_db: "{{vault_mongodb_db}}"
 mongodb_user: "{{vault_mongodb_user}}"
