@@ -1,4 +1,5 @@
-const { ApolloServerPluginDrainHttpServer } = require( 'apollo-server-core' );
+const { ApolloServerPluginLandingPageGraphQLPlayground,
+  ApolloServerPluginDrainHttpServer } = require( 'apollo-server-core' );
 const express = require( 'express' );
 const http = require( 'http' );
 const path = require( 'path' );
@@ -13,20 +14,24 @@ const connectToDB = require( "./src/db/connect" )
 const buildApolloServer = require( "./src/gql/apollo_server" )
 
 const dbConfig = {
-  mdbHost: process.env['MONGO_DB_HOST'] || 'localhost',
-  mdbPort: process.env['MONGO_DB_PORT'] || '21017',
-  mdbDB: process.env['MONGO_DB_DB'] || 'test',
-  mdbUser: process.env['MONGO_DB_USER'] || 'test',
-  mdbPassword: process.env['MONGO_DB_PASSWORD'] || '',
+  mdbHost: process.env[ 'MONGO_DB_HOST' ] || 'localhost',
+  mdbPort: process.env[ 'MONGO_DB_PORT' ] || '21017',
+  mdbDB: process.env[ 'MONGO_DB_DB' ] || 'test',
+  mdbUser: process.env[ 'MONGO_DB_USER' ] || 'test',
+  mdbPassword: process.env[ 'MONGO_DB_PASSWORD' ] || '',
 }
 
 async function startApolloServer( { expressApp, schema, initContext } ) {
 
   const httpServer = http.createServer( expressApp )
   const server = await buildApolloServer( {
+    grapi: true,
     schema,
     dbConfig,
-    plugins: [ApolloServerPluginDrainHttpServer( { httpServer } )],
+    plugins: [
+      ApolloServerPluginLandingPageGraphQLPlayground,
+      ApolloServerPluginDrainHttpServer( { httpServer } ),
+    ],
     debug: false,
   } )
 

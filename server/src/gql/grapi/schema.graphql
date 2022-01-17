@@ -1,0 +1,96 @@
+####################
+### Entities ###
+####################
+
+type EntityChildren implements Relation @config( 
+  name: "EntityChildren" 
+  foreignKey: { key: "parentId" , side: Entity }
+)
+
+type EntityRelation implements Relation @config( 
+  name: "EntityRelation"
+  isCircular: "true"
+)
+
+
+# Type of the Entity ex. God, Author, Slokam etc.
+type Entity @Model( dataSource: "mdb", key: "Entities" ) {
+  id: ID! @unique @autoGen
+  type: EntityTypeEnum!
+
+  related: [Entity!]! @relation( with: EntityRelation )
+  # parentsCount: Int!
+  children: [Entity!] @relation( with: EntityChildren )
+  # childrenCount: Int!
+
+  text: String!
+}
+
+####################
+### Entity Types ###
+####################
+
+# Type of the Entity ex. God, Author, Slokam etc.
+type EntityType @Model( dataSource: "mdb", key: "EntityTypes" ) {
+  id: ID! @unique
+  code: EntityTypeEnum!
+  name: String!
+  description: String
+}
+
+enum EntityTypeEnum {
+  GOD
+  AUTHOR
+  ITIHASAM
+  PURANAM
+  STHOTRAM
+  DANDAKAM
+  KAANDAM
+  SARGA
+  PARVAM
+  ADHYAAYAM
+  SLOKAM
+  OTHERS
+}
+
+#################
+### Languages ###
+#################
+
+# Language supported ex. Telugu, Samskrutham.
+type Language @Model( dataSource: "mdb", key: "Languages" ) {
+  id: ID! @unique
+  iso: String!
+  name: String!
+  description: String
+}
+
+# Sanskript Transliterate Schemes
+enum SanscriptScheme {
+  # Devanagari (Samskrutam)
+  DEVANAGARI
+
+  # International Alphabet of Sanskrit Transliteration
+  IAST
+
+  # Indian languages TRANSliteration
+  ITRANS
+
+  # Sanskrit Library Phonetic Basic
+  SLP1
+  TELUGU
+  TAMIL
+  KANNADA
+}
+
+#############
+### Users ###
+#############
+
+# Type of Users
+type User @Model( dataSource: "mdb", key: "Users" ) {
+  # user name
+  id: ID! @unique
+  displayName: String
+  settings: String
+}

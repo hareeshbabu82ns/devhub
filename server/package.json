@@ -12,6 +12,8 @@
     "@graphql-tools/graphql-file-loader": "^7.1.0",
     "@graphql-tools/load": "^7.3.2",
     "@graphql-tools/schema": "^8.2.0",
+    "@terabits/grapi": "^2.2.7",
+    "@terabits/grapi-mongodb": "^2.2.6",
     "apollo-server-core": "^3.3.0",
     "apollo-server-express": "^3.3.0",
     "cors": "^2.8.5",
