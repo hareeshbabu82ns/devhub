@@ -5,6 +5,8 @@ const { addResolversToSchema } = require( '@graphql-tools/schema' )
 const { Grapi } = require( '@terabits/grapi' )
 const { MongodbDataSourceGroup } = require( '@terabits/grapi-mongodb' )
 
+const { loadDBConfig } = require( '../db/utils' )
+
 const connectToDB = require( "../db/connect" )
 const path = require( 'path' )
 const { readFileSync } = require( 'fs' )
@@ -20,24 +22,6 @@ const getDataSource = async ( { mdbUser, mdbPassword, mdbHost, mdbPort, mdbDB } 
     console.log( "Database connection failed" )
     throw e
   }
-}
-
-const loadDBConfig = ( dbConfig ) => {
-
-  if ( !dbConfig ) {
-    require( 'dotenv' ).config( {
-      path: envFilePath || path.resolve( process.cwd(), './', envFile || '.env.local' )
-    } )
-    return {
-      mdbHost: process.env[ 'MONGO_DB_HOST' ],
-      mdbPort: process.env[ 'MONGO_DB_PORT' ],
-      mdbDB: process.env[ 'MONGO_DB_DB' ],
-      mdbUser: process.env[ 'MONGO_DB_USER' ],
-      mdbPassword: process.env[ 'MONGO_DB_PASSWORD' ],
-    }
-    // console.log(useDBConfig)
-  }
-  return dbConfig
 }
 
 async function buildApolloServer( config ) {
@@ -58,11 +42,25 @@ async function buildGrapiServer( { schema, plugins, dbConfig, envFilePath, envFi
     // plugins: [
     //   new TestQueryPlugin(),
     // ]
+    skipPrint: !debug,
   } )
   const apolloConfig = grapiServer.createApolloConfig()
 
   const usePlugins = [
-    ...plugins,
+    ...plugins || [],
+    {
+      async serverWillStart() {
+        // do some initializations on server start
+        // console.log( 'server starting' )
+        return {
+          async drainServer() {
+            // do cleanup at server stop
+            // console.log( 'drain server' )
+            await dataSource.close()
+          }
+        }
+      }
+    },
   ]
 
   if ( apolloConfig?.plugins ) {

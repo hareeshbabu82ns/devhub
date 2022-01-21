@@ -2,16 +2,20 @@ const config = {
   verbose: true,
   collectCoverage: true,
   maxWorkers: 1, // disable running tests in parallel
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: -10
-    }
-  },
+  // coverageThreshold: {
+  //   global: {
+  //     branches: 80,
+  //     functions: 80,
+  //     lines: 80,
+  //     statements: -10
+  //   }
+  // },
+  testMatch: [
+    "<rootDir>/test/**/*.spec.js",
+  ],
   coveragePathIgnorePatterns: [
     "<rootDir>/src/db/models/",
+    "<rootDir>/src/gql/resolvers/",
   ],
   collectCoverageFrom: [
     // "<rootDir>/index.js",

@@ -2,16 +2,22 @@
 ### Entities ###
 ####################
 
+type LanguageText {
+  iso: String!
+  text: String!
+}
+
+# One to Many Uni-directional
 type EntityChildren implements Relation @config( 
   name: "EntityChildren" 
   foreignKey: { key: "parentId" , side: Entity }
 )
 
+# Many to Many Bi-directional
 type EntityRelation implements Relation @config( 
   name: "EntityRelation"
   isCircular: "true"
 )
-
 
 # Type of the Entity ex. God, Author, Slokam etc.
 type Entity @Model( dataSource: "mdb", key: "Entities" ) {
@@ -23,7 +29,7 @@ type Entity @Model( dataSource: "mdb", key: "Entities" ) {
   children: [Entity!] @relation( with: EntityChildren )
   # childrenCount: Int!
 
-  text: String!
+  text: [LanguageText!]!
 }
 
 ####################
@@ -32,8 +38,8 @@ type Entity @Model( dataSource: "mdb", key: "Entities" ) {
 
 # Type of the Entity ex. God, Author, Slokam etc.
 type EntityType @Model( dataSource: "mdb", key: "EntityTypes" ) {
-  id: ID! @unique
-  code: EntityTypeEnum!
+  id: ID! @unique @autoGen
+  code: EntityTypeEnum! @unique
   name: String!
   description: String
 }
@@ -59,8 +65,8 @@ enum EntityTypeEnum {
 
 # Language supported ex. Telugu, Samskrutham.
 type Language @Model( dataSource: "mdb", key: "Languages" ) {
-  id: ID! @unique
-  iso: String!
+  id: ID! @unique @autoGen
+  iso: String! @unique
   name: String!
   description: String
 }
@@ -90,7 +96,7 @@ enum SanscriptScheme {
 # Type of Users
 type User @Model( dataSource: "mdb", key: "Users" ) {
   # user name
-  id: ID! @unique
+  id: ID! @unique @autoGen
   displayName: String
   settings: String
 }
