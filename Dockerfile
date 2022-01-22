@@ -2,7 +2,7 @@
 # Server BUILDER #
 ##################
 
-FROM node:14-alpine as builder
+FROM node:14 as builder
 
 WORKDIR /usr/src/app
 

@@ -98,5 +98,5 @@ type User @Model( dataSource: "mdb", key: "Users" ) {
   # user name
   id: ID! @unique @autoGen
   displayName: String
-  settings: String
+  settings: Json
 }
