@@ -4,17 +4,17 @@ const data = {
     {
       iso: "TEL",
       name: "Telugu",
-      description: "Telugu"
+      nameISO: "తెలుగు"
     },
     {
       iso: "HIN",
       name: "Hindi",
-      description: "Hindi"
+      nameISO: "हिन्दि"
     },
     {
       iso: "SAN",
       name: "Samskrutham",
-      description: "Samskrutham"
+      nameISO: "संस्कृतम्"
     },
   ]
 }

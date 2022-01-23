@@ -68,6 +68,7 @@ type Language @Model( dataSource: "mdb", key: "Languages" ) {
   id: ID! @unique @autoGen
   iso: String! @unique
   name: String!
+  nameISO: String!
   description: String
 }
 

@@ -19,6 +19,7 @@ function testSuits() {
     expect( entities[ 0 ].text[ 0 ] ).toHaveProperty( 'iso' )
     expect( entities[ 0 ].text[ 0 ] ).toHaveProperty( 'text' )
   } )
+
 }
 
 module.exports = { testSuits }
