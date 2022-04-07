@@ -1,4 +1,5 @@
-const mongoose = require( 'mongoose' )
+const mongoose = require( 'mongoose' );
+const { LANGUAGE_DEFAULT_ISO } = require( '../constants' );
 
 const LanguageTextSchema = new mongoose.Schema( {
   lang: {
@@ -33,6 +34,16 @@ const schema = new mongoose.Schema( {
   text: {
     type: [ LanguageTextSchema ],
     required: "Text Data is required",
+    validate: {
+      validator: ( text ) => {
+        // console.log( 'text validator:', text )
+
+        // check if default language is present
+        return !!text.find( e => e.get( 'lang' ) === LANGUAGE_DEFAULT_ISO )
+      },
+      message: props => `Invalid Text Language - Value list`
+    }
+
   },
   parents: {
     type: [ TypeEntitiesSchema ],
@@ -46,7 +57,7 @@ const schema = new mongoose.Schema( {
 } );
 
 schema.post( 'save', async ( doc ) => {
-  console.log( 'post save:', doc.toJSON() )
+  // console.log( 'post save:', doc.toJSON() )
 } )
 
 const Entity = mongoose.model( 'Entity', schema, 'Entities' );

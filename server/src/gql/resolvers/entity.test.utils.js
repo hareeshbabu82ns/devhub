@@ -1,18 +1,18 @@
-const { CREATE_ENTITY, DELETE_ENTITY } = require('./entity.queries')
+const { CREATE_ENTITY, DELETE_ENTITY } = require( './entity.queries' )
 
-async function initEntities({ testData, apolloServer }) {
-  const allAsyncs = testData.map(async (withData) =>
-    apolloServer.executeOperation({ query: CREATE_ENTITY, variables: { withData } }))
-  const allIds = (await Promise.all(allAsyncs)).map(res => res.data.createdId)
+async function initEntities( { testData, apolloServer } ) {
+  const allAsyncs = testData.map( async ( withData ) =>
+    apolloServer.executeOperation( { query: CREATE_ENTITY, variables: { withData } } ) )
+  const allIds = ( await Promise.all( allAsyncs ) ).map( res => res.data.createdId )
   // console.log(allIds)
   return allIds
 }
 
-async function cleanupEntities({ ids = [], apolloServer }) {
-  const allAsyncs = ids.map(async id => apolloServer.executeOperation({
+async function cleanupEntities( { ids = [], apolloServer } ) {
+  const allAsyncs = ids.map( async id => apolloServer.executeOperation( {
     query: DELETE_ENTITY, variables: { id },
-  }))
-  const allIds = (await Promise.all(allAsyncs)).map(res => res.data.deletedId)
+  } ) )
+  const allIds = ( await Promise.all( allAsyncs ) ).map( res => res.data.deletedId )
   // console.log(allIds)
   return allIds
 }
@@ -56,6 +56,7 @@ const testData = {
     create: {
       type: "GOD",
       text: [
+        { language: "SAN", value: "Simple Test San" },
         { language: "ENG", value: "Simple Test" },
       ],
     },
@@ -106,7 +107,7 @@ const testData = {
     byIn: {
       type: {
         operation: "IN",
-        valueList: ["GOD", "AUTHOR"]
+        valueList: [ "GOD", "AUTHOR" ]
       }
     },
     byRegex: {
