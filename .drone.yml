@@ -29,9 +29,8 @@ steps:
     DRONE_TAG: ${DRONE_TAG}
   commands:
     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-    # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhubjs:latest -f Dockerfile .
-    - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhubjs:latest -f Dockerfile . 
-    - docker push docker.$SERVER_DOMAIN/home/devhubjs:latest
+    # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhubjs:latest -f Dockerfile . 
+    # - docker push docker.$SERVER_DOMAIN/home/devhubjs:latest
     # - docker build -t docker.$SERVER_DOMAIN/home/mathub-api:$DRONE_TAG -f Dockerfile .
     # - docker push docker.$SERVER_DOMAIN/home/mathub-api:$DRONE_TAG    
   # when:
