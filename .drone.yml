@@ -44,6 +44,7 @@ steps:
   environment:
     ansible_vault_pass:
       from_secret: ansible_vault_pass
+    commit_sha: ${DRONE_COMMIT_SHA}
   settings:
     playbook: .ansible/playbook.yml
     # galaxy: .ansible/requirements.yml

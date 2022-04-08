@@ -4,17 +4,17 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@sanskrit-coders/sanscript": "^1.1.5",
-    "graphql": "^15.5.0"
+    "@sanskrit-coders/sanscript": "^1.2.2",
+    "graphql": "^16.3.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "1.21.5",
-    "@graphql-codegen/typescript": "1.22.1",
-    "@graphql-codegen/typescript-graphql-request": "^3.2.1",
-    "@graphql-codegen/typescript-operations": "^1.18.0",
-    "@graphql-codegen/typescript-resolvers": "^1.19.2",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.3.3"
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.4.8",
+    "@graphql-codegen/typescript-graphql-request": "^4.4.5",
+    "@graphql-codegen/typescript-operations": "^2.3.5",
+    "@graphql-codegen/typescript-resolvers": "^2.6.1",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
   },
   "scripts": {
     "gql-codegen-v1": "graphql-codegen --config codegen_v1.yml",
@@ -22,6 +22,9 @@
     "tsc-test-v1": "ts-node test_v1.ts",
     "gql-codegen-v2": "graphql-codegen --config codegen_v2.yml",
     "tsc-gql-v2": "tsc src/generated/graphql_v2.ts",
-    "tsc-test-v2": "ts-node test_v2.ts"
+    "tsc-test-v2": "ts-node test_v2.ts",
+    "gql-codegen-js": "graphql-codegen --config codegen_js.yml",
+    "tsc-gql-js": "tsc src/generated/graphql_js.ts",
+    "tsc-test-js": "ts-node test_js.ts"
   }
 }
