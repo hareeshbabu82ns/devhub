@@ -46,51 +46,207 @@
   "entityTypes": [
     {
       "code": "GOD",
-      "name": "God"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "God San"
+        },
+        {
+          "lang": "ENG",
+          "value": "God Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "God Tel"
+        }
+      ]
     },
     {
       "code": "AUTHOR",
-      "name": "Author"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Author San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Author Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Author Tel"
+        }
+      ]
     },
     {
       "code": "SLOKAM",
-      "name": "Slokam"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Slokam San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Slokam Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Slokam Tel"
+        }
+      ]
     },
     {
       "code": "ADHYAAYAM",
-      "name": "Adhyaayam"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Adhyaayam San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Adhyaayam Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Adhyaayam Tel"
+        }
+      ]
     },
     {
       "code": "PARVAM",
-      "name": "Parvam"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Parvam San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Parvam Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Parvam Tel"
+        }
+      ]
     },
     {
       "code": "KAANDAM",
-      "name": "Kaandam"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Kaandam San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Kaandam Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Kaandam Tel"
+        }
+      ]
     },
     {
       "code": "STHOTRAM",
-      "name": "Sthotram"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Sthotram San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Sthotram Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Sthotram Tel"
+        }
+      ]
     },
     {
       "code": "DANDAKAM",
-      "name": "Dandakam"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Dandakam San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Dandakam Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Dandakam Tel"
+        }
+      ]
     },
     {
       "code": "SARGA",
-      "name": "Sarga"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Sarga San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Sarga Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Sarga Tel"
+        }
+      ]
     },
     {
       "code": "PURANAM",
-      "name": "Puranam"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Puranam San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Puranam Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Puranam Tel"
+        }
+      ]
     },
     {
       "code": "ITIHASAM",
-      "name": "Itihasam"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Itihasam San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Itihasam Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Itihasam Tel"
+        }
+      ]
     },
     {
       "code": "OTHERS",
-      "name": "Others"
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "Others San"
+        },
+        {
+          "lang": "ENG",
+          "value": "Others Eng"
+        },
+        {
+          "lang": "TEL",
+          "value": "Others Tel"
+        }
+      ]
     }
   ],
   "entities": []

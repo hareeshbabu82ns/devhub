@@ -2,15 +2,7 @@ const mongoose = require( 'mongoose' );
 const { LANGUAGE_DEFAULT_INPUT, LANGUAGE_DEFAULT_ISO } = require( '../../db/constants' );
 const EntityModel = require( '../../db/models/Entity' );
 const language = require( './language' );
-const { buildQueryFilter } = require( './utils' );
-
-
-function languageValuesConvert( languageValues ) {
-  return languageValues.map( i => ( { lang: i.language, value: i.value } ) )
-}
-// function languageValuesToMap( languageValues ) {
-//   return languageValues.reduce( ( p, c ) => ( { ...p, [ c.language ]: c.value } ), {} )
-// }
+const { buildQueryFilter, mapLanguageValueDocumentToGQL, languageValuesToModel } = require( './utils' )
 
 async function createEntityWithData( { data, session } ) {
   const itemData = mapInputToModel( data )
@@ -179,22 +171,12 @@ module.exports = {
   },
 }
 
-const mapTextDocumentToGQL = ( item ) => {
-  // console.log( item.toJSON() )
-  const type = {
-    id: item.id,
-    language: item.get( 'lang' ),
-    value: item.get( 'value' ),
-  }
-  return type;
-}
-
 const mapModelToGQL = ( item ) => {
   // console.log( item.toJSON() )
   const type = {
     id: item.id,
     type: item.get( 'type' ),
-    text: item.get( 'text' )?.map( mapTextDocumentToGQL ),
+    text: item.get( 'text' )?.map( mapLanguageValueDocumentToGQL ),
     children: item.get( 'children' ),
     parents: item.get( 'parents' ),
   }
@@ -204,7 +186,7 @@ const mapModelToGQL = ( item ) => {
 const mapInputToModel = ( item ) => {
   // console.log( item )
   // const text = languageValuesToMap( item.text )
-  const text = languageValuesConvert( item.text )
+  const text = languageValuesToModel( item.text )
   const itemData = {
     type: item.type,
     text,

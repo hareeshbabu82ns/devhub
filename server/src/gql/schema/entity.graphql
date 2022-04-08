@@ -44,7 +44,7 @@ type Entity {
 
 input EntitySearchInput {
   id: FilterID
-  type: FilterString
+  type: FilterEntityTypeEnum
   text: FilterString
   and: [EntitySearchInput!]
   or: [EntitySearchInput!]  

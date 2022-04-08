@@ -1,4 +1,4 @@
-const { Query, Document, FilterQuery } = require('mongoose');
+const { Query, Document, FilterQuery } = require( 'mongoose' );
 
 const FilterOperation = {
   Equals: 'EQUALS',
@@ -12,26 +12,26 @@ const FilterOperation = {
   Regex: 'REGEX',
   All: 'ALL',
 }
-function getRequestedFields(info) {
-  const selections = info.fieldNodes[0]?.selectionSet?.selections;
+function getRequestedFields( info ) {
+  const selections = info.fieldNodes[ 0 ]?.selectionSet?.selections;
   // console.log('Requested Fields: ', selections);
 
   const names = [];
-  selections.forEach(({ name: { value } }) => names.push(value));
+  selections.forEach( ( { name: { value } } ) => names.push( value ) );
   return names;
 }
 
 const queryFilterMap = {
-  [FilterOperation.Equals]: Query.prototype.equals,
-  [FilterOperation.NotEquals]: Query.prototype.ne,
-  [FilterOperation.In]: Query.prototype.in,
-  [FilterOperation.NotIn]: Query.prototype.nin,
-  [FilterOperation.LessThan]: Query.prototype.lt,
-  [FilterOperation.LessThanEquals]: Query.prototype.lte,
-  [FilterOperation.GreaterThan]: Query.prototype.gt,
-  [FilterOperation.GreaterThanEquals]: Query.prototype.gte,
-  [FilterOperation.Regex]: Query.prototype.regex,
-  [FilterOperation.All]: Query.prototype.all,
+  [ FilterOperation.Equals ]: Query.prototype.equals,
+  [ FilterOperation.NotEquals ]: Query.prototype.ne,
+  [ FilterOperation.In ]: Query.prototype.in,
+  [ FilterOperation.NotIn ]: Query.prototype.nin,
+  [ FilterOperation.LessThan ]: Query.prototype.lt,
+  [ FilterOperation.LessThanEquals ]: Query.prototype.lte,
+  [ FilterOperation.GreaterThan ]: Query.prototype.gt,
+  [ FilterOperation.GreaterThanEquals ]: Query.prototype.gte,
+  [ FilterOperation.Regex ]: Query.prototype.regex,
+  [ FilterOperation.All ]: Query.prototype.all,
 }
 
 const queryFilterLogicalMap = {
@@ -42,63 +42,86 @@ const queryFilterLogicalMap = {
 
 function buildQueryFilter(
   query,
-  filters) {
+  filters ) {
 
-  const keys = Object.keys(filters);
+  const keys = Object.keys( filters );
   var queryTmp = query
-  keys.forEach((key) => {
+  keys.forEach( ( key ) => {
 
-    const value = filters[key];
+    const value = filters[ key ];
 
-    if (key in queryFilterLogicalMap) {
+    if ( key in queryFilterLogicalMap ) {
       const filter = [];
-      value.forEach((filterCondition) => {
+      value.forEach( ( filterCondition ) => {
         const q = new Query();
-        buildQueryFilter(q, filterCondition);
-        filter.push(q.getFilter());
-      });
+        buildQueryFilter( q, filterCondition );
+        filter.push( q.getFilter() );
+      } );
       // queryTmp = queryTmp.and(filter);
-      queryTmp = queryFilterLogicalMap[key].apply(queryTmp, [filter]);
+      queryTmp = queryFilterLogicalMap[ key ].apply( queryTmp, [ filter ] );
     }
 
     const path = key === 'id' ? '_id' : value.path ? `${key}.${value.path}` : key
 
-    queryTmp = queryTmp.where(path)
+    queryTmp = queryTmp.where( path )
     // console.log(value)
 
-    if ('operation' in value) {
-      const valueOperation = value['operation'];
-      const valueValue = value['value'];
-      const valueValueList = value['valueList'];
+    if ( 'operation' in value ) {
+      const valueOperation = value[ 'operation' ];
+      const valueValue = value[ 'value' ];
+      const valueValueList = value[ 'valueList' ];
+      const valueValueString = value[ 'valueString' ];
       // console.log(valueOperation)
 
-      switch (valueOperation) {
+      switch ( valueOperation ) {
         case FilterOperation.In:
         case FilterOperation.NotIn:
-          if (valueValueList)
-            queryTmp = queryFilterMap[valueOperation].apply(queryTmp, [valueValueList]);
+          if ( valueValueList )
+            queryTmp = queryFilterMap[ valueOperation ].apply( queryTmp, [ valueValueList ] );
           else
             throw `valueList missing for ${key} - ${valueOperation}`
           break;
         case FilterOperation.Regex:
-          if (valueValue)
-            queryTmp = queryFilterMap[valueOperation].apply(queryTmp, [new RegExp(valueValue, 'i')]);
+          if ( valueValueString )
+            queryTmp = queryFilterMap[ valueOperation ].apply( queryTmp, [ new RegExp( valueValueString, 'i' ) ] );
+          else if ( valueValue )
+            queryTmp = queryFilterMap[ valueOperation ].apply( queryTmp, [ new RegExp( valueValue, 'i' ) ] );
           else
             throw `value missing for ${key} - ${valueOperation}`
           break;
         default:
-          if (valueValue)
-            queryTmp = queryFilterMap[valueOperation].apply(queryTmp, [valueValue]);
+          if ( valueValue )
+            queryTmp = queryFilterMap[ valueOperation ].apply( queryTmp, [ valueValue ] );
           else
             throw `value missing for ${key} - ${valueOperation}`
           break;
       }
     }
     // query.where(key).equals(filters[key]);
-  });
+  } );
 }
+
+const mapLanguageValueDocumentToGQL = ( item ) => {
+  // console.log( item.toJSON() )
+  const type = {
+    id: item.id,
+    language: item.get( 'lang' ),
+    value: item.get( 'value' ),
+  }
+  return type;
+}
+
+function languageValuesToModel( languageValues ) {
+  return languageValues?.map( i => ( { lang: i.language, value: i.value } ) )
+}
+// function languageValuesToModel( languageValues ) {
+//   return languageValues.reduce( ( p, c ) => ( { ...p, [ c.language ]: c.value } ), {} )
+// }
 
 module.exports = {
   getRequestedFields,
-  buildQueryFilter
+  buildQueryFilter,
+
+  mapLanguageValueDocumentToGQL,
+  languageValuesToModel,
 }

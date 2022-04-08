@@ -13,7 +13,7 @@ extend type Mutation {
 
 input EntityTypeInput {
   code: EntityTypeEnum
-  name: String
+  name: [LanguageValueInput]
   description: String
 }
 
@@ -21,13 +21,13 @@ input EntityTypeInput {
 type EntityType {
   id: ID!
   code: EntityTypeEnum!
-  name: String!
+  name(language:String = "DEFAULT"): String!
   description: String
 }
 
 input EntityTypeSearchInput {
   id: FilterID
-  code: FilterString
+  code: FilterEntityTypeEnum
   name: FilterString
   description: FilterString
   and: [EntityTypeSearchInput!]
@@ -47,4 +47,12 @@ enum EntityTypeEnum {
   ADHYAAYAM
   SLOKAM
   OTHERS
+}
+
+input FilterEntityTypeEnum {
+  operation: FilterOperation = EQUALS
+  path: String
+  value: EntityTypeEnum
+  valueList: [EntityTypeEnum!]
+  valueString: String
 }

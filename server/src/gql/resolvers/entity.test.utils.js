@@ -77,7 +77,7 @@ const testData = {
         {
           type: {
             operation: "REGEX",
-            value: "^SLO.*"
+            valueString: "^SLO.*"
           }
         },
         {
@@ -113,7 +113,7 @@ const testData = {
     byRegex: {
       type: {
         operation: "REGEX",
-        value: "^G"
+        valueString: "^G"
       }
     },
   },
