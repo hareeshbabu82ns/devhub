@@ -4,9 +4,9 @@
   debug:
     var: git_tag
 
-# - name: Ansible Env
-#   debug:
-#     var: ansible_env
+- name: Ansible Env
+  debug:
+    var: ansible_env
 
 # - name: Copy KubeConfig
 #   shell: >

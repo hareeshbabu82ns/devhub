@@ -3,14 +3,14 @@ kind: Deployment
 metadata:
   labels:
     app: "{{app_name}}"
+    commit_sha: "{{ansible_env.COMMIT_SHA}}"
   name: "{{app_name}}"
   namespace: default
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: "{{app_name}}"
-      commit_sha: "{{ansible_env.COMMIT_SHA}}"
+      app: "{{app_name}}"      
   strategy:
     rollingUpdate:
       maxSurge: 1
