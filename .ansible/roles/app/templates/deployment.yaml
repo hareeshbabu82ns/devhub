@@ -21,6 +21,7 @@ spec:
       labels:
         app: "{{app_name}}"
         commit_sha: "{{commit_sha}}"
+        # redeploy: "$(date +%s)"
     spec:
       containers:
       - image: "{{docker_fdqn}}/home/{{app_name}}:{{git_tag}}"
