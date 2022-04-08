@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: "{{app_name}}"
-    commit_sha: "{{ansible_env.COMMIT_SHA}}"
+    commit_sha: "{{commit_sha}}"
   name: "{{app_name}}"
   namespace: default
 spec:
