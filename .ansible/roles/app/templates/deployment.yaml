@@ -20,6 +20,7 @@ spec:
     metadata:
       labels:
         app: "{{app_name}}"
+        commit_sha: "{{commit_sha}}"
     spec:
       containers:
       - image: "{{docker_fdqn}}/home/{{app_name}}:{{git_tag}}"
