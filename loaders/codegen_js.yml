@@ -1,0 +1,17 @@
+overwrite: true
+schema: "http://localhost:4000/graphql"
+# schema: "http://devhubjs.kube.local.io/graphql"
+documents: './src/queries/js/**/*.graphql'
+generates:
+  src/generated/graphql_js.ts:
+    plugins:
+      - "typescript"
+      - typescript-operations
+      - typescript-graphql-request
+      - typescript-resolvers
+config:
+  rawRequest: true
+      # documentMode: external
+      # importDocumentNodeExternallyFrom: src/queries/test.graphql
+  scalars:
+    DateTime: string  

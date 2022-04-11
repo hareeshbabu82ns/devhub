@@ -1,0 +1,21 @@
+query getVersion {
+  version
+}
+
+query getLanguages{
+  languages{
+    id
+    iso
+    name
+    description
+  }
+}
+
+query getEntityTypes($language:String){
+    entityTypes{
+    id
+    name(language:$language)
+    code
+    description
+  }
+}

@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@sanskrit-coders/sanscript": "^1.2.2",
+    "dotenv": "^16.0.0",
     "graphql": "^16.3.0"
   },
   "devDependencies": {
@@ -13,6 +14,7 @@
     "@graphql-codegen/typescript-graphql-request": "^4.4.5",
     "@graphql-codegen/typescript-operations": "^2.3.5",
     "@graphql-codegen/typescript-resolvers": "^2.6.1",
+    "@types/node": "^17.0.23",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"
   },
@@ -25,6 +27,7 @@
     "tsc-test-v2": "ts-node test_v2.ts",
     "gql-codegen-js": "graphql-codegen --config codegen_js.yml",
     "tsc-gql-js": "tsc src/generated/graphql_js.ts",
-    "tsc-test-js": "ts-node test_js.ts"
+    "tsc-test-js": "ts-node test_js.ts",
+    "upload-sthotram": "ts-node src/upload_sthotram_v1.ts"
   }
 }

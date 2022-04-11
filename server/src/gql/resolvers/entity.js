@@ -10,6 +10,8 @@ async function createEntityWithData( { data, session } ) {
   // console.log( itemData )
   const item = ( await EntityModel.create( [ itemData ], { session } ) )[ 0 ]
 
+  // TODO: check [childIDs]
+
   // check [children] data
   if ( data.children && data.children.length > 0 ) {
     // create child entities
@@ -33,6 +35,14 @@ async function createEntityWithData( { data, session } ) {
     item.children = childIds
   }
 
+  // check [parentIDs]
+  if ( data?.parentIDs?.length > 0 ) {
+    const pIDs = []
+    data?.parentIDs.forEach( e => pIDs.push( ...e.entities ) )
+    const updatedEntities = await EntityModel.updateMany( { _id: { $in: pIDs } },
+      { $push: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
+    console.log( 'updated parent entities:', updatedEntities )
+  }
   // check [parents] data
   if ( data.parents && data.parents.length > 0 ) {
     // create parent entities

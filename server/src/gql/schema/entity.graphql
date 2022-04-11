@@ -19,7 +19,7 @@ input EntityInput {
   children: [EntityInput!]
 
   """ Child Entity IDs only (will just link to existing entities) """
-  childIDs: [ID!]
+  childIDs: [TypeEntityInput!]
 
   """ Parent Entities with Data (will create new entities) """
   parents: [EntityInput!]
