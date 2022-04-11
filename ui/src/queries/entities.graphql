@@ -1,7 +1,0 @@
-query getVersion {
-  version
-}
-
-mutation createEntity($data:EntityCreateInput){
-  createEntity(withData:$data)
-}

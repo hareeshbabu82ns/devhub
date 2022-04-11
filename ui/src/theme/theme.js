@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { CssBaseline, useMediaQuery } from '@mui/material';
 import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
@@ -16,32 +16,33 @@ ThemeConfig.propTypes = {
   children: PropTypes.node
 };
 
-const getDesignTokens = (mode) => ({
+const getDesignTokens = ( mode ) => ( {
   palette: {
     mode,
-    ...palette[mode],
+    ...palette[ mode ],
   },
   // shape,
   // typography,
   // shadows,
   // customShadows
-})
+} )
 
-export default function ThemeConfig({ children }) {
+export default function ThemeConfig( { children } ) {
 
-  const [themeMode, setThemeMode] = useRecoilState(themeModeState)
+  const [ themeMode, setThemeMode ] = useRecoilState( themeModeState )
 
   // const prefersDarkMode = false;
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const prefersDarkMode = useMediaQuery( '(prefers-color-scheme: dark)' );
 
-  useMemo(() => {
-    console.log(themeMode, prefersDarkMode)
-    if (prefersDarkMode && themeMode === THEME_LIGHT)
-      setThemeMode(THEME_DARK)
-  }, [prefersDarkMode])
+  useMemo( () => {
+    // console.log( themeMode, prefersDarkMode )
+    if ( prefersDarkMode && themeMode === THEME_LIGHT )
+      setThemeMode( THEME_DARK )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ prefersDarkMode ] )
 
   // Update the theme only if the mode changes
-  const theme = useMemo(() => createTheme(getDesignTokens(themeMode)), [themeMode]);
+  const theme = useMemo( () => createTheme( getDesignTokens( themeMode ) ), [ themeMode ] );
   // theme.components = componentsOverride(theme);
 
   return (
