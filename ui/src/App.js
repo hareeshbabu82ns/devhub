@@ -5,6 +5,7 @@ import {
 
 import HomePage from "./pages/HomePage"
 import SimplePageLayout from "./pages/SimplePageLayout"
+// import GraphEditorPage from "./pages/GraphEditorPage";
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
             <Route index element={<SettingsPage />} />
           </Route> */}
         </Route>
+        {/* <Route path="editor" >
+          <Route index element={<GraphEditorPage />} />
+        </Route> */}
       </Route>
 
     </Routes>

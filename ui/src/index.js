@@ -1,33 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from "react-router-dom"
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { RecoilRoot } from 'recoil';
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import ThemeConfig from './theme/theme';
+import App from './App'
+import reportWebVitals from './reportWebVitals'
+import { RecoilRoot } from 'recoil'
+import { ApolloProvider } from "@apollo/client"
+import { SnackbarProvider } from 'notistack'
+import ThemeConfig from './theme/theme'
 
-const client = new ApolloClient( {
-  uri: '/graphql',
-  cache: new InMemoryCache()
-} );
+import client from './utils/GqlClient'
 
-ReactDOM.render(
+const container = document.getElementById( 'root' )
+const root = createRoot( container )
+root.render(
   <React.StrictMode>
     <RecoilRoot>
       <ThemeConfig>
-        <ApolloProvider client={client}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ApolloProvider>
+        <SnackbarProvider maxSnack={5}>
+          <ApolloProvider client={client}>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ApolloProvider>
+        </SnackbarProvider>
       </ThemeConfig>
     </RecoilRoot>
-  </React.StrictMode>,
-  document.getElementById( 'root' )
-);
+  </React.StrictMode>
+)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals()

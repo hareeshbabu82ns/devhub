@@ -28,5 +28,11 @@ export const mainListItems = (
 export const secondaryListItems = (
   <div>
     {/* <ListSubheader inset>Saved Searches</ListSubheader> */}
+    <ListItem component={Link} to="/editor">
+      <ListItemIcon>
+        <AritmeticIcon />
+      </ListItemIcon>
+      <ListItemText primary={<Typography color="text.primary">GraphEditor</Typography>} />
+    </ListItem>
   </div>
 );
