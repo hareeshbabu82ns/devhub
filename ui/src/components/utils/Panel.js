@@ -3,7 +3,8 @@ import { Alert, AlertTitle, Box, CircularProgress, Paper, Stack, Toolbar, Typogr
 
 const Panel = ( { title, toolbarActions,
   children, actionsLeft, actionsRight,
-  loading, error, onRefresh, titleVarient = "dense" } ) => {
+  loading, error, onRefresh, titleVarient = "dense",
+  sx } ) => {
 
   const Titlebar = ( { title, toolbarActions, onRefresh, titleVarient } ) => {
     return ( title || toolbarActions || onRefresh ) ?
@@ -27,8 +28,8 @@ const Panel = ( { title, toolbarActions,
     </Box>
   )
 
-  const ErrorPanel = ( { error } ) => (
-    <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900" }}>
+  const ErrorPanel = ( { error, sx } ) => (
+    <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900", ...sx }}>
       <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
 
       <Paper sx={{ p: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -49,10 +50,10 @@ const Panel = ( { title, toolbarActions,
   )
 
   if ( loading ) return loadingPanel
-  if ( error ) return <ErrorPanel {...{ error, title, toolbarActions, onRefresh }} />
+  if ( error ) return <ErrorPanel {...{ error, title, toolbarActions, onRefresh, sx }} />
 
   return (
-    <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900" }}>
+    <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900", ...sx }}>
 
       <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
 

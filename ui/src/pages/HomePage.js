@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { Button, Stack, Typography } from '@mui/material';
-import Panel from '../components/Panel';
+import Panel from '../components/utils/Panel';
 import { useSnackbar } from 'notistack'
 
 const QUERY_API_VERSION = gql`

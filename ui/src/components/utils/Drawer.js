@@ -10,7 +10,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 
 import { mainListItems, secondaryListItems } from './listItems'
 
-import { drawerWidth } from '../constants'
+import { drawerWidth } from '../../constants'
 
 export const drawerState = atom( {
   key: 'drawerState',
