@@ -45,6 +45,7 @@ function mapContentTextToEntities( data: any ): EntityInput[] {
 
   return entities
 }
+
 function mapEntityTextLanguage( data: any ): LanguageValueInput[] {
   const textData: LanguageValueInput[] = []
   // let userTestStatus: { id: number, name: string }[] = []
@@ -88,10 +89,8 @@ async function createGod( withData: any ) {
   return data.createEntity
 }
 
-async function createSthotram( { god: { } } ) {
+async function createSthotram( inputData: any ) {
   let god: any
-
-  const inputData = await readSthotramFile( 'data/Uma_Maheshwara_Stotram.json' )
 
   if ( inputData?.parent?.type === 'GOD' ) {
     god = await createGod( inputData.parent )
@@ -99,7 +98,7 @@ async function createSthotram( { god: { } } ) {
   }
 
   // create sthotram entity
-  if ( inputData?.entity?.type === 'STHOTRAM' ) {
+  if ( inputData?.entity?.type === 'STHOTRAM' || inputData?.entity?.type === 'DANDAKAM' ) {
     const textData = mapEntityTextLanguage( inputData.entity )
 
     const childEntities = mapContentTextToEntities( inputData?.contents )
@@ -107,7 +106,7 @@ async function createSthotram( { god: { } } ) {
 
     const { data } = await sdk.createEntity( {
       withData: {
-        type: EntityTypeEnum.Sthotram,
+        type: inputData.entity.type,
         text: textData,
         parentIDs: [ {
           type: EntityTypeEnum.God,
@@ -124,19 +123,24 @@ async function createSthotram( { god: { } } ) {
 }
 
 
-async function main() {
+async function main( argv: any ) {
 
-  console.log( 'uploading...' )
+  console.log( 'uploading...', argv.file )
 
-  await createSthotram( { god: {} } )
+  const inputData = await readSthotramFile( argv.file )
 
-  // const { data } = await sdk.getEntities( { by: { type: { value: EntityTypeEnum.God } } } )
-
-  // console.log( data );
+  await createSthotram( inputData )
 
   console.log( 'uploading finished' )
 }
 
+import yargs from 'yargs/yargs'
 
-main();
+const argv = yargs( process.argv.slice( 2 ) ).options( {
+  file: { type: 'string' },
+} )
+  .alias( 'f', 'file' )
+  .usage( '$0 --file <json file path>' )
+  .parseSync()
 
+main( argv );
