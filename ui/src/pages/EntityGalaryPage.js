@@ -5,10 +5,9 @@ import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
 import Panel from '../components/utils/Panel'
-import { useNavigate, useParams } from 'react-router-dom'
-import { C_ENTITY_TYPE_SLOKAM } from '../constants'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { C_ENTITY_TYPE_SLOKAM, C_LANGUAGE_DEFAULT } from '../constants'
 import EntityTextListItem from '../components/EntityTextListItem'
-
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
   query($id:ID, $language:String) {
@@ -29,6 +28,8 @@ const QUERY_GET_ENTITY_CHILDREN = gql`
 export default function EntityGalaryPage() {
 
   const params = useParams()
+  const [ searchParams ] = useSearchParams()
+  const { search: queryParams } = useLocation()
   const navigate = useNavigate()
 
   const { enqueueSnackbar } = useSnackbar()
@@ -39,7 +40,7 @@ export default function EntityGalaryPage() {
   const [ hasTextContents, setHasTextContents ] = React.useState( false )
 
   const { loading, error, data, refetch, networkStatus } = useQuery( QUERY_GET_ENTITY_CHILDREN,
-    { variables: { language: "SAN", id: params.id } } )
+    { variables: { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT, id: params.id } } )
 
   React.useEffect( () => {
     if ( data?.entities[ 0 ] ) {
@@ -98,7 +99,7 @@ export default function EntityGalaryPage() {
         <ImageList gap={20} cols={5} >
           {children.map( ( item, i ) => (
             <EntityGalaryItem item={item} key={item.id}
-              onSelect={() => navigate( `/entity/${item.id}` )} />
+              onSelect={() => navigate( `/entity/${item.id}${queryParams}` )} />
           ) )}
         </ImageList>}
 

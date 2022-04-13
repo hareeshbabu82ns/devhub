@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 
-import { mainListItems, secondaryListItems } from './listItems'
+import { MainListItems, SecondaryListItems } from './listItems'
 
 import { drawerWidth } from '../../constants'
 
@@ -69,9 +69,9 @@ function Drawer( { open } ) {
         </IconButton>
       </Toolbar>
       <Divider />
-      <List>{mainListItems}</List>
+      <List><MainListItems /></List>
       <Divider />
-      <List>{secondaryListItems}</List>
+      <List><SecondaryListItems /></List>
     </DrawerStyled>
   )
 }

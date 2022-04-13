@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 
+import LanguageSelect from './LanguageSelect'
 import { APP_THEME_MODE, drawerWidth } from '../../constants'
 
 import { useRecoilState, useSetRecoilState } from 'recoil'
@@ -66,6 +67,7 @@ function AppBar( { open } ) {
           DevHub
         </Typography>
         <Stack direction="row">
+          <LanguageSelect />
           <ThemeUISwitch checked={themeMode === THEME_DARK}
             onChange={( event, checked ) => {
               const themeMode = checked ? THEME_DARK : THEME_LIGHT

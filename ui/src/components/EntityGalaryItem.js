@@ -14,6 +14,7 @@ export default function EntityGalaryItem( { item, onSelect } ) {
         srcSet={`${DEFAULT_IMG}?random=${item.id}`}
         alt={item.text}
         loading="lazy"
+        onClick={onSelect}
       />
       <ImageListItemBar
         title={item.text}

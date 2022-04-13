@@ -5,7 +5,8 @@ import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
 import Panel from '../components/utils/Panel'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { C_LANGUAGE_DEFAULT } from '../constants'
 
 
 const QUERY_GET_ENTITIES_BY_TYPE = gql`
@@ -20,14 +21,16 @@ const QUERY_GET_ENTITIES_BY_TYPE = gql`
 
 export default function GodsPage() {
 
+  const [ searchParams ] = useSearchParams()
   const navigate = useNavigate()
+  const { search: queryParams } = useLocation()
 
   const { enqueueSnackbar } = useSnackbar()
 
   const [ refetching, setRefetching ] = React.useState( false )
 
   const { loading, error, data, refetch, networkStatus } = useQuery( QUERY_GET_ENTITIES_BY_TYPE,
-    { variables: { language: "SAN", type: 'GOD' } } )
+    { variables: { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT, type: 'GOD' } } )
 
   React.useEffect( () => {
     if ( error )
@@ -68,7 +71,7 @@ export default function GodsPage() {
         <ImageList gap={20} cols={5} >
           {data?.entities?.map( ( item, i ) => (
             <EntityGalaryItem item={item} key={item.id}
-              onSelect={() => navigate( `/entity/${item.id}` )} />
+              onSelect={() => navigate( `/entity/${item.id}${queryParams}` )} />
           ) )}
         </ImageList>}
     </Panel>
