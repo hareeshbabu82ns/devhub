@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ImageList, IconButton, List } from '@mui/material'
+import { ImageList, IconButton, List, useMediaQuery } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
@@ -8,6 +8,7 @@ import Panel from '../components/utils/Panel'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { C_ENTITY_TYPE_SLOKAM, C_LANGUAGE_DEFAULT } from '../constants'
 import EntityTextListItem from '../components/EntityTextListItem'
+import _ from 'lodash'
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
   query($id:ID, $language:String) {
@@ -22,10 +23,20 @@ const QUERY_GET_ENTITY_CHILDREN = gql`
         text(language: $language)
       }
     }
+    entityTypes{
+      id
+      name(language: $language)
+      code
+    }
   }
 `
 
 export default function EntityGalaryPage() {
+
+  const mediaSmUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'sm' ) )
+  const mediaMdUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'md' ) )
+  const mediaLgUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'lg' ) )
+  const mediaXlUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'xl' ) )
 
   const params = useParams()
   const [ searchParams ] = useSearchParams()
@@ -44,9 +55,11 @@ export default function EntityGalaryPage() {
 
   React.useEffect( () => {
     if ( data?.entities[ 0 ] ) {
+      const entityTypes = _.get( data, 'entityTypes', [] )
       const { id, type, text, childrenCount } = data.entities[ 0 ]
-      setEntity( { id, type, text, childrenCount } )
-      setChildren( data.entities[ 0 ].children )
+      setEntity( { id, type, text, childrenCount, typeData: _.find( entityTypes, { 'code': type } ) } )
+      setChildren( data.entities[ 0 ].children
+        .map( i => ( { ...i, typeData: _.find( entityTypes, { 'code': i.type } ) } ) ) )
       const index = data.entities[ 0 ].children.findIndex( e => e.type === C_ENTITY_TYPE_SLOKAM )
       setHasTextContents( index >= 0 )
     } else {
@@ -87,7 +100,7 @@ export default function EntityGalaryPage() {
   )
 
   return (
-    <Panel title={entity ? `${entity.type}: ${entity.text}` : 'Entity Children'}
+    <Panel title={entity ? `${entity.text}` : 'Entity Children'}
       sx={{ border: 0, m: 2 }}
       loading={loading || refetching}
       error={error}
@@ -96,7 +109,8 @@ export default function EntityGalaryPage() {
 
       {/* Children as Image List */}
       {( children?.length > 0 && !hasTextContents ) &&
-        <ImageList gap={20} cols={5} >
+        <ImageList gap={20}
+          cols={mediaXlUp ? 5 : mediaLgUp ? 4 : mediaMdUp ? 3 : mediaSmUp ? 2 : 1} >
           {children.map( ( item, i ) => (
             <EntityGalaryItem item={item} key={item.id}
               onSelect={() => navigate( `/entity/${item.id}${queryParams}` )} />

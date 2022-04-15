@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ImageList, IconButton } from '@mui/material'
+import { ImageList, IconButton, useMediaQuery } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
@@ -7,6 +7,7 @@ import EntityGalaryItem from '../components/EntityGalaryItem'
 import Panel from '../components/utils/Panel'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { C_LANGUAGE_DEFAULT } from '../constants'
+import _ from 'lodash'
 
 
 const QUERY_GET_ENTITIES_BY_TYPE = gql`
@@ -16,10 +17,20 @@ const QUERY_GET_ENTITIES_BY_TYPE = gql`
       type
       text(language: $language)
     }
+    entityTypes{
+      id
+      name(language: $language)
+      code
+    }
   }
 `
 
 export default function GodsPage() {
+
+  const mediaSmUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'sm' ) )
+  const mediaMdUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'md' ) )
+  const mediaLgUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'lg' ) )
+  const mediaXlUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'xl' ) )
 
   const [ searchParams ] = useSearchParams()
   const navigate = useNavigate()
@@ -68,11 +79,13 @@ export default function GodsPage() {
       onRefresh={refetchData}
       toolbarActions={toolbarActions}>
       {data?.entities?.length > 0 &&
-        <ImageList gap={20} cols={5} >
-          {data?.entities?.map( ( item, i ) => (
-            <EntityGalaryItem item={item} key={item.id}
-              onSelect={() => navigate( `/entity/${item.id}${queryParams}` )} />
-          ) )}
+        <ImageList gap={20}
+          cols={mediaXlUp ? 5 : mediaLgUp ? 4 : mediaMdUp ? 3 : mediaSmUp ? 2 : 1} >
+          {data?.entities?.map( i => ( { ...i, typeData: _.find( _.get( data, 'entityTypes', [] ), { 'code': i.type } ) } ) )
+            .map( ( item, i ) => (
+              <EntityGalaryItem item={item} key={item.id}
+                onSelect={() => navigate( `/entity/${item.id}${queryParams}` )} />
+            ) )}
         </ImageList>}
     </Panel>
   )

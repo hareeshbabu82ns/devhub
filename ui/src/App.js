@@ -1,13 +1,14 @@
 import {
   Routes,
   Route
-} from "react-router-dom";
-import EntityGalaryPage from "./pages/EntityGalaryPage";
-import GodsPage from "./pages/GodsPage";
+} from "react-router-dom"
+import EntityGalaryPage from "./pages/EntityGalaryPage"
+import GodsPage from "./pages/GodsPage"
+import SthotramUploadPage from "./pages/SthotramUploadPage"
 
 import HomePage from "./pages/HomePage"
 import SimplePageLayout from "./pages/SimplePageLayout"
-// import GraphEditorPage from "./pages/GraphEditorPage";
+// import GraphEditorPage from "./pages/GraphEditorPage"
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="entity" >
             <Route path=":id" element={<EntityGalaryPage />} />
+          </Route>
+          <Route path="uploaders" >
+            <Route path="sthotram" element={<SthotramUploadPage />} />
           </Route>
           <Route path="gods" element={<GodsPage />} />
           {/* <Route path="arithmetic" >
@@ -32,7 +36,7 @@ function App() {
       </Route>
 
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App
