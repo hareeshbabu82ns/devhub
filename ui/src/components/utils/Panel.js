@@ -18,7 +18,7 @@ const Panel = ( { title, toolbarActions,
       : null
   }
 
-  const loadingPanel = (
+  const LoadingPanel = () => (
     <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900" }}>
       <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
 
@@ -49,40 +49,42 @@ const Panel = ( { title, toolbarActions,
     </Box>
   )
 
-  if ( loading ) return loadingPanel
-  if ( error ) return <ErrorPanel {...{ error, title, toolbarActions, onRefresh, sx }} />
+  if ( loading ) return <LoadingPanel />
+  if ( error ) return <ErrorPanel {...{ error }} />
 
   return (
-    <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900", ...sx }}>
+    <React.Suspense fallback={<LoadingPanel />}>
+      <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900", ...sx }}>
 
-      <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
+        <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
 
-      <Paper sx={{ p: 2, }}>
-        {children}
+        <Paper sx={{ p: 2, }}>
+          {children}
 
-        {( actionsLeft || actionsRight ) &&
-          <Stack
-            sx={{ pt: 1, mt: 2, borderTop: 1, borderColor: "grey.400" }}
-            direction="row"
-            spacing={2}
-          // justifyContent="flex-end"
-          >
-            {( actionsLeft || actionsRight ) &&
-              <Box sx={{ flexGrow: 1 }}>
-                {actionsLeft}
-              </Box>
-            }
-            {actionsRight &&
-              <Box >
-                {actionsRight}
-              </Box>
-            }
+          {( actionsLeft || actionsRight ) &&
+            <Stack
+              sx={{ pt: 1, mt: 2, borderTop: 1, borderColor: "grey.400" }}
+              direction="row"
+              spacing={2}
+            // justifyContent="flex-end"
+            >
+              {( actionsLeft || actionsRight ) &&
+                <Box sx={{ flexGrow: 1 }}>
+                  {actionsLeft}
+                </Box>
+              }
+              {actionsRight &&
+                <Box >
+                  {actionsRight}
+                </Box>
+              }
 
-          </Stack>
-        }
+            </Stack>
+          }
 
-      </Paper>
-    </Box>
+        </Paper>
+      </Box>
+    </React.Suspense>
   )
 
 

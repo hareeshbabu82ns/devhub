@@ -18,11 +18,33 @@ const QUERY_FIND_ENTITY_BY_TYPE_TEXT = gql`
       }
   }
 `
+const QUERY_FETCH_ENTITY_TYPES = gql`
+  query($language:String) {
+    entityTypes{
+      id
+      name(language: $language)
+      code
+    }
+  }
+`
 const MUTATION_CREATE_ENTITY = gql`
   mutation createEntity($data: EntityInput) {
     createEntity(withData: $data)
   }
 `
+
+export async function fetchAllEntityTypes( { language } ) {
+
+  const { data } = await client.query( {
+    query: QUERY_FETCH_ENTITY_TYPES,
+    variables: {
+      language
+    }
+  } )
+
+  return data.entityTypes
+}
+
 export async function createEntity( { withData,
   checkExistance = true } ) {
 

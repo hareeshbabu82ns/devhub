@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ImageList, IconButton, List, useMediaQuery } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import EditIcon from '@mui/icons-material/Edit'
 import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
@@ -9,6 +10,8 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { C_ENTITY_TYPE_SLOKAM, C_LANGUAGE_DEFAULT } from '../constants'
 import EntityTextListItem from '../components/EntityTextListItem'
 import _ from 'lodash'
+import { useRecoilValue } from 'recoil'
+import { entityTypesState } from '../state/entityTypes'
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
   query($id:ID, $language:String) {
@@ -22,11 +25,6 @@ const QUERY_GET_ENTITY_CHILDREN = gql`
         type
         text(language: $language)
       }
-    }
-    entityTypes{
-      id
-      name(language: $language)
-      code
     }
   }
 `
@@ -45,6 +43,8 @@ export default function EntityGalaryPage() {
 
   const { enqueueSnackbar } = useSnackbar()
 
+  const entityTypes = useRecoilValue( entityTypesState( searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT ) )
+
   const [ refetching, setRefetching ] = React.useState( false )
   const [ entity, setEntity ] = React.useState( undefined )
   const [ children, setChildren ] = React.useState( [] )
@@ -55,7 +55,6 @@ export default function EntityGalaryPage() {
 
   React.useEffect( () => {
     if ( data?.entities[ 0 ] ) {
-      const entityTypes = _.get( data, 'entityTypes', [] )
       const { id, type, text, childrenCount } = data.entities[ 0 ]
       setEntity( { id, type, text, childrenCount, typeData: _.find( entityTypes, { 'code': type } ) } )
       setChildren( data.entities[ 0 ].children
@@ -88,14 +87,14 @@ export default function EntityGalaryPage() {
 
   const toolbarActions = (
     <React.Fragment>
+      <IconButton aria-label="Edit Entity"
+        onClick={() => navigate( `/entity/${entity?.id}/edit${queryParams}` )}>
+        <EditIcon />
+      </IconButton>
       <IconButton disabled={loading || ( networkStatus === NetworkStatus.refetch ) || refetching}
         onClick={refetchData}>
         <RefreshIcon />
       </IconButton>
-      {/* <IconButton aria-label="Create New Schema"
-        onClick={() => navigate( 'new' )}>
-        <AddIcon />
-      </IconButton> */}
     </React.Fragment>
   )
 

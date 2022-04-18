@@ -1,7 +1,8 @@
-import { MenuItem, Select } from '@mui/material';
+import { MenuItem, Select } from '@mui/material'
 import { gql, useQuery } from "@apollo/client"
-import { useSearchParams } from 'react-router-dom';
-import { C_LANGUAGE_DEFAULT, C_LANGUAGE_MEANING_DEFAULT } from '../../constants';
+import { useSearchParams } from 'react-router-dom'
+import { C_LANGUAGE_DEFAULT, C_LANGUAGE_MEANING_DEFAULT } from '../../constants'
+import { startTransition } from 'react'
 
 export const GET_LANGUAGES_NAMES = gql`
 {
@@ -15,13 +16,14 @@ export const GET_LANGUAGES_NAMES = gql`
 
 function LanguageSelect() {
   const { data, loading, error } = useQuery( GET_LANGUAGES_NAMES )
-  const [ searchParams, setSearchParams ] = useSearchParams();
+  const [ searchParams, setSearchParams ] = useSearchParams()
 
   const handleChange = ( { target } ) => {
     // console.log(target)
     searchParams.set( 'language', target.value )
     searchParams.delete( 'languageMeaning' )
-    setSearchParams( searchParams, { replace: true } )
+    // setSearchParams( searchParams, { replace: true } )
+    startTransition( () => setSearchParams( searchParams, { replace: true } ) )
   }
 
   if ( loading ) return null

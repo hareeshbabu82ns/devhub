@@ -36,6 +36,13 @@ export const SecondaryListItems = () => {
   const { search: queryParams } = useLocation()
   return (
     <>
+      <ListSubheader>Entities</ListSubheader>
+      <ListItem component={Link} to={`/entity/create${queryParams}`} onClick={() => setDrawerState( false )}>
+        <ListItemIcon>
+          <AritmeticIcon />
+        </ListItemIcon>
+        <ListItemText primary={<Typography color="text.primary">Create</Typography>} />
+      </ListItem>
       <ListSubheader>Uploaders</ListSubheader>
       <ListItem component={Link} to={`/uploaders/sthotram${queryParams}`} onClick={() => setDrawerState( false )}>
         <ListItemIcon>

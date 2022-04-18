@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ImageList, IconButton, useMediaQuery } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import AddIcon from '@mui/icons-material/Add'
 import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
@@ -8,6 +9,8 @@ import Panel from '../components/utils/Panel'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { C_LANGUAGE_DEFAULT } from '../constants'
 import _ from 'lodash'
+import { useRecoilValue } from 'recoil'
+import { entityTypesState } from '../state/entityTypes'
 
 
 const QUERY_GET_ENTITIES_BY_TYPE = gql`
@@ -16,11 +19,6 @@ const QUERY_GET_ENTITIES_BY_TYPE = gql`
       id
       type
       text(language: $language)
-    }
-    entityTypes{
-      id
-      name(language: $language)
-      code
     }
   }
 `
@@ -35,6 +33,8 @@ export default function GodsPage() {
   const [ searchParams ] = useSearchParams()
   const navigate = useNavigate()
   const { search: queryParams } = useLocation()
+
+  const entityTypes = useRecoilValue( entityTypesState( searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT ) )
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -61,14 +61,14 @@ export default function GodsPage() {
 
   const toolbarActions = (
     <React.Fragment>
+      <IconButton aria-label="Create New Schema"
+        onClick={() => navigate( `/entity/create${queryParams}` )}>
+        <AddIcon />
+      </IconButton>
       <IconButton disabled={loading || ( networkStatus === NetworkStatus.refetch ) || refetching}
         onClick={refetchData}>
         <RefreshIcon />
       </IconButton>
-      {/* <IconButton aria-label="Create New Schema"
-        onClick={() => navigate( 'new' )}>
-        <AddIcon />
-      </IconButton> */}
     </React.Fragment>
   )
 
@@ -81,7 +81,7 @@ export default function GodsPage() {
       {data?.entities?.length > 0 &&
         <ImageList gap={20}
           cols={mediaXlUp ? 5 : mediaLgUp ? 4 : mediaMdUp ? 3 : mediaSmUp ? 2 : 1} >
-          {data?.entities?.map( i => ( { ...i, typeData: _.find( _.get( data, 'entityTypes', [] ), { 'code': i.type } ) } ) )
+          {data?.entities?.map( i => ( { ...i, typeData: _.find( entityTypes, { 'code': i.type } ) } ) )
             .map( ( item, i ) => (
               <EntityGalaryItem item={item} key={item.id}
                 onSelect={() => navigate( `/entity/${item.id}${queryParams}` )} />
