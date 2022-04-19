@@ -191,6 +191,7 @@ const mapModelToGQL = ( item ) => {
   const type = {
     id: item.id,
     type: item.get( 'type' ),
+    imageThumbnail: item.get( 'imageThumbnail' ),
     text: item.get( 'text' )?.map( mapLanguageValueDocumentToGQL ),
     children: item.get( 'children' ),
     parents: item.get( 'parents' ),
@@ -206,6 +207,7 @@ const mapInputToModel = ( item ) => {
     type: item.type,
     text,
     // textData: item.text,
+    imageThumbnail: item.imageThumbnail,
     parents: item.parentIDs,
     children: item.childIDs,
     // parents: item.parentIds ? { ...item.parentIds } : {},

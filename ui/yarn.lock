@@ -1884,6 +1884,13 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.2.tgz#7a26e63b1bdaf654bcce2176a38b83f7f576327e"
   integrity sha512-oe5WJEDaVsW8fBlGT7udrSCgOwWfoYHQOmSpnh8X+0GXpqqcRCP8k4y+Dxb0taWJDPpB+rdDUtumIiBwkY9qGA==
 
+"@sanskrit-coders/sanscript@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@sanskrit-coders/sanscript/-/sanscript-1.2.2.tgz#93cbd64ae30e1f77c13528c6210c776dd05cc81d"
+  integrity sha512-P5aTrcuaPJcmKhsucm1TzoAkNMj/+c3oO85zarOD4LDFvgthFChbkMnhOeKvMU6w2CYOvk6uJ57t9AIlx0og4Q==
+  dependencies:
+    toml "^2.3.6"
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
@@ -9532,6 +9539,11 @@ toidentifier@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.1.tgz#3be34321a88a820ed1bd80dfaa33e479fbb8dd35"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
+
+toml@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/toml/-/toml-2.3.6.tgz#25b0866483a9722474895559088b436fd11f861b"
+  integrity sha512-gVweAectJU3ebq//Ferr2JUY4WKSDe5N+z0FvjDncLGyHmIDoxgY/2Ie4qfEIDm4IS7OA6Rmdm7pdEEdMcV/xQ==
 
 toposort@^2.0.2:
   version "2.0.2"

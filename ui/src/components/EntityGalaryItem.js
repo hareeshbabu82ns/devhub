@@ -5,14 +5,12 @@ import ImageListItemBar from '@mui/material/ImageListItemBar'
 // import InfoIcon from '@mui/icons-material/Info'
 import _ from 'lodash'
 
-const DEFAULT_IMG = 'https://picsum.photos/300/250'
-
 export default function EntityGalaryItem( { item, onSelect } ) {
   return (
     <ImageListItem onClick={onSelect}>
       <img
-        src={`${DEFAULT_IMG}?random=${item.id}`}
-        srcSet={`${DEFAULT_IMG}?random=${item.id}`}
+        src={item.imageThumbnail}
+        srcSet={item.imageThumbnail}
         alt={item.text}
         loading="lazy"
       />

@@ -24,6 +24,7 @@ const QUERY_GET_ENTITY_CHILDREN = gql`
         id
         type
         text(language: $language)
+        imageThumbnail
       }
     }
   }

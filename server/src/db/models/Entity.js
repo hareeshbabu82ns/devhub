@@ -1,5 +1,5 @@
 const mongoose = require( 'mongoose' );
-const { LANGUAGE_DEFAULT_ISO } = require( '../constants' );
+const { LANGUAGE_DEFAULT_ISO, DEFAULT_ENTITY_THUMBNAIL } = require( '../constants' );
 const { LanguageTextSchema } = require( './CommonSchema' );
 
 const TypeEntitiesSchema = new mongoose.Schema( {
@@ -21,6 +21,10 @@ const schema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
+    },
+    imageThumbnail: {
+      type: String,
+      default: ( data ) => `${DEFAULT_ENTITY_THUMBNAIL}?random=${data.id}`
     },
     text: {
       type: [ LanguageTextSchema ],

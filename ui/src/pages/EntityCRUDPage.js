@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { Button, Grid, Stack, Typography } from '@mui/material'
 import Panel from '../components/utils/Panel'
 import { useQuery, gql, useMutation } from '@apollo/client'
-import { C_LANGUAGE_DEFAULT, C_LANGUAGE_TEXT_LIST } from '../constants'
+import { C_DEFAULT_IMAGE_THUMBNAIL, C_LANGUAGE_DEFAULT, C_LANGUAGE_TEXT_LIST } from '../constants'
 import { useRecoilValueLoadable } from 'recoil'
 import { entityTypesState } from '../state/entityTypes'
 import { FormInputDropdown } from '../components/FormInput/FormInputDropdown'
@@ -21,6 +21,7 @@ const QUERY_GET_ENTITIES_BY_ID = gql`
       id
       type
       text(language:$language)
+      imageThumbnail
       textData {
         language
         value
@@ -101,12 +102,13 @@ const EntityCRUDPage = () => {
       }} />
   )
 }
-const defaultEntity = { id: 0, type: '', textData: [] }
+const defaultEntity = { id: 0, type: '', textData: [], imageThumbnail: C_DEFAULT_IMAGE_THUMBNAIL }
 
 const transformToFormData = ( { entity } ) => {
   return {
     id: entity.id,
     type: entity.type,
+    imageThumbnail: entity.imageThumbnail,
     textData: C_LANGUAGE_TEXT_LIST?.map( l => ( {
       language: l,
       value: _.find( entity.textData, { 'language': l } )?.value || ''
@@ -116,7 +118,8 @@ const transformToFormData = ( { entity } ) => {
 const transformToGQLInputData = ( { entityFormData } ) => {
   return {
     type: entityFormData.type,
-    text: entityFormData.textData.filter( t => !!t.value )
+    text: entityFormData.textData.filter( t => !!t.value ),
+    imageThumbnail: entityFormData.imageThumbnail,
   }
 }
 const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
@@ -130,7 +133,8 @@ const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
       } )
     )
       .min( 1, 'Required atleast 1 Text Data' )
-      .required( 'Entity Text Data is required' )
+      .required( 'Entity Text Data is required' ),
+    imageThumbnail: Yup.string(),
   } )
 
   const [ searchParams ] = useSearchParams()
@@ -173,7 +177,7 @@ const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
 
 const EntityForm = ( { form, onSubmit, entityTypes, baseLanguages } ) => {
   // ref https://www.bezkoder.com/react-hook-form-material-ui-validation/
-  const { formState, control, handleSubmit, setValue } = form
+  const { formState, control, handleSubmit, setValue, watch } = form
   const { errors, isSubmitting } = formState
 
   const LanguageText = ( { languageText, index } ) => {
@@ -208,13 +212,26 @@ const EntityForm = ( { form, onSubmit, entityTypes, baseLanguages } ) => {
   return (
     <form onSubmit={handleSubmit( onSubmit )}>
       <Grid container spacing={1}>
-        <Grid item xs={12} sm={12}>
-          <FormInputDropdown
-            name="type"
-            control={control}
-            label="Entity Type"
-            options={entityTypes.map( e => ( { label: e.name, value: e.code } ) )}
-          />
+        <Grid item xs={12} sm={4}>
+          <img src={watch( 'imageThumbnail' )} alt='thumbnail'
+            width={300} height={250} style={{ objectFit: 'cover' }} />
+        </Grid>
+        <Grid container item xs={12} sm={8} spacing={1}>
+          <Grid item xs={12} sm={12}>
+            <FormInputDropdown
+              name="type"
+              control={control}
+              label="Entity Type"
+              options={entityTypes.map( e => ( { label: e.name, value: e.code } ) )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <FormInputText
+              name="imageThumbnail"
+              control={control}
+              label="Thumbnail"
+            />
+          </Grid>
         </Grid>
         <Grid container item xs={12} gap={2}>
           <Grid item xs={12}>

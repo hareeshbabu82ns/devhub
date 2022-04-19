@@ -19,6 +19,7 @@ const QUERY_GET_ENTITIES_BY_TYPE = gql`
       id
       type
       text(language: $language)
+      imageThumbnail
     }
   }
 `
