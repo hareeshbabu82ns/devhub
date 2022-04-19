@@ -20,3 +20,5 @@ export const C_ENTITY_TYPE_OTHERS = 'OTHERS'
 
 export const C_LANGUAGE_DEFAULT = 'SAN'
 export const C_LANGUAGE_MEANING_DEFAULT = 'TEL'
+
+export const C_LANGUAGE_TEXT_LIST = [ 'SAN', 'TEL', 'SLP1', 'IAST' ]

@@ -40,6 +40,9 @@ type Entity {
   childrenCount(type: [EntityTypeEnum!]): Int!
 
   text(language:String = "DEFAULT"): String!
+
+  # gets text data for all languages
+  textData: [LanguageValueType!]!
 }
 
 input EntitySearchInput {
@@ -50,6 +53,10 @@ input EntitySearchInput {
   or: [EntitySearchInput!]  
 }
 
+type LanguageValueType {
+  language: String
+  value: String
+}
 input LanguageValueInput {
   language: String!
   value: String!

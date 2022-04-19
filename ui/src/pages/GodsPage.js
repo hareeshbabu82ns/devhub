@@ -9,7 +9,7 @@ import Panel from '../components/utils/Panel'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { C_LANGUAGE_DEFAULT } from '../constants'
 import _ from 'lodash'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValueLoadable } from 'recoil'
 import { entityTypesState } from '../state/entityTypes'
 
 
@@ -34,7 +34,7 @@ export default function GodsPage() {
   const navigate = useNavigate()
   const { search: queryParams } = useLocation()
 
-  const entityTypes = useRecoilValue( entityTypesState( searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT ) )
+  const entityTypesLoadable = useRecoilValueLoadable( entityTypesState( searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT ) )
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -74,14 +74,14 @@ export default function GodsPage() {
 
   return (
     <Panel title={'Gods'} sx={{ border: 0, m: 2 }}
-      loading={loading || refetching}
+      loading={loading || refetching || entityTypesLoadable.state === 'loading'}
       error={error}
       onRefresh={refetchData}
       toolbarActions={toolbarActions}>
       {data?.entities?.length > 0 &&
         <ImageList gap={20}
           cols={mediaXlUp ? 5 : mediaLgUp ? 4 : mediaMdUp ? 3 : mediaSmUp ? 2 : 1} >
-          {data?.entities?.map( i => ( { ...i, typeData: _.find( entityTypes, { 'code': i.type } ) } ) )
+          {data?.entities?.map( i => ( { ...i, typeData: _.find( entityTypesLoadable.contents, { 'code': i.type } ) } ) )
             .map( ( item, i ) => (
               <EntityGalaryItem item={item} key={item.id}
                 onSelect={() => navigate( `/entity/${item.id}${queryParams}` )} />

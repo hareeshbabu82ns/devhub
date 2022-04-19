@@ -27,6 +27,16 @@ const QUERY_FETCH_ENTITY_TYPES = gql`
     }
   }
 `
+const QUERY_FETCH_LANGUAGES = gql`
+  query {
+    languages{
+      id
+      iso
+      name
+      description
+    }
+  }
+`
 const MUTATION_CREATE_ENTITY = gql`
   mutation createEntity($data: EntityInput) {
     createEntity(withData: $data)
@@ -43,6 +53,15 @@ export async function fetchAllEntityTypes( { language } ) {
   } )
 
   return data.entityTypes
+}
+
+export async function fetchAllLanguages() {
+
+  const { data } = await client.query( {
+    query: QUERY_FETCH_LANGUAGES
+  } )
+
+  return data.languages
 }
 
 export async function createEntity( { withData,

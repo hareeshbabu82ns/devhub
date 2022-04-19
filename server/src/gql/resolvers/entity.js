@@ -81,10 +81,14 @@ async function createEntityWithData( { data, session } ) {
   // console.log(item)
   return item
 }
+const MAP_FIELD_ALIAS = { "textData": "text" }
 
 module.exports = {
   type: {
     Entity: {
+      textData: async ( { text }, { language } ) => {
+        return text
+      },
       text: async ( { text }, { language } ) => {
         // return text[ language === LANGUAGE_DEFAULT_INPUT ? LANGUAGE_DEFAULT_ISO : language ]
         const lang = language === LANGUAGE_DEFAULT_INPUT ? LANGUAGE_DEFAULT_ISO : language
@@ -149,7 +153,8 @@ module.exports = {
     }
     query.limit( args.limit );
 
-    query.select( requestedFields.join( ' ' ) );
+    const rFields = requestedFields.map( f => MAP_FIELD_ALIAS[ f ] || f )
+    query.select( rFields.join( ' ' ) );
     const res = await query.exec();
     return res.map( mapModelToGQL );
   },

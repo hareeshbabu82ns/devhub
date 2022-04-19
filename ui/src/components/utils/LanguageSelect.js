@@ -1,22 +1,14 @@
 import { MenuItem, Select } from '@mui/material'
-import { gql, useQuery } from "@apollo/client"
 import { useSearchParams } from 'react-router-dom'
 import { C_LANGUAGE_DEFAULT, C_LANGUAGE_MEANING_DEFAULT } from '../../constants'
 import { startTransition } from 'react'
+import { useRecoilValueLoadable } from 'recoil'
+import { baseLanguagesState } from '../../state/baseLanguages'
 
-export const GET_LANGUAGES_NAMES = gql`
-{
-  languages{
-    id
-    iso
-    name
-  }
-}
-`
 
 function LanguageSelect() {
-  const { data, loading, error } = useQuery( GET_LANGUAGES_NAMES )
   const [ searchParams, setSearchParams ] = useSearchParams()
+  const baseLanguagesLoadable = useRecoilValueLoadable( baseLanguagesState )
 
   const handleChange = ( { target } ) => {
     // console.log(target)
@@ -26,7 +18,7 @@ function LanguageSelect() {
     startTransition( () => setSearchParams( searchParams, { replace: true } ) )
   }
 
-  if ( loading ) return null
+  if ( baseLanguagesLoadable.state === 'loading' ) return null
   // const defaultEnv = data?.configs?.find(c => c.default) || {}
   // if (searchParams.get('language') === '' && defaultEnv?.name)
   //   setSearchParams({ 'language': defaultEnv.name })
@@ -41,9 +33,9 @@ function LanguageSelect() {
       label="Language"
       autoWidth
       onChange={handleChange}
-      error={!!error}
+      error={baseLanguagesLoadable.state === 'hasError'}
     >
-      {data?.languages.map( c => (
+      {baseLanguagesLoadable.contents.map( c => (
         <MenuItem key={c.iso} value={c.iso}>{c.name}</MenuItem>
       ) )}
     </Select>
