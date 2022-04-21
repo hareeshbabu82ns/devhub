@@ -1,5 +1,6 @@
 const { expect, test } = require( "@jest/globals" );
 const mongoose = require( "mongoose" );
+const _ = require( 'lodash' )
 const buildApolloServer = require( "../apollo_server" )
 const { testData, initEntityTypes, cleanupEntityTypes } = require( './entity_type.test.utils' )
 const { GET_ENTITY_TYPES_BY, CREATE_ENTITY_TYPE, UPDATE_ENTITY_TYPE, DELETE_ENTITY_TYPE } = require( './entity_type.queries' )
@@ -170,6 +171,25 @@ describe( 'GQL - Entity Type Tests', () => {
     // delete above entityType
     const resDelete = await apolloServer.executeOperation( { query: DELETE_ENTITY_TYPE, variables: { id: resCreate.data.createdId } } )
     expect( resDelete.data.deletedId ).toEqual( resCreate.data.createdId )
+  } )
+
+  test( 'should transliterate entityType name', async () => {
+
+    const withData = testData.transliteration.input
+    const resCreate = await apolloServer.executeOperation( { query: CREATE_ENTITY_TYPE, variables: { withData } } )
+    expect( resCreate.data.createdId ).toBeDefined()
+
+    // read entityType to validate
+    const entityTypesBy = {
+      id: {
+        value: resCreate.data.createdId
+      }
+    }
+    const resSearch = await apolloServer.executeOperation( { query: GET_ENTITY_TYPES_BY, variables: { entityTypesBy } } )
+    const dbName = _.find( resSearch.data.entityTypes[ 0 ].nameData, { language: 'TEL' } )?.value
+    const testName = _.find( testData.transliteration.output.name, { language: 'TEL' } )?.value
+    expect( dbName ).toEqual( testName )
+
   } )
 
   test( 'should fail to update entityType if not exist', async () => {

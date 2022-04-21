@@ -7,6 +7,10 @@ query ($entityTypesBy: EntityTypeSearchInput) {
     code
     name(language:"ENG")
     description
+    nameData {
+      language
+      value
+    }
   }
 }
 `

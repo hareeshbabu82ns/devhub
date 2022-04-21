@@ -116,6 +116,24 @@ const testData = {
       ],
     }
   ],
+  transliteration: {
+    input: {
+      "code": "GOD",
+      name: [
+        { language: "SAN", value: "$transliterateFrom=SLP1" },
+        { language: "SLP1", value: "Siva" },
+        { language: "TEL", value: "$transliterateFrom=SLP1" },
+      ],
+    },
+    output: {
+      "code": "GOD",
+      name: [
+        // { language: "SAN", value: "శివ" },
+        { language: "SLP1", value: "Siva" },
+        { language: "TEL", value: "శివ" },
+      ],
+    }
+  },
 }
 
 

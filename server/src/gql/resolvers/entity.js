@@ -2,7 +2,8 @@ const mongoose = require( 'mongoose' );
 const { LANGUAGE_DEFAULT_INPUT, LANGUAGE_DEFAULT_ISO } = require( '../../db/constants' );
 const EntityModel = require( '../../db/models/Entity' );
 const language = require( './language' );
-const { buildQueryFilter, mapLanguageValueDocumentToGQL, languageValuesToModel } = require( './utils' )
+const { buildQueryFilter, mapLanguageValueDocumentToGQL,
+  languageValuesToModel, transliteratedText } = require( './utils' )
 
 async function createEntityWithData( { data, session } ) {
   const itemData = mapInputToModel( data )
@@ -160,9 +161,47 @@ module.exports = {
   },
   update: async ( id, data ) => {
     const itemData = mapInputToModel( data )
-    const item = await EntityModel.findOneAndUpdate( { "_id": id }, { $set: { ...itemData } } );
-    // console.log(item)
-    return item.id;
+    const session = await EntityModel.startSession()
+    session.startTransaction()
+    try {
+      const item = await EntityModel.findOneAndUpdate( { "_id": id }, { $set: { ...itemData } }, { session } );
+
+      const pIDs = []
+      // check [parentIDs]
+      if ( itemData?.parents?.length > 0 ) {
+        itemData?.parents.forEach( e => pIDs.push( ...e.entities ) )
+
+        // const foundEntities = await EntityModel.find(
+        //   { _id: { $nin: pIDs }, 'children.entities': { $eq: id } } )
+        const updatedEntities = await EntityModel.updateMany(
+          { _id: { $in: pIDs }, 'children.entities': { $ne: id } },
+          { $push: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
+        // const updatedEntities = await EntityModel.updateMany(
+        //   { _id: { $in: pIDs }, children: { $elemMatch: { entities: { $ne: id } } } },
+        //   { $push: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
+        console.log( 'updated parent entities:', updatedEntities )
+      }
+
+      // delete unreferenced parents
+      const deleted_pIDs = []
+      item.get( 'parents' )?.forEach( e => {
+        e.entities.forEach( se => {
+          if ( !pIDs.includes( se.toString() ) )
+            deleted_pIDs.push( se.toString() )
+        } )
+      } )
+      const deletedEntities = await EntityModel.updateMany(
+        { _id: { $in: deleted_pIDs } },
+        { $pull: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
+      console.log( 'deleted parent entity references:', deletedEntities )
+
+      // console.log(item)
+      await session.commitTransaction()
+      return item.id;
+    } catch ( e ) {
+      await session.abortTransaction()
+      throw e
+    }
   },
   create: async ( data ) => {
     const session = await EntityModel.startSession()
@@ -202,7 +241,7 @@ const mapModelToGQL = ( item ) => {
 const mapInputToModel = ( item ) => {
   // console.log( item )
   // const text = languageValuesToMap( item.text )
-  const text = languageValuesToModel( item.text )
+  const text = transliteratedText( languageValuesToModel( item.text ) )
   const itemData = {
     type: item.type,
     text,

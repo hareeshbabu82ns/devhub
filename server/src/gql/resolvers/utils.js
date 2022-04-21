@@ -1,4 +1,7 @@
 const { Query, Document, FilterQuery } = require( 'mongoose' );
+const { Sanscript, schemes } = require( '@sanskrit-coders/sanscript' )
+const _ = require( 'lodash' );
+const { LANGUAGE_SCHEME_MAP } = require( '../../db/constants' );
 
 const FilterOperation = {
   Equals: 'EQUALS',
@@ -118,10 +121,26 @@ function languageValuesToModel( languageValues ) {
 //   return languageValues.reduce( ( p, c ) => ( { ...p, [ c.language ]: c.value } ), {} )
 // }
 
+const transliteratedText = ( textData ) => {
+  return textData?.map( t => {
+    if ( t.value.startsWith( '$transliterateFrom=' ) ) {
+      const fromLang = t.value.split( '=' ).pop()
+      const from = LANGUAGE_SCHEME_MAP[ fromLang ] || fromLang
+      const to = LANGUAGE_SCHEME_MAP[ t.lang ] || t.lang
+      const text = _.find( textData, { lang: fromLang } )?.value
+      const resText = Sanscript.t( text, from, to )
+      return { lang: t.lang, value: resText }
+    }
+    return t
+  } )
+}
+
 module.exports = {
   getRequestedFields,
   buildQueryFilter,
 
   mapLanguageValueDocumentToGQL,
   languageValuesToModel,
+
+  transliteratedText,
 }

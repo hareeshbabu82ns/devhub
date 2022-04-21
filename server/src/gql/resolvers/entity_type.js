@@ -1,11 +1,13 @@
 const { LANGUAGE_DEFAULT_INPUT, LANGUAGE_DEFAULT_ISO } = require( '../../db/constants' )
 const EntityTypeModel = require( '../../db/models/EntityType' )
 const initData = require( './init_data.json' )
-const { buildQueryFilter, mapLanguageValueDocumentToGQL, languageValuesToModel } = require( './utils' )
+const { buildQueryFilter, mapLanguageValueDocumentToGQL, languageValuesToModel, transliteratedText } = require( './utils' )
+
+const MAP_FIELD_ALIAS = { "nameData": "name" }
 
 const mapInputToModel = ( item ) => {
   // console.log( item )
-  const name = languageValuesToModel( item.name )
+  const name = transliteratedText( languageValuesToModel( item.name ) )
   const itemData = {
     code: item.code,
     name,
@@ -28,6 +30,9 @@ const mapModelToGQL = ( item ) => {
 module.exports = {
   type: {
     EntityType: {
+      nameData: async ( { name } ) => {
+        return name
+      },
       name: async ( { name }, { language } ) => {
         const lang = language === LANGUAGE_DEFAULT_INPUT ? LANGUAGE_DEFAULT_ISO : language
 
@@ -51,7 +56,8 @@ module.exports = {
     }
     query.limit( args.limit );
 
-    query.select( requestedFields.join( ' ' ) );
+    const rFields = requestedFields.map( f => MAP_FIELD_ALIAS[ f ] || f )
+    query.select( rFields.join( ' ' ) );
     const res = await query.exec();
     return res.map( mapModelToGQL );
   },

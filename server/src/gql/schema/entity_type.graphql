@@ -22,6 +22,9 @@ type EntityType {
   id: ID!
   code: EntityTypeEnum!
   name(language:String = "DEFAULT"): String!
+  # gets text data for all languages
+  nameData: [LanguageValueType!]!
+
   description: String
 }
 

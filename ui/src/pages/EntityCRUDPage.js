@@ -14,6 +14,7 @@ import { FormInputText } from '../components/FormInput/FormInputText'
 import { baseLanguagesState } from '../state/baseLanguages'
 import _ from 'lodash'
 import { useSnackbar } from 'notistack'
+import EntitySelectFormInput from '../components/FormInput/EntitySelectFormInput'
 
 const QUERY_GET_ENTITIES_BY_ID = gql`
   query($id:ID,$language:String) {
@@ -25,6 +26,11 @@ const QUERY_GET_ENTITIES_BY_ID = gql`
       textData {
         language
         value
+      }
+      parents {
+        id
+        type
+        text(language:$language)
       }
     }
   }
@@ -102,13 +108,18 @@ const EntityCRUDPage = () => {
       }} />
   )
 }
-const defaultEntity = { id: 0, type: '', textData: [], imageThumbnail: C_DEFAULT_IMAGE_THUMBNAIL }
+const defaultEntity = {
+  id: 0, type: '',
+  textData: [], imageThumbnail: C_DEFAULT_IMAGE_THUMBNAIL,
+  parents: []
+}
 
 const transformToFormData = ( { entity } ) => {
   return {
     id: entity.id,
     type: entity.type,
     imageThumbnail: entity.imageThumbnail,
+    parents: entity.parents,
     textData: C_LANGUAGE_TEXT_LIST?.map( l => ( {
       language: l,
       value: _.find( entity.textData, { 'language': l } )?.value || ''
@@ -120,6 +131,7 @@ const transformToGQLInputData = ( { entityFormData } ) => {
     type: entityFormData.type,
     text: entityFormData.textData.filter( t => !!t.value ),
     imageThumbnail: entityFormData.imageThumbnail,
+    parentIDs: entityFormData?.parents?.map( e => ( { type: e.type, entities: [ e.id ] } ) )
   }
 }
 const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
@@ -135,6 +147,12 @@ const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
       .min( 1, 'Required atleast 1 Text Data' )
       .required( 'Entity Text Data is required' ),
     imageThumbnail: Yup.string(),
+    parents: Yup.array().of(
+      Yup.object().shape( {
+        type: Yup.string(),
+        id: Yup.string(),
+      } )
+    ),
   } )
 
   const [ searchParams ] = useSearchParams()
@@ -177,7 +195,7 @@ const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
 
 const EntityForm = ( { form, onSubmit, entityTypes, baseLanguages } ) => {
   // ref https://www.bezkoder.com/react-hook-form-material-ui-validation/
-  const { formState, control, handleSubmit, setValue, watch } = form
+  const { formState, control, handleSubmit, setValue, getValues, watch } = form
   const { errors, isSubmitting } = formState
 
   const LanguageText = ( { languageText, index } ) => {
@@ -232,10 +250,19 @@ const EntityForm = ( { form, onSubmit, entityTypes, baseLanguages } ) => {
               label="Thumbnail"
             />
           </Grid>
+          <Grid item xs={12} sm={12}>
+            <EntitySelectFormInput
+              name="parents"
+              label="Parents"
+              defaultValue={getValues( 'parents' )}
+              onChange={v => setValue( 'parents',
+                v.map( e => ( { type: e.type, id: e.id, text: e.text } ) ) )}
+            />
+          </Grid>
         </Grid>
         <Grid container item xs={12} gap={2}>
           <Grid item xs={12}>
-            <Typography>Text Data:</Typography>
+            <Typography>Text Data: (use <strong>$transliterateFrom=SLP1</strong> for auto translation)</Typography>
           </Grid>
           {
             C_LANGUAGE_TEXT_LIST.map( ( l, i ) => <LanguageText languageText={l} index={i} key={`ltext-${i}`} /> )
