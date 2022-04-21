@@ -52,6 +52,12 @@ export const SecondaryListItems = () => {
       </ListItem>
       {/* <ListSubheader inset>Saved Searches</ListSubheader> */}
       <ListSubheader>Extras</ListSubheader>
+      <ListItem component={Link} to={`/transliterate${queryParams}`} onClick={() => setDrawerState( false )}>
+        <ListItemIcon>
+          <AritmeticIcon />
+        </ListItemIcon>
+        <ListItemText primary={<Typography color="text.primary">Transliterate</Typography>} />
+      </ListItem>
       <ListItem component={Link} to={`/editor${queryParams}`} onClick={() => setDrawerState( false )}>
         <ListItemIcon>
           <AritmeticIcon />

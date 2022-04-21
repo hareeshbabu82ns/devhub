@@ -9,6 +9,7 @@ import SthotramUploadPage from "./pages/SthotramUploadPage"
 import HomePage from "./pages/HomePage"
 import SimplePageLayout from "./pages/SimplePageLayout"
 import EntityCRUDPage from "./pages/EntityCRUDPage"
+import TransliteratePage from "./pages/TransliteratePage"
 // import GraphEditorPage from "./pages/GraphEditorPage"
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="sthotram" element={<SthotramUploadPage />} />
           </Route>
           <Route path="gods" element={<GodsPage />} />
+          <Route path="transliterate" element={<TransliteratePage />} />
           {/* <Route path="arithmetic" >
             <Route path="new" element={<ArithmeticTestPage />} />
             <Route path="summary" element={<QASummaryPage />} />
