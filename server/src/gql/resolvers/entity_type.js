@@ -44,7 +44,8 @@ module.exports = {
   },
   init: async () => {
     // create default entity types
-    const asyncList = initData.entityTypes.map( ( { code, name } ) => EntityTypeModel.create( { code, name } ) )
+    const asyncList = initData.entityTypes.map( ( { code, name } ) =>
+      EntityTypeModel.create( { code, name: transliteratedText( name ) } ) )
     await Promise.all( asyncList )
   },
 

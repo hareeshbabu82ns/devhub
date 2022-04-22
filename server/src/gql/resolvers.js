@@ -42,6 +42,7 @@ const resolvers = {
       await UserResolvers.init();
       await EntityTypeResolvers.init();
       await LanguageResolvers.init();
+      await EntityResolvers.init();
       return "data successfully initialized";
     },
 

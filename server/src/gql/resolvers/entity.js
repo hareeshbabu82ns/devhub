@@ -1,7 +1,8 @@
-const mongoose = require( 'mongoose' );
-const { LANGUAGE_DEFAULT_INPUT, LANGUAGE_DEFAULT_ISO } = require( '../../db/constants' );
-const EntityModel = require( '../../db/models/Entity' );
-const language = require( './language' );
+const mongoose = require( 'mongoose' )
+const initData = require( './init_data.json' )
+const { LANGUAGE_DEFAULT_INPUT, LANGUAGE_DEFAULT_ISO } = require( '../../db/constants' )
+const EntityModel = require( '../../db/models/Entity' )
+const language = require( './language' )
 const { buildQueryFilter, mapLanguageValueDocumentToGQL,
   languageValuesToModel, transliteratedText } = require( './utils' )
 
@@ -104,7 +105,7 @@ module.exports = {
       //   const typeKeys = type.length ? Object.keys( children ).filter( t => type.includes( t ) ) : Object.keys( children )
       //   const childIds = typeKeys.reduce( ( p, c ) => [ ...p, ...children[ c ] ], [] )
       //   buildQueryFilter( query, { id: { operation: 'IN', valueList: childIds } } )
-      //   const res = await query.exec();
+      //   const res = await query.exec()
       //   return res.map( mapModelToGQL )
       // },
       children: async ( { children = [] }, { type = [] }, info ) => {
@@ -113,7 +114,7 @@ module.exports = {
         const typeKeysChildren = type.length ? children.filter( t => type.includes( t.type ) ) : children
         typeKeysChildren.forEach( e => childIds.push( e.entities ) )
         buildQueryFilter( query, { id: { operation: 'IN', valueList: childIds } } )
-        const res = await query.exec();
+        const res = await query.exec()
         return res.map( mapModelToGQL )
       },
       childrenCount: async ( { children = [] }, { type = [] }, info ) => {
@@ -128,7 +129,7 @@ module.exports = {
         const typeKeysParents = type.length ? parents.filter( t => type.includes( t.type ) ) : parents
         typeKeysParents.forEach( e => parentIds.push( e.entities ) )
         buildQueryFilter( query, { id: { operation: 'IN', valueList: parentIds } } )
-        const res = await query.exec();
+        const res = await query.exec()
         return res.map( mapModelToGQL )
       },
       parentsCount: async ( { parents = [] }, { type = [] }, info ) => {
@@ -141,30 +142,36 @@ module.exports = {
       //   const query = EntityModel.find()
       //   const parentIds = Object.keys( parents ).reduce( ( p, c ) => [ ...p, ...parents[ c ] ], [] )
       //   buildQueryFilter( query, { id: { operation: 'IN', valueList: parentIds } } )
-      //   const res = await query.exec();
+      //   const res = await query.exec()
       //   return res.map( mapModelToGQL )
       // },
     }
   },
+  init: async () => {
+    // create default entity types
+    const asyncList = initData.entities.map( ( { type, text, imageThumbnail } ) =>
+      EntityModel.create( { type, text: transliteratedText( text ), imageThumbnail } ) )
+    await Promise.all( asyncList )
+  },
   read: async ( args, requestedFields ) => {
-    const query = EntityModel.find();
+    const query = EntityModel.find()
 
     if ( args.by ) {
-      buildQueryFilter( query, args.by );
+      buildQueryFilter( query, args.by )
     }
-    query.limit( args.limit );
+    query.limit( args.limit )
 
     const rFields = requestedFields.map( f => MAP_FIELD_ALIAS[ f ] || f )
-    query.select( rFields.join( ' ' ) );
-    const res = await query.exec();
-    return res.map( mapModelToGQL );
+    query.select( rFields.join( ' ' ) )
+    const res = await query.exec()
+    return res.map( mapModelToGQL )
   },
   update: async ( id, data ) => {
     const itemData = mapInputToModel( data )
     const session = await EntityModel.startSession()
     session.startTransaction()
     try {
-      const item = await EntityModel.findOneAndUpdate( { "_id": id }, { $set: { ...itemData } }, { session } );
+      const item = await EntityModel.findOneAndUpdate( { "_id": id }, { $set: { ...itemData } }, { session } )
 
       const pIDs = []
       // check [parentIDs]
@@ -197,7 +204,7 @@ module.exports = {
 
       // console.log(item)
       await session.commitTransaction()
-      return item.id;
+      return item.id
     } catch ( e ) {
       await session.abortTransaction()
       throw e
@@ -209,19 +216,19 @@ module.exports = {
     try {
       const item = await createEntityWithData( { data, session } )
       await session.commitTransaction()
-      return item.id;
+      return item.id
     } catch ( e ) {
       await session.abortTransaction()
       throw e
     }
   },
   delete: async ( id ) => {
-    const item = await EntityModel.deleteOne( { "_id": id } );
+    const item = await EntityModel.deleteOne( { "_id": id } )
     // console.log(item)
     if ( item.deletedCount === 1 )
-      return id;
+      return id
     else
-      throw `Nothing deleted with matching id: ${id}`;
+      throw `Nothing deleted with matching id: ${id}`
   },
 }
 
@@ -235,7 +242,7 @@ const mapModelToGQL = ( item ) => {
     children: item.get( 'children' ),
     parents: item.get( 'parents' ),
   }
-  return type;
+  return type
 }
 
 const mapInputToModel = ( item ) => {
@@ -252,5 +259,5 @@ const mapInputToModel = ( item ) => {
     // parents: item.parentIds ? { ...item.parentIds } : {},
     // children: item.childIds ? { ...item.childIds } : {},
   }
-  return itemData;
+  return itemData
 }
