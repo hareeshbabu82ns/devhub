@@ -1,32 +1,38 @@
-import { FormControl, Grid, Icon, IconButton, InputLabel, MenuItem, Select, TextareaAutosize, TextField } from "@mui/material"
+import { FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextareaAutosize } from "@mui/material"
 import Panel from "../components/utils/Panel"
 import Sanscript from '@sanskrit-coders/sanscript'
 import SwapIcon from '@mui/icons-material/SwapHorizOutlined';
 import React, { startTransition, useEffect, useMemo, useState } from "react";
 import { throttle } from "lodash";
 import { C_TRANSLATE_TEXT_MAP } from "../constants";
+import { useRecoilState } from "recoil";
+import { transliterationState } from "../state/transliteration";
 
 const TransliteratePage = () => {
-  const [ fromTextLang, setFromTextLang ] = useState( 'slp1' )
-  const [ toTextLang, setToTextLang ] = useState( 'telugu' )
-  const [ fromText, setFromText ] = useState( 'Siva' )
-  const [ toText, setToText ] = useState( '' )
+
+  const [ transliteration, setTransliteration ] = useRecoilState( transliterationState )
+
+  const [ fromTextLang, setFromTextLang ] = useState( transliteration.fromTextLang )
+  const [ toTextLang, setToTextLang ] = useState( transliteration.toTextLang )
+  const [ fromText, setFromText ] = useState( transliteration.fromText )
+  const [ toText, setToText ] = useState( transliteration.toText )
 
   const translate = useMemo(
     () =>
       throttle( ( { input, fromTextLang, toTextLang }, callback ) => {
         // console.log( request )
         const toText = Sanscript.t( input, fromTextLang, toTextLang )
-        callback( toText )
+        callback( { input, toText } )
       }, 1000 ),
     [],
   )
 
   useEffect( () => {
-    translate( { input: fromText, fromTextLang, toTextLang }, ( results ) => {
-      setToText( results )
+    translate( { input: fromText, fromTextLang, toTextLang }, ( { input, toText } ) => {
+      setToText( toText )
+      setTransliteration( state => ( { ...state, toText, fromText: input } ) )
     } )
-  }, [ fromText, translate, fromTextLang, toTextLang ] )
+  }, [ fromText, translate, fromTextLang, toTextLang, setTransliteration ] )
 
 
   const swapTexts = () => {
@@ -35,6 +41,7 @@ const TransliteratePage = () => {
       setFromTextLang( toTextLang )
       setToText( fromText )
       setToTextLang( fromTextLang )
+      setTransliteration( { fromText: toText, toText: fromText, fromTextLang: toTextLang, toTextLang: fromTextLang } )
     } )
   }
 
