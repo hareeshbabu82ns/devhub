@@ -41,7 +41,10 @@ const TransliteratePage = () => {
       setFromTextLang( toTextLang )
       setToText( fromText )
       setToTextLang( fromTextLang )
-      setTransliteration( { fromText: toText, toText: fromText, fromTextLang: toTextLang, toTextLang: fromTextLang } )
+      setTransliteration( state => ( {
+        ...state,
+        fromText: toText, toText: fromText, fromTextLang: toTextLang, toTextLang: fromTextLang
+      } ) )
     } )
   }
 

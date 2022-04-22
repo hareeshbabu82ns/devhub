@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 
+import SwapIcon from '@mui/icons-material/SwapHorizOutlined';
 import LanguageSelect from './LanguageSelect'
 import { APP_THEME_MODE, drawerWidth } from '../../constants'
 
@@ -13,6 +14,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { drawerState } from './Drawer'
 import ThemeUISwitch from './ThemeModeSwitch'
 import { themeModeState, THEME_DARK, THEME_LIGHT } from '../../state/theme_mode'
+import { transliterationState } from '../../state/transliteration'
 
 const AppBarStyled = styled( MuiAppBar, {
   shouldForwardProp: ( prop ) => prop !== 'open',
@@ -33,6 +35,7 @@ const AppBarStyled = styled( MuiAppBar, {
 } ) )
 
 function AppBar( { open } ) {
+  const setTransliteration = useSetRecoilState( transliterationState )
   const [ themeMode, setThemeMode ] = useRecoilState( themeModeState )
   const setDrawerState = useSetRecoilState( drawerState )
   function toggleDrawer() {
@@ -68,12 +71,16 @@ function AppBar( { open } ) {
         </Typography>
         <Stack direction="row">
           <LanguageSelect />
-          <ThemeUISwitch checked={themeMode === THEME_DARK}
+          {/* <ThemeUISwitch checked={themeMode === THEME_DARK}
             onChange={( event, checked ) => {
               const themeMode = checked ? THEME_DARK : THEME_LIGHT
               localStorage.setItem( APP_THEME_MODE, themeMode )
               setThemeMode( themeMode )
-            }} />
+            }} /> */}
+          <IconButton aria-label="swap texts"
+            onClick={() => setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
+            <SwapIcon />
+          </IconButton>
         </Stack>
       </Toolbar>
     </AppBarStyled>
