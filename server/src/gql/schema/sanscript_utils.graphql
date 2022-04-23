@@ -1,0 +1,157 @@
+extend type Query {
+  # Split Sentence
+  splits(
+    text: String!
+    schemeFrom: SanscriptScheme
+    schemeTo: SanscriptScheme
+    strictIO: Boolean
+    limit: Int
+  ): [[String!]!]!
+
+  # Joins Words (Sandhi)
+  joins(
+    words: [String!]!
+    schemeFrom: SanscriptScheme
+    schemeTo: SanscriptScheme
+    strictIO: Boolean
+  ): [String!]!
+
+  # Tags of a Sentense
+  tags(
+    text: String!
+    schemeFrom: SanscriptScheme
+    schemeTo: SanscriptScheme
+    strictIO: Boolean
+  ): [Tag!]!
+
+  # PreSegmented Splits \n
+  # - expects list of words with spaces in `text` \n
+  # - expects the words to be already splitted for `sandhis` \n
+  # - ex: text: "देवदत्तः ग्रामं गच्छति"
+  presegmented(
+    text: String!
+    schemeFrom: SanscriptScheme
+    schemeTo: SanscriptScheme
+    strictIO: Boolean
+    limit: Int
+  ): [String!]!
+
+  parse(
+    text: String!
+    schemeFrom: SanscriptScheme
+    schemeTo: SanscriptScheme
+    strictIO: Boolean
+    limit: Int
+    preSegmented: Boolean
+  ): [Parse!]!
+
+  # Transliterate from and to supported Schemes
+  transliterate(
+    text: String!
+    schemeFrom: SanscriptScheme
+    schemeTo: SanscriptScheme
+  ): String!
+
+  dictionarySearch(searchWith: DictionarySearchInput!): [DictionaryItem!]
+
+  dictionarySearchById(
+    id: ID!
+
+    # scheme for output (default: DEVANAGARI)
+    outputScheme: SanscriptScheme
+  ): DictionaryItem!
+
+}
+
+extend type Mutation {
+  createEntity(withData: EntityInput): ID!
+  updateEntity(id: ID!, withData: EntityInput): ID!
+  deleteEntity(id: ID!): ID!
+}
+
+input DictionarySearchInput {
+  search: String!
+
+  # Search String scheme (default: SLP1)
+  searchScheme: SanscriptScheme
+
+  # full text search on key and description
+  fuzzySearch: Boolean = false
+
+  # Searches only in Keys, skips checking in descriptions \
+  # `ignored when fuzzySearch is selected`
+  searchOnlyKeys: Boolean = false
+  caseInsensitive: Boolean = false
+
+  # searches where the input is at starting position \
+  # `ignored when fuzzySearch is selected`
+  startsWith: Boolean = false
+
+  # searches where the input is at ending position \
+  # `ignored when fuzzySearch is selected`
+  endsWith: Boolean = false
+  origin: [Dictionary!]
+
+  # scheme for output (default: DEVANAGARI)
+  outputScheme: SanscriptScheme
+  limit: Int = 100
+}
+
+type DictionaryItem {
+  id: ID!
+  key: String!
+  description: String
+  origin: Dictionary!
+}
+
+type DictionaryKey {
+  key: String!
+  origin: Dictionary!
+}
+
+# Sanskript Transliterate Schemes
+enum Dictionary {
+  # Vacaspatyam
+  VCP
+
+  # Dhatu Pata
+  DHATU_PATA
+
+  # Monier-Williams
+  MW
+
+  # Monier-Williams English
+  MWE
+
+  # Sabda-kalpadruma
+  SKD
+}
+
+type Parse {
+  analysis: [ParseItem]!
+  splitDot: String!
+  splitDotURL: String!
+  parseDots: [String!]!
+  parseDotURLs: [String!]!
+}
+
+type ParseItem {
+  graph: [ParseGraph!]!
+}
+
+type ParseGraph {
+  node: ParseTag
+  predecessor: ParseTag
+  sambandha: String
+}
+
+type ParseTag {
+  pada: String!
+  root: String
+  tags: [String!]!
+}
+
+type Tag {
+  word: String!
+  tags: [String!]!
+}
