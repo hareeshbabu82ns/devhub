@@ -2,22 +2,21 @@ import { Dialog, DialogTitle, IconButton } from "@mui/material"
 import { useRecoilState } from "recoil"
 import TransliteratePage from "../pages/TransliteratePage"
 import { transliterationState } from "../state/transliteration"
-import CloseIcon from '@mui/icons-material/Close'
 
 
 const TransliterationDrawer = () => {
   const [ state, setState ] = useRecoilState( transliterationState )
-
+  const handleClose = () => setState( s => ( { ...s, drawerOpened: false } ) )
   return (
     <Dialog
-      onClose={() => setState( s => ( { ...s, drawerOpened: false } ) )}
+      onClose={handleClose}
       open={state.drawerOpened} scroll={'paper'}
       fullScreen={true}
     >
-      <DialogTitle>
+      {/* <DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setState( s => ( { ...s, drawerOpened: false } ) )}
+          onClick={handleClose}
           sx={{
             position: 'absolute',
             right: 8,
@@ -27,7 +26,7 @@ const TransliterationDrawer = () => {
         >
           <CloseIcon />
         </IconButton>
-      </DialogTitle>
+      </DialogTitle> */}
       {/* <Drawer
       anchor="right"
       open={state.drawerOpened}
@@ -35,7 +34,7 @@ const TransliterationDrawer = () => {
       variant='persistent'
     >
       <Box sx={{ pt: 10, width: '100vw' }}> */}
-      <TransliteratePage />
+      <TransliteratePage onClose={handleClose} />
       {/* </Box>
     </Drawer> */}
     </Dialog>

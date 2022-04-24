@@ -2,6 +2,7 @@ import {
   FormControl, Grid, IconButton,
   InputLabel, MenuItem, Select, TextareaAutosize, Tooltip
 } from "@mui/material"
+import CloseIcon from '@mui/icons-material/Close'
 import Panel from "../components/utils/Panel"
 import Sanscript from '@sanskrit-coders/sanscript'
 import SwapIcon from '@mui/icons-material/SwapHorizOutlined'
@@ -11,7 +12,7 @@ import { C_TRANSLATE_TEXT_MAP } from "../constants"
 import { useRecoilState } from "recoil"
 import { transliterationState } from "../state/transliteration"
 
-const TransliteratePage = () => {
+const TransliteratePage = ( { onClose } ) => {
 
   const [ transliteration, setTransliteration ] = useRecoilState( transliterationState )
 
@@ -59,6 +60,11 @@ const TransliteratePage = () => {
           <SwapIcon />
         </IconButton>
       </Tooltip>
+      {onClose && <IconButton
+        aria-label="close"
+        onClick={onClose}>
+        <CloseIcon />
+      </IconButton>}
     </React.Fragment>
   )
 

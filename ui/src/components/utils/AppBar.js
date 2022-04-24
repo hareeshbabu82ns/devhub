@@ -80,13 +80,13 @@ function AppBar( { open } ) {
               localStorage.setItem( APP_THEME_MODE, themeMode )
               setThemeMode( themeMode )
             }} /> */}
-          <Tooltip title="Transliteration">
+          <Tooltip title="Transliteration (CTRL+t)">
             <IconButton aria-label="transliteration"
               onClick={() => setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
               <SwapIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Dictionary">
+          <Tooltip title="Dictionary (CTRL+d)">
             <IconButton aria-label="sanskrit dictionary"
               onClick={() => setSansDict( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
               <DictionaryIcon />

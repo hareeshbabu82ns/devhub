@@ -13,9 +13,29 @@ import TransliteratePage from "./pages/TransliteratePage"
 import TransliterationDrawer from "./components/TransliterationDrawer"
 import SanscriptDictDrawer from "./components/SanscriptDictDrawer"
 import SanscriptDictPage from "./pages/SanscriptDictPage"
+import useKeyPress from "./utils/useKeyPressHook"
+import { useSetRecoilState } from "recoil"
+import { transliterationState } from "./state/transliteration"
+import { sanscriptDictState } from "./state/sanscriptDict"
 // import GraphEditorPage from "./pages/GraphEditorPage"
 
 function App() {
+
+  const setTransliteration = useSetRecoilState( transliterationState )
+  const setDictionary = useSetRecoilState( sanscriptDictState )
+
+  const keyHandler = ( { eventKey } ) => {
+    if ( eventKey === 'CTRL+t' ) {
+      setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
+      return true // handled
+    }
+    else if ( eventKey === 'CTRL+d' ) {
+      setDictionary( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
+      return true // handled
+    }
+  }
+  useKeyPress( [ 'CTRL+t', 'CTRL+d' ], keyHandler )
+
   return (
     <>
       <Routes>

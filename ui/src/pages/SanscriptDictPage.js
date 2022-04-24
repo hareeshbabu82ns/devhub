@@ -1,5 +1,6 @@
-import { Dialog, FormControl, Grid, InputLabel, List, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Dialog, FormControl, Grid, IconButton, InputLabel, List, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, TextField, Typography } from "@mui/material"
 import Panel from "../components/utils/Panel"
+import CloseIcon from '@mui/icons-material/Close'
 import React, { useEffect, useMemo, useState } from "react"
 import { throttle } from "lodash"
 import { C_DICTIONARY_MAP, C_SANSCRIPT_SCHEME_MAP } from "../constants"
@@ -46,7 +47,7 @@ const switchFromState = ( state ) => {
   return val
 }
 
-const SanscriptDictPage = () => {
+const SanscriptDictPage = ( { onClose } ) => {
 
   const [ sdict, setSansDict ] = useRecoilState( sanscriptDictState )
 
@@ -108,7 +109,11 @@ const SanscriptDictPage = () => {
 
   const toolbarActions = (
     <React.Fragment>
-
+      {onClose && <IconButton
+        aria-label="close"
+        onClick={onClose}>
+        <CloseIcon />
+      </IconButton>}
     </React.Fragment>
   )
 
