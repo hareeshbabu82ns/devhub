@@ -1,12 +1,15 @@
-import { FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextareaAutosize } from "@mui/material"
+import {
+  FormControl, Grid, IconButton,
+  InputLabel, MenuItem, Select, TextareaAutosize, Tooltip
+} from "@mui/material"
 import Panel from "../components/utils/Panel"
 import Sanscript from '@sanskrit-coders/sanscript'
-import SwapIcon from '@mui/icons-material/SwapHorizOutlined';
-import React, { startTransition, useEffect, useMemo, useState } from "react";
-import { throttle } from "lodash";
-import { C_TRANSLATE_TEXT_MAP } from "../constants";
-import { useRecoilState } from "recoil";
-import { transliterationState } from "../state/transliteration";
+import SwapIcon from '@mui/icons-material/SwapHorizOutlined'
+import React, { startTransition, useEffect, useMemo, useState } from "react"
+import { throttle } from "lodash"
+import { C_TRANSLATE_TEXT_MAP } from "../constants"
+import { useRecoilState } from "recoil"
+import { transliterationState } from "../state/transliteration"
 
 const TransliteratePage = () => {
 
@@ -50,10 +53,12 @@ const TransliteratePage = () => {
 
   const toolbarActions = (
     <React.Fragment>
-      <IconButton aria-label="swap texts"
-        onClick={swapTexts}>
-        <SwapIcon />
-      </IconButton>
+      <Tooltip title="Swap Schemes">
+        <IconButton aria-label="swap texts"
+          onClick={swapTexts}>
+          <SwapIcon />
+        </IconButton>
+      </Tooltip>
     </React.Fragment>
   )
 

@@ -5,6 +5,7 @@ import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
 import AritmeticIcon from '@mui/icons-material/CalculateOutlined'
 import DashIcon from '@mui/icons-material/DashboardOutlined'
+import DictionaryIcon from '@mui/icons-material/MenuBook';
 import { Link, useLocation } from 'react-router-dom'
 import { Typography } from '@mui/material'
 import { useSetRecoilState } from 'recoil'
@@ -58,6 +59,12 @@ export const SecondaryListItems = () => {
         </ListItemIcon>
         <ListItemText primary={<Typography color="text.primary">Transliterate</Typography>} />
       </ListItem> */}
+      <ListItem component={Link} to={`/sans-dict${queryParams}`} onClick={() => setDrawerState( false )}>
+        <ListItemIcon>
+          <DictionaryIcon />
+        </ListItemIcon>
+        <ListItemText primary={<Typography color="text.primary">Sanscript Dictionary</Typography>} />
+      </ListItem>
       <ListItem component={Link} to={`/editor${queryParams}`} onClick={() => setDrawerState( false )}>
         <ListItemIcon>
           <AritmeticIcon />

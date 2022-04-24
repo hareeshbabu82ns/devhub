@@ -21,15 +21,15 @@ module.exports = {
     return res?.data?.data?.dictionarySearch
   },
 
-  dictionarySearchById: async ( { id }, requestedFields ) => {
+  dictionarySearchById: async ( { id, outputScheme }, requestedFields ) => {
     const query = `
-      query search($id: ID!){
-        dictionarySearchById(id:$id){
+      query search($id: ID!, $outputScheme: SanscriptScheme){
+        dictionarySearchById(id:$id, outputScheme:$outputScheme){
           ${requestedFields.join( ' ' )}
         }
       }
     `
-    const res = await sanscriptUtilsAPI.post( '', { query, variables: { id } } )
+    const res = await sanscriptUtilsAPI.post( '', { query, variables: { id, outputScheme } } )
     // console.log( res?.data )
     return res?.data?.data?.dictionarySearchById
   },

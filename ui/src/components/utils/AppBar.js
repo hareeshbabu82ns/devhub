@@ -1,9 +1,10 @@
 import { styled } from '@mui/material/styles'
-import { Stack, Typography } from '@mui/material'
+import { Stack, Typography, Tooltip } from '@mui/material'
 import MuiAppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
+import DictionaryIcon from '@mui/icons-material/MenuBook';
 
 import SwapIcon from '@mui/icons-material/SwapHorizOutlined';
 import LanguageSelect from './LanguageSelect'
@@ -15,6 +16,7 @@ import { drawerState } from './Drawer'
 import ThemeUISwitch from './ThemeModeSwitch'
 import { themeModeState, THEME_DARK, THEME_LIGHT } from '../../state/theme_mode'
 import { transliterationState } from '../../state/transliteration'
+import { sanscriptDictState } from '../../state/sanscriptDict'
 
 const AppBarStyled = styled( MuiAppBar, {
   shouldForwardProp: ( prop ) => prop !== 'open',
@@ -36,6 +38,7 @@ const AppBarStyled = styled( MuiAppBar, {
 
 function AppBar( { open } ) {
   const setTransliteration = useSetRecoilState( transliterationState )
+  const setSansDict = useSetRecoilState( sanscriptDictState )
   const [ themeMode, setThemeMode ] = useRecoilState( themeModeState )
   const setDrawerState = useSetRecoilState( drawerState )
   function toggleDrawer() {
@@ -77,10 +80,18 @@ function AppBar( { open } ) {
               localStorage.setItem( APP_THEME_MODE, themeMode )
               setThemeMode( themeMode )
             }} /> */}
-          <IconButton aria-label="swap texts"
-            onClick={() => setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
-            <SwapIcon />
-          </IconButton>
+          <Tooltip title="Transliteration">
+            <IconButton aria-label="transliteration"
+              onClick={() => setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
+              <SwapIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Dictionary">
+            <IconButton aria-label="sanskrit dictionary"
+              onClick={() => setSansDict( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
+              <DictionaryIcon />
+            </IconButton>
+          </Tooltip>
         </Stack>
       </Toolbar>
     </AppBarStyled>

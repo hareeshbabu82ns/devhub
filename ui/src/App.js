@@ -11,6 +11,8 @@ import SimplePageLayout from "./pages/SimplePageLayout"
 import EntityCRUDPage from "./pages/EntityCRUDPage"
 import TransliteratePage from "./pages/TransliteratePage"
 import TransliterationDrawer from "./components/TransliterationDrawer"
+import SanscriptDictDrawer from "./components/SanscriptDictDrawer"
+import SanscriptDictPage from "./pages/SanscriptDictPage"
 // import GraphEditorPage from "./pages/GraphEditorPage"
 
 function App() {
@@ -33,6 +35,7 @@ function App() {
             </Route>
             <Route path="gods" element={<GodsPage />} />
             <Route path="transliterate" element={<TransliteratePage />} />
+            <Route path="sans-dict" element={<SanscriptDictPage />} />
           </Route>
           {/* <Route path="editor" >
           <Route index element={<GraphEditorPage />} />
@@ -40,6 +43,7 @@ function App() {
         </Route>
       </Routes>
       <TransliterationDrawer />
+      <SanscriptDictDrawer />
     </>
   )
 }

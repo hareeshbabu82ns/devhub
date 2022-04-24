@@ -1,12 +1,11 @@
 import { Dialog, DialogTitle, IconButton } from "@mui/material"
 import { useRecoilState } from "recoil"
-import TransliteratePage from "../pages/TransliteratePage"
-import { transliterationState } from "../state/transliteration"
+import SanscriptDictPage from "../pages/SanscriptDictPage"
+import { sanscriptDictState } from "../state/sanscriptDict"
 import CloseIcon from '@mui/icons-material/Close'
 
-
-const TransliterationDrawer = () => {
-  const [ state, setState ] = useRecoilState( transliterationState )
+const SanscriptDictDrawer = () => {
+  const [ state, setState ] = useRecoilState( sanscriptDictState )
 
   return (
     <Dialog
@@ -33,12 +32,16 @@ const TransliterationDrawer = () => {
       open={state.drawerOpened}
       onClose={() => { setState( s => ( { ...s, drawerOpened: false } ) ) }}
       variant='persistent'
-    >
-      <Box sx={{ pt: 10, width: '100vw' }}> */}
-      <TransliteratePage />
-      {/* </Box>
-    </Drawer> */}
+    > 
+    <Box sx={{ pt: 10, width: '100vw' }}>
+    */}
+
+      <SanscriptDictPage />
+
+      {/* 
+      </Box>
+      </Drawer> */}
     </Dialog>
   )
 }
-export default TransliterationDrawer
+export default SanscriptDictDrawer
