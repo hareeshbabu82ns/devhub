@@ -7,8 +7,12 @@ export const sanscriptSplitsState = atom( {
     drawerOpened: false,
     inputScheme: 'SLP1',
     outputScheme: 'TELUGU',
-    inputText: '',
+    inputText: 'namaH SivAByAM navayOvanAByAM  parasparASlizwavapurDarAByAm',
+    inputWords: 'paraspara,ASlizwa',
+    // inputText: '',
     limit: 10,
     strictIO: false,
+    splitsData: [],
+    joinsData: [],
   },
 } )
