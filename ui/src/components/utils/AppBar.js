@@ -4,9 +4,9 @@ import MuiAppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
-import DictionaryIcon from '@mui/icons-material/MenuBook';
-
-import SwapIcon from '@mui/icons-material/SwapHorizOutlined';
+import DictionaryIcon from '@mui/icons-material/MenuBook'
+import SplitsIcon from '@mui/icons-material/AltRoute'
+import SwapIcon from '@mui/icons-material/SwapHorizOutlined'
 import LanguageSelect from './LanguageSelect'
 import { APP_THEME_MODE, drawerWidth } from '../../constants'
 
@@ -17,6 +17,7 @@ import ThemeUISwitch from './ThemeModeSwitch'
 import { themeModeState, THEME_DARK, THEME_LIGHT } from '../../state/theme_mode'
 import { transliterationState } from '../../state/transliteration'
 import { sanscriptDictState } from '../../state/sanscriptDict'
+import { sanscriptSplitsState } from '../../state/sanscriptSplits'
 
 const AppBarStyled = styled( MuiAppBar, {
   shouldForwardProp: ( prop ) => prop !== 'open',
@@ -39,6 +40,7 @@ const AppBarStyled = styled( MuiAppBar, {
 function AppBar( { open } ) {
   const setTransliteration = useSetRecoilState( transliterationState )
   const setSansDict = useSetRecoilState( sanscriptDictState )
+  const setSansSplits = useSetRecoilState( sanscriptSplitsState )
   const [ themeMode, setThemeMode ] = useRecoilState( themeModeState )
   const setDrawerState = useSetRecoilState( drawerState )
   function toggleDrawer() {
@@ -90,6 +92,12 @@ function AppBar( { open } ) {
             <IconButton aria-label="sanskrit dictionary"
               onClick={() => setSansDict( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
               <DictionaryIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Splits (CTRL+s)">
+            <IconButton aria-label="sanskrit scentence splits"
+              onClick={() => setSansSplits( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
+              <SplitsIcon />
             </IconButton>
           </Tooltip>
         </Stack>

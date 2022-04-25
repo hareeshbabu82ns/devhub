@@ -3,9 +3,12 @@ import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
+import TempleHinduIcon from '@mui/icons-material/TempleHindu'
 import AritmeticIcon from '@mui/icons-material/CalculateOutlined'
 import DashIcon from '@mui/icons-material/DashboardOutlined'
-import DictionaryIcon from '@mui/icons-material/MenuBook';
+import SwapIcon from '@mui/icons-material/SwapHorizOutlined'
+import DictionaryIcon from '@mui/icons-material/MenuBook'
+import SplitsIcon from '@mui/icons-material/AltRoute'
 import { Link, useLocation } from 'react-router-dom'
 import { Typography } from '@mui/material'
 import { useSetRecoilState } from 'recoil'
@@ -24,7 +27,7 @@ export const MainListItems = () => {
       </ListItem>
       <ListItem component={Link} to={`/gods${queryParams}`} onClick={() => setDrawerState( false )}>
         <ListItemIcon>
-          <AritmeticIcon />
+          <TempleHinduIcon />
         </ListItemIcon>
         <ListItemText primary={<Typography color="text.primary">Gods</Typography>} />
       </ListItem>
@@ -53,17 +56,23 @@ export const SecondaryListItems = () => {
       </ListItem>
       {/* <ListSubheader inset>Saved Searches</ListSubheader> */}
       <ListSubheader>Extras</ListSubheader>
-      {/* <ListItem component={Link} to={`/transliterate${queryParams}`} onClick={() => setDrawerState( false )}>
+      <ListItem component={Link} to={`/transliterate${queryParams}`} onClick={() => setDrawerState( false )}>
         <ListItemIcon>
-          <AritmeticIcon />
+          <SwapIcon />
         </ListItemIcon>
         <ListItemText primary={<Typography color="text.primary">Transliterate</Typography>} />
-      </ListItem> */}
+      </ListItem>
       <ListItem component={Link} to={`/sans-dict${queryParams}`} onClick={() => setDrawerState( false )}>
         <ListItemIcon>
           <DictionaryIcon />
         </ListItemIcon>
         <ListItemText primary={<Typography color="text.primary">Sanscript Dictionary</Typography>} />
+      </ListItem>
+      <ListItem component={Link} to={`/sans-splits${queryParams}`} onClick={() => setDrawerState( false )}>
+        <ListItemIcon>
+          <SplitsIcon />
+        </ListItemIcon>
+        <ListItemText primary={<Typography color="text.primary">Sanscript Splits</Typography>} />
       </ListItem>
       <ListItem component={Link} to={`/editor${queryParams}`} onClick={() => setDrawerState( false )}>
         <ListItemIcon>
