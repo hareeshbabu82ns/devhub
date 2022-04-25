@@ -7,13 +7,18 @@ const TypeEntitiesSchema = new mongoose.Schema( {
     type: String,
     required: "Entity Type is required",
   },
-  entities: {
-    type: [ {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Entity',
-      required: "Entity IDs is required",
-    } ],
+  entity: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Entity',
+    required: "Entity IDs is required",
   },
+  // entities: {
+  //   type: [ {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'Entity',
+  //     required: "Entity IDs is required",
+  //   } ],
+  // },
 } )
 
 const schema = new mongoose.Schema(

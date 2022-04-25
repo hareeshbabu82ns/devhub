@@ -65,5 +65,6 @@ input LanguageValueInput {
 }
 input TypeEntityInput {
   type: EntityTypeEnum!
-  entities: [ID!]
+  entity: ID!
+  # entities: [ID!]
 }

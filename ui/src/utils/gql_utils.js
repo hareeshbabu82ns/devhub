@@ -133,7 +133,8 @@ export async function uploadSthotram( inputData ) {
     if ( parentResult ) {
       parentIDs.push( {
         type: parentResult.data.type,
-        entities: [ parentResult.data.id ]
+        entity: parentResult.data.id,
+        // entities: [ parentResult.data.id ]
       } )
     }
 

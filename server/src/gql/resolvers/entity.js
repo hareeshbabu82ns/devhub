@@ -17,21 +17,22 @@ async function createEntityWithData( { data, session } ) {
   // check [children] data
   if ( data.children && data.children.length > 0 ) {
     // create child entities
-    const parentIDs = [ { type: itemData.type, entities: [ item.id ] } ]
+    const parentIDs = [ { type: itemData.type, entity: item.id } ]
     const childrenData = data.children.map( c => mapInputToModel( { ...c, parentIDs } ) )
     const childItems = await EntityModel.create( childrenData, { session } )
 
     // update childs to entity
-    const childIds = childItems.reduce( ( p, { id, type } ) => {
-      const i = p.findIndex( e => e.type === type )
-      const typeIds = i > 0 ? p[ i ] : { type, entities: [] }
-      typeIds.entities.push( id )
-      if ( i > 0 )
-        p[ i ] = typeIds
-      else
-        p.push( typeIds )
-      return [ ...p ]
-    }, [] )
+    const childIds = childItems.map( ( { id, type } ) => ( { type, entity: id } ) )
+    // const childIds = childItems.reduce( ( p, { id, type } ) => {
+    //   const i = p.findIndex( e => e.type === type )
+    //   const typeIds = i > 0 ? p[ i ] : { type, entities: [] }
+    //   typeIds.entities.push( id )
+    //   if ( i > 0 )
+    //     p[ i ] = typeIds
+    //   else
+    //     p.push( typeIds )
+    //   return [ ...p ]
+    // }, [] )
 
     // console.log( 'child ids: ', childIds )
     item.children = childIds
@@ -40,29 +41,30 @@ async function createEntityWithData( { data, session } ) {
   // check [parentIDs]
   if ( data?.parentIDs?.length > 0 ) {
     const pIDs = []
-    data?.parentIDs.forEach( e => pIDs.push( ...e.entities ) )
+    data?.parentIDs.forEach( e => pIDs.push( e.entity ) )
     const updatedEntities = await EntityModel.updateMany( { _id: { $in: pIDs } },
-      { $push: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
+      { $push: { children: { type: itemData.type, entity: item.id } } }, { session } )
     console.log( 'updated parent entities:', updatedEntities )
   }
   // check [parents] data
   if ( data.parents && data.parents.length > 0 ) {
     // create parent entities
-    const childIDs = [ { type: itemData.type, entities: [ item.id ] } ]
+    const childIDs = [ { type: itemData.type, entity: item.id } ]
     const parentsData = data.parents.map( c => mapInputToModel( { ...c, childIDs } ) )
     const parentItems = await EntityModel.create( parentsData, { session } )
 
     // update parents to entity
-    const parentIds = parentItems.reduce( ( p, { id, type } ) => {
-      const i = p.findIndex( e => e.type === type )
-      const typeIds = i > 0 ? p[ i ] : { type, entities: [] }
-      typeIds.entities.push( id )
-      if ( i > 0 )
-        p[ i ] = typeIds
-      else
-        p.push( typeIds )
-      return [ ...p ]
-    }, [] )
+    const parentIds = parentItems.map( ( { id, type } ) => ( { type, entity: id } ) )
+    // const parentIds = parentItems.reduce( ( p, { id, type } ) => {
+    //   const i = p.findIndex( e => e.type === type )
+    //   const typeIds = i > 0 ? p[ i ] : { type, entities: [] }
+    //   typeIds.entities.push( id )
+    //   if ( i > 0 )
+    //     p[ i ] = typeIds
+    //   else
+    //     p.push( typeIds )
+    //   return [ ...p ]
+    // }, [] )
 
     item.parents = parentIds
   }
@@ -112,7 +114,7 @@ module.exports = {
         const query = EntityModel.find()
         const childIds = []
         const typeKeysChildren = type.length ? children.filter( t => type.includes( t.type ) ) : children
-        typeKeysChildren.forEach( e => childIds.push( e.entities ) )
+        typeKeysChildren.forEach( e => childIds.push( e.entity ) )
         buildQueryFilter( query, { id: { operation: 'IN', valueList: childIds } } )
         const res = await query.exec()
         return res.map( mapModelToGQL )
@@ -120,14 +122,14 @@ module.exports = {
       childrenCount: async ( { children = [] }, { type = [] }, info ) => {
         const childIds = []
         const typeKeysChildren = type.length ? children.filter( t => type.includes( t.type ) ) : children
-        typeKeysChildren.forEach( e => childIds.push( e.entities ) )
+        typeKeysChildren.forEach( e => childIds.push( e.entity ) )
         return childIds.length
       },
       parents: async ( { parents = [] }, { type = [] }, info ) => {
         const query = EntityModel.find()
         const parentIds = []
         const typeKeysParents = type.length ? parents.filter( t => type.includes( t.type ) ) : parents
-        typeKeysParents.forEach( e => parentIds.push( e.entities ) )
+        typeKeysParents.forEach( e => parentIds.push( e.entity ) )
         buildQueryFilter( query, { id: { operation: 'IN', valueList: parentIds } } )
         const res = await query.exec()
         return res.map( mapModelToGQL )
@@ -135,7 +137,7 @@ module.exports = {
       parentsCount: async ( { parents = [] }, { type = [] }, info ) => {
         const parentIds = []
         const typeKeysParents = type.length ? parents.filter( t => type.includes( t.type ) ) : parents
-        typeKeysParents.forEach( e => parentIds.push( e.entities ) )
+        typeKeysParents.forEach( e => parentIds.push( e.entity ) )
         return parentIds.length
       },
       // parents: async ( { parents = {} }, args, info ) => {
@@ -176,13 +178,13 @@ module.exports = {
       const pIDs = []
       // check [parentIDs]
       if ( itemData?.parents?.length > 0 ) {
-        itemData?.parents.forEach( e => pIDs.push( ...e.entities ) )
+        itemData?.parents.forEach( e => pIDs.push( e.entity ) )
 
         // const foundEntities = await EntityModel.find(
         //   { _id: { $nin: pIDs }, 'children.entities': { $eq: id } } )
         const updatedEntities = await EntityModel.updateMany(
-          { _id: { $in: pIDs }, 'children.entities': { $ne: id } },
-          { $push: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
+          { _id: { $in: pIDs }, 'children.entity': { $ne: id } },
+          { $push: { children: { type: itemData.type, entity: item.id } } }, { session } )
         // const updatedEntities = await EntityModel.updateMany(
         //   { _id: { $in: pIDs }, children: { $elemMatch: { entities: { $ne: id } } } },
         //   { $push: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
@@ -192,14 +194,16 @@ module.exports = {
       // delete unreferenced parents
       const deleted_pIDs = []
       item.get( 'parents' )?.forEach( e => {
-        e.entities.forEach( se => {
-          if ( !pIDs.includes( se.toString() ) )
-            deleted_pIDs.push( se.toString() )
-        } )
+        if ( !pIDs.includes( e.entity.toString() ) )
+          deleted_pIDs.push( e.entity.toString() )
+        // e.entities.forEach( se => {
+        //   if ( !pIDs.includes( se.toString() ) )
+        //     deleted_pIDs.push( se.toString() )
+        // } )
       } )
       const deletedEntities = await EntityModel.updateMany(
         { _id: { $in: deleted_pIDs } },
-        { $pull: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
+        { $pull: { children: { type: itemData.type, entity: item.id } } }, { session } )
       console.log( 'deleted parent entity references:', deletedEntities )
 
       // console.log(item)
