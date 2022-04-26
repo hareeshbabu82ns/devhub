@@ -169,8 +169,6 @@ describe( 'GQL - Entity Type Tests', () => {
     } )
     // console.log(resCreate)
     expect( resCreate.data.createdId ).toBeDefined()
-    // push it for cleanup
-    createdIds.push( resCreate.data.createdId )
 
     // read entity to validate
     const entitiesBy = {
@@ -188,6 +186,26 @@ describe( 'GQL - Entity Type Tests', () => {
     expect( resSearch.data.entities[ 0 ].children[ 0 ].text ).toEqual(
       withData.children[ 0 ].text.filter( text => text.language === "ENG" )[ 0 ].value
     )
+
+    // delete above entity
+    const resDelete = await apolloServer.executeOperation( {
+      query: DELETE_ENTITY,
+      variables: { id: resCreate.data.createdId }
+    } )
+
+    // read entity children to be delted
+    const entitiesChildrenBy = {
+      text: {
+        path: 'value',
+        value: testData.createWithChildren.simple.children[ 0 ].text[ 0 ].value
+      }
+    }
+    const resChildSearch = await apolloServer.executeOperation( {
+      query: GET_ENTITIES_BY,
+      variables: { entitiesBy }
+    } )
+    console.log( resChildSearch )
+    expect( resChildSearch.data.entities.length ).toEqual( 0 )
   } )
 
 } )

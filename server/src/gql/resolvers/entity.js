@@ -188,7 +188,7 @@ module.exports = {
         // const updatedEntities = await EntityModel.updateMany(
         //   { _id: { $in: pIDs }, children: { $elemMatch: { entities: { $ne: id } } } },
         //   { $push: { children: { type: itemData.type, entities: [ item.id ] } } }, { session } )
-        console.log( 'updated parent entities:', updatedEntities )
+        // console.log( 'updated parent entities:', updatedEntities )
       }
 
       // delete unreferenced parents
@@ -204,7 +204,7 @@ module.exports = {
       const deletedEntities = await EntityModel.updateMany(
         { _id: { $in: deleted_pIDs } },
         { $pull: { children: { type: itemData.type, entity: item.id } } }, { session } )
-      console.log( 'deleted parent entity references:', deletedEntities )
+      // console.log( 'deleted parent entity references:', deletedEntities )
 
       // console.log(item)
       await session.commitTransaction()
@@ -227,12 +227,31 @@ module.exports = {
     }
   },
   delete: async ( id ) => {
-    const item = await EntityModel.deleteOne( { "_id": id } )
-    // console.log(item)
-    if ( item.deletedCount === 1 )
-      return id
-    else
-      throw `Nothing deleted with matching id: ${id}`
+    const session = await EntityModel.startSession()
+    session.startTransaction()
+    try {
+      const item = await EntityModel.findOneAndDelete( { "_id": id }, { session } )
+      // console.log( item )      
+      if ( item._id ) {
+
+        // delte child entities
+        const childrenIDs = item.get( 'children' ).map( e => e.entity )
+        if ( childrenIDs.length > 0 ) {
+          const delChilds = await EntityModel.deleteMany( { _id: { $in: childrenIDs } }, { session } )
+          console.log( delChilds )
+          if ( childrenIDs.length !== delChilds.deletedCount ) {
+            throw `Not all Children is deleted for the entity: ${id}`
+          }
+        }
+        await session.commitTransaction()
+        return id
+      }
+      else
+        throw `Nothing deleted with matching id: ${id}`
+    } catch ( e ) {
+      await session.abortTransaction()
+      throw e
+    }
   },
 }
 

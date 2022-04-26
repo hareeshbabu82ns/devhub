@@ -52,10 +52,15 @@ function App() {
           <Route path="/" >
             <Route index element={<HomePage />} />
             <Route path="entity" >
-              <Route path="create" element={<EntityCRUDPage />} />
+              {/* <Route path="create" element={<EntityCRUDPage />} /> */}
+              <Route path="create">
+                <Route index element={<EntityCRUDPage />} />
+                <Route path=":parent" element={<EntityCRUDPage />} />
+              </Route>
               <Route path=":id">
                 <Route index element={<EntityGalaryPage />} />
                 <Route path="edit" element={<EntityCRUDPage />} />
+                <Route path="create" element={<EntityCRUDPage />} />
               </Route>
             </Route>
             <Route path="uploaders" >

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ImageList, IconButton, List, useMediaQuery } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import EditIcon from '@mui/icons-material/Edit'
+import NewIcon from '@mui/icons-material/Add'
 import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
@@ -91,6 +92,10 @@ export default function EntityGalaryPage() {
       <IconButton aria-label="Edit Entity"
         onClick={() => navigate( `/entity/${entity?.id}/edit${queryParams}` )}>
         <EditIcon />
+      </IconButton>
+      <IconButton disabled={loading || ( networkStatus === NetworkStatus.refetch ) || refetching}
+        onClick={() => navigate( `/entity/create/${entity?.id}${queryParams}` )}>
+        <NewIcon />
       </IconButton>
       <IconButton disabled={loading || ( networkStatus === NetworkStatus.refetch ) || refetching}
         onClick={refetchData}>

@@ -46,6 +46,11 @@ const MUTATION_UPDATE_ENTITY = gql`
     updateEntity(id:$id, withData: $data)
   }
 `
+const MUTATION_DELETE_ENTITY = gql`
+  mutation($id: ID!) {
+    deleteEntity(id: $id)
+  }
+`
 
 const EntityCRUDPage = () => {
 
@@ -63,15 +68,44 @@ const EntityCRUDPage = () => {
       }
     } )
 
+  const { loading: parentLoading, error: parentError, data: parentData } = useQuery( QUERY_GET_ENTITIES_BY_ID,
+    {
+      variables: {
+        language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT,
+        id: params.parent
+      }
+    } )
+
   const [ createEntityMutation, { data: mCreData, error: mCreError, loading: mCreLoading } ] = useMutation( MUTATION_CREATE_ENTITY )
   const [ updateEntityMutation, { data: mUpdData, error: mUpdError, loading: mUpdLoading } ] = useMutation( MUTATION_UPDATE_ENTITY )
+  const [ deleteEntityMutation, { data: mDelData, error: mDelError, loading: mDelLoading } ] = useMutation( MUTATION_DELETE_ENTITY )
 
   const onReset = async () => {
     await refetch()
   }
 
+  const onDelete = async ( { id } ) => {
+    // console.log( 'onSubmit: ', data )
+
+    try {
+      if ( id !== 0 ) {
+        const res = await deleteEntityMutation( {
+          variables: {
+            id: id,
+          }
+        } )
+        enqueueSnackbar( 'Entity Deleted' )
+        console.log( res )
+        navigate( -1 )
+      }
+    } catch ( e ) {
+      enqueueSnackbar( 'Error Deleting Entity', { variant: 'error' } )
+      console.log( e )
+    }
+  }
+
   const onSubmit = async ( data ) => {
-    console.log( 'onSubmit: ', data )
+    // console.log( 'onSubmit: ', data )
 
     try {
       if ( data.id === 0 ) {
@@ -81,7 +115,7 @@ const EntityCRUDPage = () => {
           }
         } )
         enqueueSnackbar( 'Entity Saved' )
-        console.log( res )
+        // console.log( res )
         navigate( `/entity/${res.data.createEntity}/edit${queryParams}`, { replace: true } )
       } else {
         const res = await updateEntityMutation( {
@@ -99,12 +133,25 @@ const EntityCRUDPage = () => {
     }
   }
 
+  const prepareEntity = () => {
+    const entity = data?.entities[ 0 ]
+    const parentEntity = parentData?.entities[ 0 ]
+    if ( entity ) return entity
+    if ( parentEntity ) {
+      const parents = [ { ...parentEntity } ]
+      return { ...defaultEntity, parents }
+    }
+    return defaultEntity
+  }
+
   return (
-    <EntityFormWrapper entity={data?.entities[ 0 ] || defaultEntity}
-      key={data?.entities[ 0 ]?.id || 0}
+    <EntityFormWrapper
+      entity={prepareEntity()}
+      parent={parentData?.entities[ 0 ]}
+      key={data?.entities[ 0 ]?.id || parentData?.entities[ 0 ]?.id || 0}
       {...{
-        loading: loading,
-        error: params.id ? error : undefined, onReset, onSubmit
+        loading: loading || parentLoading,
+        error: params.id ? error : undefined, onReset, onSubmit, onDelete,
       }} />
   )
 }
@@ -131,10 +178,10 @@ const transformToGQLInputData = ( { entityFormData } ) => {
     type: entityFormData.type,
     text: entityFormData.textData.filter( t => !!t.value ),
     imageThumbnail: entityFormData.imageThumbnail,
-    parentIDs: entityFormData?.parents?.map( e => ( { type: e.type, entities: [ e.id ] } ) )
+    parentIDs: entityFormData?.parents?.map( e => ( { type: e.type, entity: e.id } ) )
   }
 }
-const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
+const EntityFormWrapper = ( { entity, onSubmit, onDelete, loading, error, onReset } ) => {
   // console.log( entity )
   const validationSchema = Yup.object().shape( {
     type: Yup.string().required( 'Entity Type is required' ),
@@ -170,6 +217,10 @@ const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
 
   const actionsRight = (
     <Stack direction="row" spacing={2} >
+      {!!entity.id &&
+        <Button onClick={() => onDelete( { id: entity.id } )} variant={"contained"} disabled={isSubmitting} color='error'>
+          Delete
+        </Button>}
       <Button onClick={handleSubmit( onSubmit )} variant={"contained"} disabled={isSubmitting}>
         Submit
       </Button>
@@ -180,7 +231,7 @@ const EntityFormWrapper = ( { entity, onSubmit, loading, error, onReset } ) => {
   )
 
   return (
-    <Panel title={`Entity Form: ${entity.id ? entity.text : 'new'}`}
+    <Panel title={`${entity.id ? entity.text : 'New Entity'}`}
       loading={loading || entityTypesLoadable.state === 'loading' || baseLanguagesLoadable.state === 'loading'}
       error={error}
       sx={{ border: 0, m: 2 }}
