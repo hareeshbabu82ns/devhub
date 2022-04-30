@@ -10,10 +10,10 @@ export const C_KEY_DELIMITER = '+'
 
 const buildKeyString = ( e ) => {
   const keys = []
-  e.ctrlKey && keys.push( C_KEY_CTRL )
-  e.shiftKey && keys.push( C_KEY_SHIFT )
-  e.altKey && keys.push( C_KEY_ALT )
   e.metaKey && keys.push( C_KEY_META )
+  e.ctrlKey && keys.push( C_KEY_CTRL )
+  e.altKey && keys.push( C_KEY_ALT )
+  e.shiftKey && keys.push( C_KEY_SHIFT )
   keys.push( e.key )
   return keys.join( C_KEY_DELIMITER )
 }

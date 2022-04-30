@@ -15,7 +15,7 @@ import SanscriptDictDrawer from "./components/SanscriptDictDrawer"
 import SanscriptSplitsDrawer from "./components/SanscriptSplitsDrawer"
 import SanscriptDictPage from "./pages/SanscriptDictPage"
 import SanscriptSplitsPage from "./pages/SanscriptSplitsPage"
-import useKeyPress from "./utils/useKeyPressHook"
+import useKeyPress, { C_KEY_CTRL, C_KEY_META, C_KEY_SHIFT } from "./utils/useKeyPressHook"
 import { useSetRecoilState } from "recoil"
 import { transliterationState } from "./state/transliteration"
 import { sanscriptDictState } from "./state/sanscriptDict"
@@ -28,21 +28,27 @@ function App() {
   const setDictionary = useSetRecoilState( sanscriptDictState )
   const setSplits = useSetRecoilState( sanscriptSplitsState )
 
-  const keyHandler = ( { eventKey } ) => {
-    if ( eventKey === 'CTRL+t' ) {
+  const keyHandlerMap = {
+    [ `${C_KEY_CTRL}+t` ]: () => {
       setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
       return true // handled
-    }
-    else if ( eventKey === 'CTRL+d' ) {
+    },
+    [ `${C_KEY_CTRL}+d` ]: () => {
       setDictionary( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
       return true // handled
-    }
-    else if ( eventKey === 'CTRL+s' ) {
+    },
+    [ `${C_KEY_CTRL}+s` ]: () => {
       setSplits( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
       return true // handled
-    }
+    },
   }
-  useKeyPress( [ 'CTRL+t', 'CTRL+d', 'CTRL+s' ], keyHandler )
+  const keyHandler = ( { eventKey } ) => {
+    console.log( eventKey )
+    const fn = keyHandlerMap[ eventKey ]
+    if ( fn ) return fn()
+  }
+  useKeyPress( Object.keys( keyHandlerMap ), keyHandler )
+  // useKeyPress( [ `${C_KEY_CTRL}+t`, `${C_KEY_CTRL}+d`, `${C_KEY_CTRL}+s` ], keyHandler )
 
   return (
     <>

@@ -3,7 +3,8 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import { useForm } from 'react-hook-form'
-import { Button, Grid, Stack, Typography } from '@mui/material'
+import { Button, Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material'
+import NewIcon from '@mui/icons-material/Add'
 import Panel from '../components/utils/Panel'
 import { useQuery, gql, useMutation } from '@apollo/client'
 import { C_DEFAULT_IMAGE_THUMBNAIL, C_LANGUAGE_DEFAULT, C_LANGUAGE_TEXT_LIST } from '../constants'
@@ -11,6 +12,7 @@ import { useRecoilValueLoadable } from 'recoil'
 import { entityTypesState } from '../state/entityTypes'
 import { FormInputDropdown } from '../components/FormInput/FormInputDropdown'
 import { FormInputText } from '../components/FormInput/FormInputText'
+import { FormInputTextArea } from '../components/FormInput/FormInputTextArea'
 import { baseLanguagesState } from '../state/baseLanguages'
 import _ from 'lodash'
 import { useSnackbar } from 'notistack'
@@ -143,12 +145,21 @@ const EntityCRUDPage = () => {
     }
     return defaultEntity
   }
+  const prepareKey = () => {
+    const entity = data?.entities[ 0 ]
+    const parentEntity = parentData?.entities[ 0 ]
+    if ( entity ) return `e-${entity.id}`
+    if ( parentEntity ) {
+      return `pe-${parentEntity.id}`
+    }
+    return `e-0`
+  }
 
   return (
     <EntityFormWrapper
       entity={prepareEntity()}
       parent={parentData?.entities[ 0 ]}
-      key={data?.entities[ 0 ]?.id || parentData?.entities[ 0 ]?.id || 0}
+      key={prepareKey()}
       {...{
         loading: loading || parentLoading,
         error: params.id ? error : undefined, onReset, onSubmit, onDelete,
@@ -201,6 +212,8 @@ const EntityFormWrapper = ( { entity, onSubmit, onDelete, loading, error, onRese
       } )
     ),
   } )
+  const { search: queryParams } = useLocation()
+  const navigate = useNavigate()
 
   const [ searchParams ] = useSearchParams()
 
@@ -230,11 +243,24 @@ const EntityFormWrapper = ( { entity, onSubmit, onDelete, loading, error, onRese
     </Stack>
   )
 
+  const toolbarActions = (
+    <React.Fragment>
+      {!!entity.id &&
+        <Tooltip title="Create Child">
+          <IconButton
+            onClick={() => navigate( `/entity/create/${entity?.id}${queryParams}` )}>
+            <NewIcon />
+          </IconButton>
+        </Tooltip>}
+    </React.Fragment>
+  )
+
   return (
     <Panel title={`${entity.id ? entity.text : 'New Entity'}`}
       loading={loading || entityTypesLoadable.state === 'loading' || baseLanguagesLoadable.state === 'loading'}
       error={error}
       sx={{ border: 0, m: 2 }}
+      toolbarActions={toolbarActions}
       actionsRight={actionsRight} >
       <EntityForm entityTypes={entityTypesLoadable.contents}
         baseLanguages={baseLanguagesLoadable.contents}
@@ -252,12 +278,21 @@ const EntityForm = ( { form, onSubmit, entityTypes, baseLanguages } ) => {
   const LanguageText = ( { languageText, index } ) => {
     return (
       <Grid item xs={12}>
-        <FormInputText
+        <FormInputTextArea
           name={`textData[${index}].value`}
           control={control}
           label={`${_.find( baseLanguages, { 'iso': languageText } )?.name || languageText} Text`}
         />
       </Grid>
+
+      // <Grid item xs={12}>
+      //   <FormInputText
+      //     name={`textData[${index}].value`}
+      //     control={control}
+      //     label={`${_.find( baseLanguages, { 'iso': languageText } )?.name || languageText} Text`}
+      //   />
+      // </Grid>
+
       // <Grid container item xs={12} sx={{ m: 1 }} spacing={2}>
       //   <Grid item xs={12} sm={3}>
       //     <FormInputDropdown
