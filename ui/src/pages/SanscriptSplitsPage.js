@@ -270,7 +270,18 @@ const SanscriptSplitsPage = ( { onClose } ) => {
 
 const SplitResults = ( { splits } ) => {
   return (
-    <pre>{JSON.stringify( splits, null, 2 )}</pre>
+    // <pre>{JSON.stringify( splits, null, 2 )}</pre>
+    <table style={{ width: '100%', overflowX: 'scroll' }}>
+      <tbody>
+        {splits.map( ( s, si ) => (
+          <tr key={`split-${si}`}>
+            {s.map( ( ss, ssi ) => (
+              <td key={`subsplit-${ssi}`}>
+                {ss}
+              </td> ) )}
+          </tr> ) )}
+      </tbody>
+    </table>
   )
 }
 

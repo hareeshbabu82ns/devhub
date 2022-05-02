@@ -8,7 +8,7 @@ import DictionaryIcon from '@mui/icons-material/MenuBook'
 import SplitsIcon from '@mui/icons-material/AltRoute'
 import SwapIcon from '@mui/icons-material/SwapHorizOutlined'
 import LanguageSelect from './LanguageSelect'
-import { APP_THEME_MODE, drawerWidth } from '../../constants'
+import { APP_THEME_MODE, C_LANGUAGE_DEFAULT, C_TRANSLATE_TEXT_MAP, drawerWidth } from '../../constants'
 
 import { useRecoilState, useSetRecoilState } from 'recoil'
 
@@ -18,6 +18,9 @@ import { themeModeState, THEME_DARK, THEME_LIGHT } from '../../state/theme_mode'
 import { transliterationState } from '../../state/transliteration'
 import { sanscriptDictState } from '../../state/sanscriptDict'
 import { sanscriptSplitsState } from '../../state/sanscriptSplits'
+import { getSelectionText } from '../../utils/utils'
+import _ from 'lodash'
+import { useSearchParams } from 'react-router-dom'
 
 const AppBarStyled = styled( MuiAppBar, {
   shouldForwardProp: ( prop ) => prop !== 'open',
@@ -38,6 +41,7 @@ const AppBarStyled = styled( MuiAppBar, {
 } ) )
 
 function AppBar( { open } ) {
+  const [ searchParams ] = useSearchParams()
   const setTransliteration = useSetRecoilState( transliterationState )
   const setSansDict = useSetRecoilState( sanscriptDictState )
   const setSansSplits = useSetRecoilState( sanscriptSplitsState )
@@ -46,6 +50,15 @@ function AppBar( { open } ) {
   function toggleDrawer() {
     setDrawerState( currentState => !currentState )
   }
+  const drawerStateUpdater = s => ( {
+    ...s, drawerOpened: !s.drawerOpened, inputText: getSelectionText() || s.inputText,
+    inputScheme: _.find( C_TRANSLATE_TEXT_MAP, { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT } )?.value?.toUpperCase()
+  } )
+  const drawerStateUpdaterTrans = s => ( {
+    ...s, drawerOpened: !s.drawerOpened, fromText: getSelectionText() || s.fromText,
+    fromTextLang: _.find( C_TRANSLATE_TEXT_MAP, { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT } )?.value,
+  } )
+
   return (
     <AppBarStyled position="absolute" open={open} enableColorOnDark={true}>
       <Toolbar
@@ -84,19 +97,19 @@ function AppBar( { open } ) {
             }} /> */}
           <Tooltip title="Transliteration (CTRL+t)">
             <IconButton aria-label="transliteration"
-              onClick={() => setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
+              onClick={() => setTransliteration( drawerStateUpdaterTrans )}>
               <SwapIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Dictionary (CTRL+d)">
             <IconButton aria-label="sanskrit dictionary"
-              onClick={() => setSansDict( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
+              onClick={() => setSansDict( drawerStateUpdater )}>
               <DictionaryIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Splits (CTRL+s)">
             <IconButton aria-label="sanskrit scentence splits"
-              onClick={() => setSansSplits( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )}>
+              onClick={() => setSansSplits( drawerStateUpdater )}>
               <SplitsIcon />
             </IconButton>
           </Tooltip>

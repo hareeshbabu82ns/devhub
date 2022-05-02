@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { ImageList, IconButton, List, useMediaQuery } from '@mui/material'
+import {
+  ImageList, IconButton, List, useMediaQuery,
+  ListItemIcon, ListItemText, MenuList, MenuItem
+} from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import EditIcon from '@mui/icons-material/Edit'
 import NewIcon from '@mui/icons-material/Add'
@@ -7,11 +10,11 @@ import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
 import Panel from '../components/utils/Panel'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { C_ENTITY_TYPE_SLOKAM, C_LANGUAGE_DEFAULT } from '../constants'
+import { useLocation, useNavigate, useParams, useSearchParams, Link } from 'react-router-dom'
+import { C_ENTITY_TYPE_SLOKAM, C_LANGUAGE_DEFAULT, C_TRANSLATE_TEXT_MAP } from '../constants'
 import EntityTextListItem from '../components/EntityTextListItem'
 import _ from 'lodash'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { entityTypesState } from '../state/entityTypes'
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
@@ -130,6 +133,9 @@ export default function EntityGalaryPage() {
           ) )}
         </List>}
 
+
     </Panel>
   )
 }
+
+

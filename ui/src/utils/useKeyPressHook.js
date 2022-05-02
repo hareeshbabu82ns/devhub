@@ -36,7 +36,10 @@ const useKeyPress = ( keys, callback, node = null ) => {
           event,
           eventKey
         } )
-        if ( handled ) event.stopPropagation()
+        if ( handled ) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
       }
     },
     [ keys ]

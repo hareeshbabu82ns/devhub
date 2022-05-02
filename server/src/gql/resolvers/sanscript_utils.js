@@ -2,7 +2,7 @@ const axios = require( 'axios' )
 
 const sanscriptUtilsAPI = axios.create( {
   baseURL: process.env.SANSCRIPT_UTILS_URL || 'http://sanskrit-utils-api.kube.local.io/graphql',
-  timeout: 5000,
+  // timeout: 5000,
   headers: { 'X-Sanscript-Client': 'DevHubJS' }
 } )
 

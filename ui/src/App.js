@@ -1,6 +1,7 @@
 import {
   Routes,
-  Route
+  Route,
+  useSearchParams
 } from "react-router-dom"
 import EntityGalaryPage from "./pages/EntityGalaryPage"
 import GodsPage from "./pages/GodsPage"
@@ -20,30 +21,46 @@ import { useSetRecoilState } from "recoil"
 import { transliterationState } from "./state/transliteration"
 import { sanscriptDictState } from "./state/sanscriptDict"
 import { sanscriptSplitsState } from "./state/sanscriptSplits"
+import { getSelectionText } from "./utils/utils"
+import _ from "lodash"
+import { C_LANGUAGE_DEFAULT, C_TRANSLATE_TEXT_MAP } from "./constants"
 // import GraphEditorPage from "./pages/GraphEditorPage"
+import useContextMenu from './utils/useContextMenu'
+import SelectedTextContextMenu from './components/SelectedTextContextMenu'
 
 function App() {
 
+  const [ searchParams ] = useSearchParams()
   const setTransliteration = useSetRecoilState( transliterationState )
   const setDictionary = useSetRecoilState( sanscriptDictState )
   const setSplits = useSetRecoilState( sanscriptSplitsState )
+  const { anchorPoint, showContext, selectedText } = useContextMenu( { showOnlyOnTextSelection: true } );
+
+  const drawerStateUpdater = s => ( {
+    ...s, drawerOpened: !s.drawerOpened, inputText: getSelectionText() || s.inputText,
+    inputScheme: _.find( C_TRANSLATE_TEXT_MAP, { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT } )?.value?.toUpperCase()
+  } )
+  const drawerStateUpdaterTrans = s => ( {
+    ...s, drawerOpened: !s.drawerOpened, fromText: getSelectionText() || s.fromText,
+    fromTextLang: _.find( C_TRANSLATE_TEXT_MAP, { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT } )?.value,
+  } )
 
   const keyHandlerMap = {
     [ `${C_KEY_CTRL}+t` ]: () => {
-      setTransliteration( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
+      setTransliteration( drawerStateUpdaterTrans )
       return true // handled
     },
     [ `${C_KEY_CTRL}+d` ]: () => {
-      setDictionary( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
+      setDictionary( drawerStateUpdater )
       return true // handled
     },
     [ `${C_KEY_CTRL}+s` ]: () => {
-      setSplits( s => ( { ...s, drawerOpened: !s.drawerOpened } ) )
+      setSplits( drawerStateUpdater )
       return true // handled
     },
   }
   const keyHandler = ( { eventKey } ) => {
-    console.log( eventKey )
+    // console.log( eventKey )
     const fn = keyHandlerMap[ eventKey ]
     if ( fn ) return fn()
   }
@@ -86,6 +103,7 @@ function App() {
       <TransliterationDrawer />
       <SanscriptDictDrawer />
       <SanscriptSplitsDrawer />
+      {showContext && <SelectedTextContextMenu anchorPoint={anchorPoint} selectedText={selectedText} />}
     </>
   )
 }
