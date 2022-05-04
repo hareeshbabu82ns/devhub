@@ -50,6 +50,8 @@ enum EntityTypeEnum {
   ADHYAAYAM
   SLOKAM
   OTHERS
+  SKANDAM
+  GHATTAM
 }
 
 input FilterEntityTypeEnum {

@@ -18,14 +18,51 @@ export type Scalars = {
   Float: number;
 };
 
+export enum Dictionary {
+  DhatuPata = 'DHATU_PATA',
+  Mw = 'MW',
+  Mwe = 'MWE',
+  Skd = 'SKD',
+  Vcp = 'VCP'
+}
+
+export type DictionaryItem = {
+  __typename?: 'DictionaryItem';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  key: Scalars['String'];
+  origin: Dictionary;
+};
+
+export type DictionaryKey = {
+  __typename?: 'DictionaryKey';
+  key: Scalars['String'];
+  origin: Dictionary;
+};
+
+export type DictionarySearchInput = {
+  caseInsensitive?: InputMaybe<Scalars['Boolean']>;
+  endsWith?: InputMaybe<Scalars['Boolean']>;
+  fuzzySearch?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  origin?: InputMaybe<Array<Dictionary>>;
+  outputScheme?: InputMaybe<SanscriptScheme>;
+  search: Scalars['String'];
+  searchOnlyKeys?: InputMaybe<Scalars['Boolean']>;
+  searchScheme?: InputMaybe<SanscriptScheme>;
+  startsWith?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Entity = {
   __typename?: 'Entity';
   children?: Maybe<Array<Entity>>;
   childrenCount: Scalars['Int'];
   id: Scalars['ID'];
+  imageThumbnail?: Maybe<Scalars['String']>;
   parents?: Maybe<Array<Entity>>;
   parentsCount: Scalars['Int'];
   text: Scalars['String'];
+  textData: Array<LanguageValueType>;
   type: EntityTypeEnum;
 };
 
@@ -56,9 +93,10 @@ export type EntityTextArgs = {
 
 export type EntityInput = {
   /**  Child Entity IDs only (will just link to existing entities)  */
-  childIDs?: InputMaybe<Array<Scalars['ID']>>;
+  childIDs?: InputMaybe<Array<TypeEntityInput>>;
   /**  Child Entities with Data (will create new entities)  */
   children?: InputMaybe<Array<EntityInput>>;
+  imageThumbnail?: InputMaybe<Scalars['String']>;
   /**  Parent Entity IDs only (will just link to existing entities)  */
   parentIDs?: InputMaybe<Array<TypeEntityInput>>;
   /**  Parent Entities with Data (will create new entities)  */
@@ -81,6 +119,7 @@ export type EntityType = {
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];
+  nameData: Array<LanguageValueType>;
 };
 
 
@@ -92,6 +131,7 @@ export enum EntityTypeEnum {
   Adhyaayam = 'ADHYAAYAM',
   Author = 'AUTHOR',
   Dandakam = 'DANDAKAM',
+  Ghattam = 'GHATTAM',
   God = 'GOD',
   Itihasam = 'ITIHASAM',
   Kaandam = 'KAANDAM',
@@ -99,6 +139,7 @@ export enum EntityTypeEnum {
   Parvam = 'PARVAM',
   Puranam = 'PURANAM',
   Sarga = 'SARGA',
+  Skandam = 'SKANDAM',
   Slokam = 'SLOKAM',
   Sthotram = 'STHOTRAM'
 }
@@ -202,6 +243,12 @@ export type LanguageValueInput = {
   value: Scalars['String'];
 };
 
+export type LanguageValueType = {
+  __typename?: 'LanguageValueType';
+  language?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createEntity: Scalars['ID'];
@@ -284,14 +331,61 @@ export type MutationUpdateUserArgs = {
   withData?: InputMaybe<UserInput>;
 };
 
+export type Parse = {
+  __typename?: 'Parse';
+  analysis: Array<Maybe<ParseItem>>;
+  parseDotURLs: Array<Scalars['String']>;
+  parseDots: Array<Scalars['String']>;
+  splitDot: Scalars['String'];
+  splitDotURL: Scalars['String'];
+};
+
+export type ParseGraph = {
+  __typename?: 'ParseGraph';
+  node?: Maybe<ParseTag>;
+  predecessor?: Maybe<ParseTag>;
+  sambandha?: Maybe<Scalars['String']>;
+};
+
+export type ParseItem = {
+  __typename?: 'ParseItem';
+  graph: Array<ParseGraph>;
+};
+
+export type ParseTag = {
+  __typename?: 'ParseTag';
+  pada: Scalars['String'];
+  root?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
+  dictionarySearch?: Maybe<Array<DictionaryItem>>;
+  dictionarySearchById: DictionaryItem;
   entities: Array<Entity>;
   entityTypes: Array<EntityType>;
+  joins: Array<Scalars['String']>;
   languages: Array<Language>;
   me: User;
+  parse: Array<Parse>;
+  presegmented: Array<Scalars['String']>;
+  splits: Array<Array<Scalars['String']>>;
+  tags: Array<Tag>;
+  transliterate: Scalars['String'];
   users: Array<User>;
   version: Scalars['String'];
+};
+
+
+export type QueryDictionarySearchArgs = {
+  searchWith: DictionarySearchInput;
+};
+
+
+export type QueryDictionarySearchByIdArgs = {
+  id: Scalars['ID'];
+  outputScheme?: InputMaybe<SanscriptScheme>;
 };
 
 
@@ -307,9 +401,60 @@ export type QueryEntityTypesArgs = {
 };
 
 
+export type QueryJoinsArgs = {
+  schemeFrom?: InputMaybe<SanscriptScheme>;
+  schemeTo?: InputMaybe<SanscriptScheme>;
+  strictIO?: InputMaybe<Scalars['Boolean']>;
+  words: Array<Scalars['String']>;
+};
+
+
 export type QueryLanguagesArgs = {
   by?: InputMaybe<LanguageSearchInput>;
   limit?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryParseArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  preSegmented?: InputMaybe<Scalars['Boolean']>;
+  schemeFrom?: InputMaybe<SanscriptScheme>;
+  schemeTo?: InputMaybe<SanscriptScheme>;
+  strictIO?: InputMaybe<Scalars['Boolean']>;
+  text: Scalars['String'];
+};
+
+
+export type QueryPresegmentedArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  schemeFrom?: InputMaybe<SanscriptScheme>;
+  schemeTo?: InputMaybe<SanscriptScheme>;
+  strictIO?: InputMaybe<Scalars['Boolean']>;
+  text: Scalars['String'];
+};
+
+
+export type QuerySplitsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  schemeFrom?: InputMaybe<SanscriptScheme>;
+  schemeTo?: InputMaybe<SanscriptScheme>;
+  strictIO?: InputMaybe<Scalars['Boolean']>;
+  text: Scalars['String'];
+};
+
+
+export type QueryTagsArgs = {
+  schemeFrom?: InputMaybe<SanscriptScheme>;
+  schemeTo?: InputMaybe<SanscriptScheme>;
+  strictIO?: InputMaybe<Scalars['Boolean']>;
+  text: Scalars['String'];
+};
+
+
+export type QueryTransliterateArgs = {
+  schemeFrom?: InputMaybe<SanscriptScheme>;
+  schemeTo?: InputMaybe<SanscriptScheme>;
+  text: Scalars['String'];
 };
 
 
@@ -328,8 +473,14 @@ export enum SanscriptScheme {
   Telugu = 'TELUGU'
 }
 
+export type Tag = {
+  __typename?: 'Tag';
+  tags: Array<Scalars['String']>;
+  word: Scalars['String'];
+};
+
 export type TypeEntityInput = {
-  entities?: InputMaybe<Array<Scalars['ID']>>;
+  entity: Scalars['ID'];
   type: EntityTypeEnum;
 };
 
@@ -534,6 +685,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Dictionary: Dictionary;
+  DictionaryItem: ResolverTypeWrapper<DictionaryItem>;
+  DictionaryKey: ResolverTypeWrapper<DictionaryKey>;
+  DictionarySearchInput: DictionarySearchInput;
   Entity: ResolverTypeWrapper<Entity>;
   EntityInput: EntityInput;
   EntitySearchInput: EntitySearchInput;
@@ -555,10 +710,16 @@ export type ResolversTypes = {
   LanguageInput: LanguageInput;
   LanguageSearchInput: LanguageSearchInput;
   LanguageValueInput: LanguageValueInput;
+  LanguageValueType: ResolverTypeWrapper<LanguageValueType>;
   Mutation: ResolverTypeWrapper<{}>;
+  Parse: ResolverTypeWrapper<Parse>;
+  ParseGraph: ResolverTypeWrapper<ParseGraph>;
+  ParseItem: ResolverTypeWrapper<ParseItem>;
+  ParseTag: ResolverTypeWrapper<ParseTag>;
   Query: ResolverTypeWrapper<{}>;
   SanscriptScheme: SanscriptScheme;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Tag: ResolverTypeWrapper<Tag>;
   TypeEntityInput: TypeEntityInput;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
@@ -568,6 +729,9 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  DictionaryItem: DictionaryItem;
+  DictionaryKey: DictionaryKey;
+  DictionarySearchInput: DictionarySearchInput;
   Entity: Entity;
   EntityInput: EntityInput;
   EntitySearchInput: EntitySearchInput;
@@ -587,22 +751,44 @@ export type ResolversParentTypes = {
   LanguageInput: LanguageInput;
   LanguageSearchInput: LanguageSearchInput;
   LanguageValueInput: LanguageValueInput;
+  LanguageValueType: LanguageValueType;
   Mutation: {};
+  Parse: Parse;
+  ParseGraph: ParseGraph;
+  ParseItem: ParseItem;
+  ParseTag: ParseTag;
   Query: {};
   String: Scalars['String'];
+  Tag: Tag;
   TypeEntityInput: TypeEntityInput;
   User: User;
   UserInput: UserInput;
   UserSearchInput: UserSearchInput;
 };
 
+export type DictionaryItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['DictionaryItem'] = ResolversParentTypes['DictionaryItem']> = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  origin?: Resolver<ResolversTypes['Dictionary'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DictionaryKeyResolvers<ContextType = any, ParentType extends ResolversParentTypes['DictionaryKey'] = ResolversParentTypes['DictionaryKey']> = {
+  key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  origin?: Resolver<ResolversTypes['Dictionary'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EntityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entity'] = ResolversParentTypes['Entity']> = {
   children?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, Partial<EntityChildrenArgs>>;
   childrenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<EntityChildrenCountArgs>>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  imageThumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parents?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, Partial<EntityParentsArgs>>;
   parentsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<EntityParentsCountArgs>>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<EntityTextArgs, 'language'>>;
+  textData?: Resolver<Array<ResolversTypes['LanguageValueType']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['EntityTypeEnum'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -612,6 +798,7 @@ export type EntityTypeResolvers<ContextType = any, ParentType extends ResolversP
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<EntityTypeNameArgs, 'language'>>;
+  nameData?: Resolver<Array<ResolversTypes['LanguageValueType']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -620,6 +807,12 @@ export type LanguageResolvers<ContextType = any, ParentType extends ResolversPar
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   iso?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LanguageValueTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LanguageValueType'] = ResolversParentTypes['LanguageValueType']> = {
+  language?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -640,13 +833,55 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type ParseResolvers<ContextType = any, ParentType extends ResolversParentTypes['Parse'] = ResolversParentTypes['Parse']> = {
+  analysis?: Resolver<Array<Maybe<ResolversTypes['ParseItem']>>, ParentType, ContextType>;
+  parseDotURLs?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  parseDots?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  splitDot?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  splitDotURL?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParseGraphResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParseGraph'] = ResolversParentTypes['ParseGraph']> = {
+  node?: Resolver<Maybe<ResolversTypes['ParseTag']>, ParentType, ContextType>;
+  predecessor?: Resolver<Maybe<ResolversTypes['ParseTag']>, ParentType, ContextType>;
+  sambandha?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParseItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParseItem'] = ResolversParentTypes['ParseItem']> = {
+  graph?: Resolver<Array<ResolversTypes['ParseGraph']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParseTagResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParseTag'] = ResolversParentTypes['ParseTag']> = {
+  pada?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  root?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  dictionarySearch?: Resolver<Maybe<Array<ResolversTypes['DictionaryItem']>>, ParentType, ContextType, RequireFields<QueryDictionarySearchArgs, 'searchWith'>>;
+  dictionarySearchById?: Resolver<ResolversTypes['DictionaryItem'], ParentType, ContextType, RequireFields<QueryDictionarySearchByIdArgs, 'id'>>;
   entities?: Resolver<Array<ResolversTypes['Entity']>, ParentType, ContextType, RequireFields<QueryEntitiesArgs, 'limit'>>;
   entityTypes?: Resolver<Array<ResolversTypes['EntityType']>, ParentType, ContextType, RequireFields<QueryEntityTypesArgs, 'limit'>>;
+  joins?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJoinsArgs, 'words'>>;
   languages?: Resolver<Array<ResolversTypes['Language']>, ParentType, ContextType, RequireFields<QueryLanguagesArgs, 'limit'>>;
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  parse?: Resolver<Array<ResolversTypes['Parse']>, ParentType, ContextType, RequireFields<QueryParseArgs, 'text'>>;
+  presegmented?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryPresegmentedArgs, 'text'>>;
+  splits?: Resolver<Array<Array<ResolversTypes['String']>>, ParentType, ContextType, RequireFields<QuerySplitsArgs, 'text'>>;
+  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryTagsArgs, 'text'>>;
+  transliterate?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryTransliterateArgs, 'text'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'limit'>>;
   version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  word?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -657,11 +892,19 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  DictionaryItem?: DictionaryItemResolvers<ContextType>;
+  DictionaryKey?: DictionaryKeyResolvers<ContextType>;
   Entity?: EntityResolvers<ContextType>;
   EntityType?: EntityTypeResolvers<ContextType>;
   Language?: LanguageResolvers<ContextType>;
+  LanguageValueType?: LanguageValueTypeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Parse?: ParseResolvers<ContextType>;
+  ParseGraph?: ParseGraphResolvers<ContextType>;
+  ParseItem?: ParseItemResolvers<ContextType>;
+  ParseTag?: ParseTagResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Tag?: TagResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

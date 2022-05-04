@@ -320,6 +320,56 @@
       ]
     },
     {
+      "code": "SKANDAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Skandam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "skandam"
+        }
+      ]
+    },
+    {
+      "code": "GHATTAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Ghattam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "GawwaM"
+        }
+      ]
+    },
+    {
       "code": "OTHERS",
       "name": [
         {
