@@ -6,6 +6,7 @@ yarn upload-sthotram -f data/Sri_Anjaneya_Dandakam.json
 
 # upload bhagavatham
 yarn upload-pothana-bhagavatham -d './data/pothana_bhagavatham'
+yarn upload-valmiki-ramayan -d './data/valmiki_ramayan'
 ```
 
 ### Markdown ref

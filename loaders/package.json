@@ -31,6 +31,7 @@
     "tsc-gql-js": "tsc src/generated/graphql_js.ts",
     "tsc-test-js": "ts-node test_js.ts",
     "upload-sthotram": "ts-node src/upload_sthotram_v1.ts",
-    "upload-pothana-bhagavatham": "ts-node src/upload_pothana_bhagavatham.ts"
+    "upload-pothana-bhagavatham": "ts-node src/upload_pothana_bhagavatham.ts",
+    "upload-valmiki-ramayan": "ts-node src/upload_valmiki_ramayan.ts"
   }
 }

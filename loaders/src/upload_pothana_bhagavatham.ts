@@ -86,13 +86,25 @@ async function main( argv: any ) {
         parentIDs: [ { type: EntityTypeEnum.Puranam, entity: puranamId } ]
       }, true ) : skandamId
 
+      // // create slokams child data
+      // const slokams: EntityInput[] = inputData.contents
+      //   .filter( ( c: any ) => c?.slokam?.length > 0 )
+      //   .map( ( c: any ) => ( {
+      //     type: EntityTypeEnum.Slokam,
+      //     text: [
+      //       { language: 'TEL', value: c?.slokam?.replace( '\n', '  \n' ) },
+      //       { language: 'SAN', value: '$transliterateFrom=TEL' } ],
+      //   } ) )
+
       // create ghattam
       const ghattamId = await createEntity( {
         type: EntityTypeEnum.Ghattam,
         text: [ { language: 'TEL', value: inputData.sargaTitle },
         { language: 'SAN', value: '$transliterateFrom=TEL' } ],
-        parentIDs: [ { type: EntityTypeEnum.Skandam, entity: skandamId } ]
+        parentIDs: [ { type: EntityTypeEnum.Skandam, entity: skandamId } ],
+        // children: slokams,
       }, false )
+      // console.log( `skandam: ${skandamFileNumber} - ${skandamId}, ghattam: ${ghattamFileNumber} - ${ghattamId}, slokams: ${slokams.length}` )
 
       // create slokams
       for ( const c of inputData.contents ) {
@@ -104,7 +116,7 @@ async function main( argv: any ) {
             { language: 'SAN', value: '$transliterateFrom=TEL' } ],
           parentIDs: [ { type: EntityTypeEnum.Ghattam, entity: ghattamId } ]
         }, false )
-        console.log( `skandam: ${skandamFileNumber} - ${skandamId}, ghattam: ${ghattamFileNumber} - ${ghattamId}, slokam: ${slokamId}` )
+        console.log( `skandam: ${skandamFileNumber} - ${inputData.kandaTitle}, ghattam: ${ghattamFileNumber} - ${inputData.sargaTitle}, slokam: ${slokamId}` )
       }
 
     }
