@@ -44,7 +44,7 @@ async function createEntity( withData?: EntityInput, checkExisting: Boolean = tr
 }
 
 const defaultTextData: LanguageValueInput[] = [
-  { language: 'SLP1', value: '$transliterateFrom=IAST' }, { language: 'SAN', value: '$transliterateFrom=IAST' }, { language: 'TEL', value: '$transliterateFrom=IAST' },
+  { language: 'SLP1', value: '$transliterateFrom=SAN' }, { language: 'IAST', value: '$transliterateFrom=SAN' }, { language: 'TEL', value: '$transliterateFrom=SAN' },
 ]
 
 
@@ -55,7 +55,7 @@ async function main( argv: any ) {
 
   // const kandamList = [ 'baala', 'ayodhya', 'aranya', 'kish', 'sundara', 'yuddha' ]
 
-  const kandamNamesList = await readJSONFile( `${argv.directory}/0_sarga_titles_iast.json` )
+  const kandamNamesList = await readJSONFile( `${argv.directory}/0_sarga_titles_san.json` )
 
   // create or fetch god
   const godId = await createEntity( {
@@ -90,7 +90,7 @@ async function main( argv: any ) {
         break // the sarga loop
       }
 
-      const sargaTextIAST = kandamNamesMap?.sargaTitles[ sargaFileNumber - 1 ]
+      const sargaText = kandamNamesMap?.sargaTitles[ sargaFileNumber - 1 ]
 
       // create kandam
       // const textData = [ { language: 'ENG', value: inputData.kandaTitle } ]
@@ -98,7 +98,7 @@ async function main( argv: any ) {
       // kdata?.text?.forEach( t => textData.push( t ) )
 
       // create kandam
-      const textData = [ { language: 'IAST', value: kandamNamesMap?.text } ]
+      const textData = [ { language: 'SAN', value: kandamNamesMap?.text } ]
       defaultTextData?.forEach( t => textData.push( t ) )
 
       kandamId = sargaFileNumber === 1 ? await createEntity( {
@@ -119,7 +119,7 @@ async function main( argv: any ) {
         } ) )
 
       // create sarga
-      const stextData = [ { language: 'IAST', value: sargaTextIAST }, { language: 'ENG', value: inputData.sargaTitle } ]
+      const stextData = [ { language: 'SAN', value: sargaText }, { language: 'ENG', value: inputData.sargaTitle } ]
       defaultTextData?.forEach( t => stextData.push( t ) )
       const sargaId = await createEntity( {
         type: EntityTypeEnum.Sarga,
@@ -141,7 +141,7 @@ async function main( argv: any ) {
       //   console.log( `kandam: ${kandamFileNumber} - ${kandamId}, sarga: ${sargaFileNumber} - ${sargaId}, slokam: ${slokamId}` )
       // }
 
-      console.log( `kandam: ${kandamFileNumber} - ${kandamNamesMap?.text}, sarga: ${sargaTextIAST} - ${sargaId}, slokams: ${children.length}` )
+      console.log( `kandam: ${kandamFileNumber} - ${kandamNamesMap?.text}, sarga: ${sargaText} - ${sargaId}, slokams: ${children.length}` )
 
     }
 
