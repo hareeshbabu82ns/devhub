@@ -3,6 +3,7 @@ import {
   ImageList, IconButton, List, useMediaQuery,
   ListItemIcon, ListItemText, MenuList, MenuItem
 } from '@mui/material'
+import BackIcon from '@mui/icons-material/NavigateBefore'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import EditIcon from '@mui/icons-material/Edit'
 import NewIcon from '@mui/icons-material/Add'
@@ -109,6 +110,12 @@ export default function EntityGalaryPage() {
 
   return (
     <Panel title={entity ? `${entity.text}` : 'Entity Children'}
+      titleIcon={
+        <IconButton size='small'
+          onClick={() => navigate( -1 )}>
+          <BackIcon />
+        </IconButton>
+      }
       sx={{ border: 0, m: 2 }}
       loading={loading || refetching}
       error={error}

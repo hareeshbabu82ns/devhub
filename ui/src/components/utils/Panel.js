@@ -1,16 +1,20 @@
 import React from "react";
 import { Alert, AlertTitle, Box, CircularProgress, Paper, Stack, Toolbar, Typography } from "@mui/material";
 
-const Panel = ( { title, toolbarActions,
+const Panel = ( { title, titleIcon, toolbarActions,
   children, actionsLeft, actionsRight,
   loading, error, onRefresh, titleVarient = "dense",
   sx } ) => {
 
-  const Titlebar = ( { title, toolbarActions, onRefresh, titleVarient } ) => {
+  const Titlebar = ( { title, toolbarActions, onRefresh, titleVarient, titleIcon } ) => {
     return ( title || toolbarActions || onRefresh ) ?
       <Toolbar sx={{ backgroundColor: 'primary.100', borderRadius: 1 }} variant={titleVarient}>
-        {typeof title === 'string' ? <Typography variant="h6" sx={{ flexGrow: 1 }}> {title} </Typography>
-          : <Box sx={{ flexGrow: 1 }}>{title}</Box>}
+        <Stack sx={{ flexGrow: 1 }} direction='row' spacing={1}>
+          {titleIcon}
+          {typeof title === 'string' ?
+            <Typography variant="h6" sx={{ flexGrow: 1 }}> {title} </Typography>
+            : <Box sx={{ flexGrow: 1 }}>{title}</Box>}
+        </Stack>
         <Stack direction='row' spacing={1}>
           {toolbarActions}
         </Stack>
@@ -20,7 +24,7 @@ const Panel = ( { title, toolbarActions,
 
   const LoadingPanel = () => (
     <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900" }}>
-      <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
+      <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient, titleIcon }} />
 
       <Paper sx={{ p: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <CircularProgress />
@@ -30,7 +34,7 @@ const Panel = ( { title, toolbarActions,
 
   const ErrorPanel = ( { error, sx } ) => (
     <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900", ...sx }}>
-      <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
+      <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient, titleIcon }} />
 
       <Paper sx={{ p: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Alert severity="warning" variant="outlined">
@@ -56,7 +60,7 @@ const Panel = ( { title, toolbarActions,
     <React.Suspense fallback={<LoadingPanel />}>
       <Box sx={{ border: 1, borderRadius: 1, borderColor: "grey.900", ...sx }}>
 
-        <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient }} />
+        <Titlebar {...{ title, toolbarActions, onRefresh, titleVarient, titleIcon }} />
 
         <Paper sx={{ p: 2, }}>
           {children}
