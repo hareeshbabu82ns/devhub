@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server-core");
+const { gql } = require( "apollo-server-core" );
 
 const GET_ENTITIES_BY = gql`
 query ($entitiesBy: EntitySearchInput,
@@ -7,6 +7,9 @@ query ($entitiesBy: EntitySearchInput,
     id
     type
     text(language:"ENG")
+    meaning(language:"ENG")
+    audio
+    notes
     children(type: $childrenType){
       id
       text(language:"ENG")

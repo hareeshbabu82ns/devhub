@@ -102,6 +102,18 @@ module.exports = {
 
         // return text.find( e => e.language === lang )?.value
       },
+      meaningData: async ( { meaning }, { language } ) => {
+        return meaning
+      },
+      meaning: async ( { meaning }, { language } ) => {
+        // return meaning[ language === LANGUAGE_DEFAULT_INPUT ? LANGUAGE_DEFAULT_ISO : language ]
+        const lang = language === LANGUAGE_DEFAULT_INPUT ? LANGUAGE_DEFAULT_ISO : language
+
+        const langObj = meaning?.find( e => e.language === lang )
+        return langObj ? langObj?.value : meaning[ 0 ]?.value
+
+        // return meaning.find( e => e.language === lang )?.value
+      },
       // children: async ( { children = {} }, { type = [] }, info ) => {
       //   const query = EntityModel.find()
       //   const typeKeys = type.length ? Object.keys( children ).filter( t => type.includes( t ) ) : Object.keys( children )
@@ -238,7 +250,7 @@ module.exports = {
         const childrenIDs = item.get( 'children' ).map( e => e.entity )
         if ( childrenIDs.length > 0 ) {
           const delChilds = await EntityModel.deleteMany( { _id: { $in: childrenIDs } }, { session } )
-          console.log( delChilds )
+          // console.log( delChilds )
           if ( childrenIDs.length !== delChilds.deletedCount ) {
             throw `Not all Children is deleted for the entity: ${id}`
           }
@@ -260,8 +272,12 @@ const mapModelToGQL = ( item ) => {
   const type = {
     id: item.id,
     type: item.get( 'type' ),
+    audio: item.get( 'audio' ),
+    notes: item.get( 'notes' ),
+    attributes: item.get( 'attributes' ),
     imageThumbnail: item.get( 'imageThumbnail' ),
     text: item.get( 'text' )?.map( mapLanguageValueDocumentToGQL ),
+    meaning: item.get( 'meaning' )?.map( mapLanguageValueDocumentToGQL ),
     children: item.get( 'children' ),
     parents: item.get( 'parents' ),
   }
@@ -271,12 +287,19 @@ const mapModelToGQL = ( item ) => {
 const mapInputToModel = ( item ) => {
   // console.log( item )
   // const text = languageValuesToMap( item.text )
+
   const text = transliteratedText( languageValuesToModel( item.text ) )
+  const meaning = transliteratedText( languageValuesToModel( item.meaning ) )
+
   const itemData = {
     type: item.type,
     text,
+    meaning,
     // textData: item.text,
     imageThumbnail: item.imageThumbnail,
+    audio: item.audio,
+    notes: item.notes,
+    attributes: item.attributes,
     parents: item.parentIDs,
     children: item.childIDs,
     // parents: item.parentIds ? { ...item.parentIds } : {},

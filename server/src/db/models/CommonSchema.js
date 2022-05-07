@@ -11,6 +11,18 @@ const LanguageTextSchema = new mongoose.Schema( {
   },
 } )
 
+const AttributesSchema = new mongoose.Schema( {
+  key: {
+    type: String,
+    required: "Attribute Key is required",
+  },
+  value: {
+    type: String,
+    required: "Attribute Value is required",
+  },
+} )
+
 module.exports = {
-  LanguageTextSchema
+  LanguageTextSchema,
+  AttributesSchema,
 }

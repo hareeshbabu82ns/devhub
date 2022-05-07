@@ -55,15 +55,27 @@ const testData = {
   simple: {
     create: {
       type: "GOD",
+      audio: 'test.mp3',
       text: [
         { language: "SAN", value: "Simple Test San" },
         { language: "ENG", value: "Simple Test" },
       ],
+      meaning: [
+        { language: "SAN", value: "Simple Meaning San" },
+        { language: "ENG", value: "Simple Meaning" },
+      ],
+      attributes: [
+        { key: "k1", value: "v1" }
+      ],
+      notes: "sample notes",
     },
     update: {
       text: [
         { language: "ENG", value: "Simple Test Chg" },
-      ]
+      ],
+      meaning: [
+        { language: "ENG", value: "Simple Meaning Chg" },
+      ],
     }
   },
   search: {

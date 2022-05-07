@@ -18,6 +18,17 @@ export type Scalars = {
   Float: number;
 };
 
+export type AttributeValueInput = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type AttributeValueType = {
+  __typename?: 'AttributeValueType';
+  key?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
 export enum Dictionary {
   DhatuPata = 'DHATU_PATA',
   Mw = 'MW',
@@ -55,10 +66,15 @@ export type DictionarySearchInput = {
 
 export type Entity = {
   __typename?: 'Entity';
+  attributes?: Maybe<Array<AttributeValueType>>;
+  audio?: Maybe<Scalars['String']>;
   children?: Maybe<Array<Entity>>;
   childrenCount: Scalars['Int'];
   id: Scalars['ID'];
   imageThumbnail?: Maybe<Scalars['String']>;
+  meaning?: Maybe<Scalars['String']>;
+  meaningData?: Maybe<Array<LanguageValueType>>;
+  notes?: Maybe<Scalars['String']>;
   parents?: Maybe<Array<Entity>>;
   parentsCount: Scalars['Int'];
   text: Scalars['String'];
@@ -77,6 +93,11 @@ export type EntityChildrenCountArgs = {
 };
 
 
+export type EntityMeaningArgs = {
+  language?: InputMaybe<Scalars['String']>;
+};
+
+
 export type EntityParentsArgs = {
   type?: InputMaybe<Array<EntityTypeEnum>>;
 };
@@ -92,11 +113,15 @@ export type EntityTextArgs = {
 };
 
 export type EntityInput = {
+  attributes?: InputMaybe<Array<InputMaybe<AttributeValueInput>>>;
+  audio?: InputMaybe<Scalars['String']>;
   /**  Child Entity IDs only (will just link to existing entities)  */
   childIDs?: InputMaybe<Array<TypeEntityInput>>;
   /**  Child Entities with Data (will create new entities)  */
   children?: InputMaybe<Array<EntityInput>>;
   imageThumbnail?: InputMaybe<Scalars['String']>;
+  meaning?: InputMaybe<Array<InputMaybe<LanguageValueInput>>>;
+  notes?: InputMaybe<Scalars['String']>;
   /**  Parent Entity IDs only (will just link to existing entities)  */
   parentIDs?: InputMaybe<Array<TypeEntityInput>>;
   /**  Parent Entities with Data (will create new entities)  */
@@ -684,6 +709,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AttributeValueInput: AttributeValueInput;
+  AttributeValueType: ResolverTypeWrapper<AttributeValueType>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Dictionary: Dictionary;
   DictionaryItem: ResolverTypeWrapper<DictionaryItem>;
@@ -728,6 +755,8 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AttributeValueInput: AttributeValueInput;
+  AttributeValueType: AttributeValueType;
   Boolean: Scalars['Boolean'];
   DictionaryItem: DictionaryItem;
   DictionaryKey: DictionaryKey;
@@ -766,6 +795,12 @@ export type ResolversParentTypes = {
   UserSearchInput: UserSearchInput;
 };
 
+export type AttributeValueTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttributeValueType'] = ResolversParentTypes['AttributeValueType']> = {
+  key?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DictionaryItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['DictionaryItem'] = ResolversParentTypes['DictionaryItem']> = {
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -781,10 +816,15 @@ export type DictionaryKeyResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type EntityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entity'] = ResolversParentTypes['Entity']> = {
+  attributes?: Resolver<Maybe<Array<ResolversTypes['AttributeValueType']>>, ParentType, ContextType>;
+  audio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   children?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, Partial<EntityChildrenArgs>>;
   childrenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<EntityChildrenCountArgs>>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   imageThumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  meaning?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<EntityMeaningArgs, 'language'>>;
+  meaningData?: Resolver<Maybe<Array<ResolversTypes['LanguageValueType']>>, ParentType, ContextType>;
+  notes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parents?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, Partial<EntityParentsArgs>>;
   parentsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<EntityParentsCountArgs>>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<EntityTextArgs, 'language'>>;
@@ -892,6 +932,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  AttributeValueType?: AttributeValueTypeResolvers<ContextType>;
   DictionaryItem?: DictionaryItemResolvers<ContextType>;
   DictionaryKey?: DictionaryKeyResolvers<ContextType>;
   Entity?: EntityResolvers<ContextType>;

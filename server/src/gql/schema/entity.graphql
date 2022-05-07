@@ -15,6 +15,11 @@ input EntityInput {
   type: EntityTypeEnum
   text: [LanguageValueInput]
   imageThumbnail: String
+  audio: String
+  notes: String
+
+  meaning: [LanguageValueInput]
+  attributes: [AttributeValueInput]
 
   """ Child Entities with Data (will create new entities) """
   children: [EntityInput!]
@@ -34,6 +39,7 @@ type Entity {
   id: ID!
   type: EntityTypeEnum!
   imageThumbnail: String
+  audio: String
 
   parents(type: [EntityTypeEnum!]): [Entity!]
   parentsCount(type: [EntityTypeEnum!]): Int!
@@ -45,6 +51,15 @@ type Entity {
 
   # gets text data for all languages
   textData: [LanguageValueType!]!
+
+  meaning(language:String = "DEFAULT"): String
+
+  # gets meaning data for all languages
+  meaningData: [LanguageValueType!]
+
+  attributes: [AttributeValueType!]
+
+  notes: String
 }
 
 input EntitySearchInput {
@@ -59,8 +74,16 @@ type LanguageValueType {
   language: String
   value: String
 }
+type AttributeValueType {
+  key: String
+  value: String
+}
 input LanguageValueInput {
   language: String!
+  value: String!
+}
+input AttributeValueInput {
+  key: String!
   value: String!
 }
 input TypeEntityInput {

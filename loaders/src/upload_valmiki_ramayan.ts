@@ -115,7 +115,15 @@ async function main( argv: any ) {
           text: [
             { language: 'SAN', value: c?.slokam?.replace( '\n', '  \n' ) },
             { language: 'TEL', value: '$transliterateFrom=SAN' },
-            { language: 'SLP1', value: '$transliterateFrom=SAN' } ],
+            { language: 'SLP1', value: '$transliterateFrom=SAN' },
+          ],
+          audio: c?.audio,
+          meaning: ( c?.tatparyam?.length > 0 ) ? [
+            { language: 'ENG', value: c?.tatparyam?.replace( '\n', '  \n' ) },
+          ] : [],
+          attributes: ( c?.prati_pada_artham?.length > 0 ) ? [
+            { key: 'each_word_meaning', value: c?.prati_pada_artham?.replace( '\n', '  \n' ) || '' }
+          ] : []
         } ) )
 
       // create sarga

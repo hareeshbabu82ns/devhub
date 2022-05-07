@@ -132,6 +132,7 @@ describe( 'GQL - Entity Type Tests', () => {
     } )
     // console.log(resSearch)
     expect( resSearch.data.entities[ 0 ].text ).toEqual( testData.simple.update.text[ 0 ].value )
+    expect( resSearch.data.entities[ 0 ].meaning ).toEqual( testData.simple.update.meaning[ 0 ].value )
 
     // delete above entity
     const resDelete = await apolloServer.executeOperation( {
@@ -204,7 +205,7 @@ describe( 'GQL - Entity Type Tests', () => {
       query: GET_ENTITIES_BY,
       variables: { entitiesBy }
     } )
-    console.log( resChildSearch )
+    // console.log( resChildSearch )
     expect( resChildSearch.data.entities.length ).toEqual( 0 )
   } )
 

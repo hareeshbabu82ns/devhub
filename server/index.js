@@ -56,6 +56,9 @@ async function initContext( { req } ) {
   // GraphQL Server
 
   const expressApp = express();
+
+  expressApp.use( express.json( { limit: '50mb' } ) );
+
   const apolloServer = await startApolloServer( { expressApp, initContext } );
 
   // serve UI

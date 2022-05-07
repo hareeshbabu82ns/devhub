@@ -1,6 +1,6 @@
 const mongoose = require( 'mongoose' );
 const { LANGUAGE_DEFAULT_ISO, DEFAULT_ENTITY_THUMBNAIL } = require( '../constants' );
-const { LanguageTextSchema } = require( './CommonSchema' );
+const { LanguageTextSchema, AttributesSchema } = require( './CommonSchema' );
 
 const TypeEntitiesSchema = new mongoose.Schema( {
   type: {
@@ -31,6 +31,7 @@ const schema = new mongoose.Schema(
       type: String,
       default: ( data ) => `${DEFAULT_ENTITY_THUMBNAIL}?random=${data.id}`
     },
+    audio: String,
     text: {
       type: [ LanguageTextSchema ],
       required: "Text Data is required",
@@ -44,6 +45,15 @@ const schema = new mongoose.Schema(
         message: props => `Invalid Text Language - Value list`
       }
     },
+
+    meaning: {
+      type: [ LanguageTextSchema ],
+    },
+    attributes: {
+      type: [ AttributesSchema ],
+    },
+    notes: String,
+
     parents: {
       type: [ TypeEntitiesSchema ],
     },
