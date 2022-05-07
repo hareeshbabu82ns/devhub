@@ -27,6 +27,8 @@ import { C_LANGUAGE_DEFAULT, C_TRANSLATE_TEXT_MAP } from "./constants"
 // import GraphEditorPage from "./pages/GraphEditorPage"
 import useContextMenu from './utils/useContextMenu'
 import SelectedTextContextMenu from './components/SelectedTextContextMenu'
+import EntityDetailPage from "./pages/EntityDetailPage"
+import EntityDetailDialog from "./components/EntityDetailDialog"
 
 function App() {
 
@@ -84,6 +86,7 @@ function App() {
                 <Route index element={<EntityGalaryPage />} />
                 <Route path="edit" element={<EntityCRUDPage />} />
                 <Route path="create" element={<EntityCRUDPage />} />
+                <Route path="details" element={<EntityDetailPage />} />
               </Route>
             </Route>
             <Route path="uploaders" >
@@ -103,6 +106,7 @@ function App() {
       <TransliterationDrawer />
       <SanscriptDictDrawer />
       <SanscriptSplitsDrawer />
+      <EntityDetailDialog />
       {showContext && <SelectedTextContextMenu anchorPoint={anchorPoint} selectedText={selectedText} />}
     </>
   )

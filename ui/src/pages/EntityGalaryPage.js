@@ -17,6 +17,7 @@ import EntityTextListItem from '../components/EntityTextListItem'
 import _ from 'lodash'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { entityTypesState } from '../state/entityTypes'
+import { entityDetailState } from '../state/entityDetail'
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
   query($id:ID, $language:String) {
@@ -48,6 +49,8 @@ export default function EntityGalaryPage() {
   const navigate = useNavigate()
 
   const { enqueueSnackbar } = useSnackbar()
+
+  const setEntityDetailDlg = useSetRecoilState( entityDetailState )
 
   const entityTypes = useRecoilValue( entityTypesState( searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT ) )
 
@@ -136,7 +139,9 @@ export default function EntityGalaryPage() {
       {( children?.length > 0 && hasTextContents ) &&
         <List sx={{ width: '100%' }} >
           {children.map( ( item, i ) => (
-            <EntityTextListItem item={item} key={item.id} />
+            <EntityTextListItem item={item} key={item.id}
+              onSelect={() => setEntityDetailDlg( s => ( { ...s, drawerOpened: true, entityId: item.id } ) )} />
+            // onSelect={() => navigate( `/entity/${item.id}/details${queryParams}` )} />
           ) )}
         </List>}
 
