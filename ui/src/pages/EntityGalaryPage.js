@@ -119,7 +119,7 @@ export default function EntityGalaryPage() {
           <BackIcon />
         </IconButton>
       }
-      sx={{ border: 0, m: 2 }}
+      sx={{ border: 0, m: { xs: 0, lg: 2 } }}
       loading={loading || refetching}
       error={error}
       onRefresh={refetchData}

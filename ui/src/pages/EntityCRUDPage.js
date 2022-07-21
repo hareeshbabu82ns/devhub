@@ -259,7 +259,7 @@ const EntityFormWrapper = ( { entity, onSubmit, onDelete, loading, error, onRese
     <Panel title={`${entity.id ? entity.text : 'New Entity'}`}
       loading={loading || entityTypesLoadable.state === 'loading' || baseLanguagesLoadable.state === 'loading'}
       error={error}
-      sx={{ border: 0, m: 2 }}
+      sx={{ border: 0, m: { xs: 0, lg: 2 } }}
       toolbarActions={toolbarActions}
       actionsRight={actionsRight} >
       <EntityForm entityTypes={entityTypesLoadable.contents}

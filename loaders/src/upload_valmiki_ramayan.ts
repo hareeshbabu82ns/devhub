@@ -44,7 +44,9 @@ async function createEntity( withData?: EntityInput, checkExisting: Boolean = tr
 }
 
 const defaultTextData: LanguageValueInput[] = [
-  { language: 'SLP1', value: '$transliterateFrom=SAN' }, { language: 'IAST', value: '$transliterateFrom=SAN' }, { language: 'TEL', value: '$transliterateFrom=SAN' },
+  { language: 'SLP1', value: '$transliterateFrom=SAN' },
+  { language: 'IAST', value: '$transliterateFrom=SAN' },
+  { language: 'TEL', value: '$transliterateFrom=SAN' },
 ]
 
 
@@ -122,7 +124,7 @@ async function main( argv: any ) {
             { language: 'ENG', value: c?.tatparyam?.replace( '\n', '  \n' ) },
           ] : [],
           attributes: ( c?.prati_pada_artham?.length > 0 ) ? [
-            { key: 'each_word_meaning', value: c?.prati_pada_artham?.replace( '\n', '  \n' ) || '' }
+            { key: 'each_word_meaning', value: c?.prati_pada_artham?.replaceAll( `\n`, '' ).replaceAll( ';', `  \n` ) || '' }
           ] : []
         } ) )
 
@@ -169,3 +171,5 @@ const argv = yargs( process.argv.slice( 2 ) ).options( {
   .parseSync()
 
 main( argv );
+
+  // yarn upload-valmiki-ramayan -d '../loaders/data/valmiki_ramayan/'

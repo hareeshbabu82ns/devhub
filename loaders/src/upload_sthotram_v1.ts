@@ -110,7 +110,7 @@ async function createSthotram( inputData: any ) {
         text: textData,
         parentIDs: [ {
           type: EntityTypeEnum.God,
-          entities: [ god ]
+          entity: god
         } ],
         children: childEntities
       }
@@ -144,3 +144,5 @@ const argv = yargs( process.argv.slice( 2 ) ).options( {
   .parseSync()
 
 main( argv );
+
+// yarn upload-sthotram -f '../loaders/data/Hanuman_Chalisa.json'

@@ -47,7 +47,7 @@ async function main( argv: any ) {
 
   console.log( 'uploading from folder ...', argv.directory ) // ./data/pothana_bhagavatham
 
-  const skandamList = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10.1', '10.2', '11', '12' ]
+  const skandamList = [ '1', '2', '3', '4', '5.1', '5.2', '6', '7', '8', '9', '10.1', '10.2', '11', '12' ]
 
   // create or fetch god
   const godId = await createEntity( {
@@ -113,8 +113,16 @@ async function main( argv: any ) {
           type: EntityTypeEnum.Slokam,
           text: [
             { language: 'TEL', value: c?.slokam?.replace( '\n', '  \n' ) },
-            { language: 'SAN', value: '$transliterateFrom=TEL' } ],
-          parentIDs: [ { type: EntityTypeEnum.Ghattam, entity: ghattamId } ]
+            { language: 'SAN', value: '$transliterateFrom=TEL' },
+            { language: 'SLP1', value: '$transliterateFrom=SAN' } ],
+          parentIDs: [ { type: EntityTypeEnum.Ghattam, entity: ghattamId } ],
+          audio: c?.audio,
+          meaning: ( c?.tatparyam?.length > 0 ) ? [
+            { language: 'TEL', value: c?.tatparyam?.replace( '\n', '  \n' ) },
+          ] : [],
+          attributes: ( c?.prati_pada_artham?.length > 0 ) ? [
+            { key: 'each_word_meaning', value: c?.prati_pada_artham?.replaceAll( `\n`, '' ).replaceAll( ';', `  \n` ) || '' }
+          ] : [],
         }, false )
         console.log( `skandam: ${skandamFileNumber} - ${inputData.kandaTitle}, ghattam: ${ghattamFileNumber} - ${inputData.sargaTitle}, slokam: ${slokamId}` )
       }
@@ -137,3 +145,5 @@ const argv = yargs( process.argv.slice( 2 ) ).options( {
   .parseSync()
 
 main( argv );
+
+  // yarn upload-pothana-bhagavatham -d '../loaders/data/pothana_bhagavatham/'

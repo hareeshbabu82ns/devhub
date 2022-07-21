@@ -109,7 +109,7 @@ export default function EntityDetailPage( { entityId, onClose } ) {
           <BackIcon />
         </IconButton>
       }
-      sx={{ border: 0, m: 2 }}
+      sx={{ border: 0, m: { xs: 0, lg: 2 } }}
       loading={loading || refetching}
       error={error}
       onRefresh={refetchData}
@@ -137,22 +137,26 @@ export default function EntityDetailPage( { entityId, onClose } ) {
 
         <Typography variant='h5'>
           <ReactMarkdown
-            children={`**Meaning Each Word**  \n\n` + entity?.attributes?.find( e => e.key === 'each_word_meaning' )?.value}
+            children={`**Meaning Each Word**  \n\n` +
+              entity?.attributes?.find( e => e.key === 'each_word_meaning' )?.value}
             remarkPlugins={[ remarkGfm ]} />
         </Typography>
 
         <Divider />
 
-        <Typography variant='h5'>
-          <ReactMarkdown
-            children={`**Notes**  \n\n` + ( _.get( entity, 'notes' ) || `**no notes**` )}
-            remarkPlugins={[ remarkGfm ]} />
-        </Typography>
+        {entity?.notes &&
+          <>
+            <Typography variant='h5'>
+              <ReactMarkdown
+                children={`**Notes**  \n\n` + ( _.get( entity, 'notes' ) || `**no notes**` )}
+                remarkPlugins={[ remarkGfm ]} />
+            </Typography>
 
-        <Divider />
+            <Divider />
+          </>}
 
-        <pre>{JSON.stringify( entity, null, 2 )}</pre>
+        {/* <pre>{JSON.stringify( entity, null, 2 )}</pre> */}
       </Stack>
-    </Panel>
+    </Panel >
   )
 }

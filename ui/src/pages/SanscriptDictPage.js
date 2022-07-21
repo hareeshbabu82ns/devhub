@@ -124,7 +124,7 @@ const SanscriptDictPage = ( { onClose } ) => {
 
   return (
     <Panel title={'Sanscript Dict'}
-      sx={{ border: 0, m: 2 }}
+      sx={{ border: 0, m: { xs: 0, lg: 2 } }}
       toolbarActions={toolbarActions}
     >
       <Grid container spacing={1}>
