@@ -19,9 +19,10 @@ COPY server/ .
 # UI BUILDER #
 ##############
 
-FROM node:16-alpine as ui-builder
+FROM node:16 as ui-builder
 WORKDIR /usr/src/app
 COPY ./ui/package.json /usr/src/app
+RUN git init
 RUN yarn install
 COPY ui/ /usr/src/app
 RUN yarn build
