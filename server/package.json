@@ -12,7 +12,7 @@
     "@graphql-tools/graphql-file-loader": "^7.1.0",
     "@graphql-tools/load": "^7.3.2",
     "@graphql-tools/schema": "^8.2.0",
-    "@sanskrit-coders/sanscript": "^1.2.2",
+    "@indic-transliteration/sanscript": "^1.2.7",
     "apollo-server-core": "^3.3.0",
     "apollo-server-express": "^3.3.0",
     "axios": "^0.26.1",

@@ -4,7 +4,7 @@ import {
 } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close'
 import Panel from "../components/utils/Panel"
-import Sanscript from '@sanskrit-coders/sanscript'
+import Sanscript from '@indic-transliteration/sanscript'
 import SwapIcon from '@mui/icons-material/SwapHorizOutlined'
 import React, { startTransition, useEffect, useMemo, useState } from "react"
 import { throttle } from "lodash"

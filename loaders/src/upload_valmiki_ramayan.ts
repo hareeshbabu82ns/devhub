@@ -1,6 +1,7 @@
 import { GraphQLClient, gql } from 'graphql-request';
 import { DEVHUB_API_URL } from './constants';
 import { EntityInput, EntityTypeEnum, getSdk, LanguageValueInput, SanscriptScheme } from './generated/graphql_js';
+import Sanscript from '@indic-transliteration/sanscript'
 
 import dotenv from 'dotenv'
 import path from 'path';
@@ -82,7 +83,7 @@ async function main( argv: any ) {
 
     let kandamId = ''
 
-    for ( let sargaFileNumber = 1; sargaFileNumber < 200; sargaFileNumber++ ) {
+    for ( let sargaFileNumber = 1; sargaFileNumber < 2; sargaFileNumber++ ) {
 
       let inputData: any
 
@@ -109,54 +110,18 @@ async function main( argv: any ) {
         parentIDs: [ { type: EntityTypeEnum.Puranam, entity: puranamId } ]
       }, true ) : kandamId
 
-      // create slokams child data
-      const arthKeys: String[] = [];
-      const childrenArthMap = inputData.contents
-        .filter( ( c: any ) => c?.slokam?.length > 0 )
-        .map( ( c: any ) => {
-          const arthamSplits = c?.prati_pada_artham?.replaceAll( `\n`, '' )
-            .split( ';' ).map( ( e: String ) => e.trim() )
-            .filter( ( e: String ) => e.length > 0 ) || []
-          const splits = arthamSplits
-            .map( ( e: String ) => {
-              const key = e.split( '=' )[ 0 ]?.trim() || ''
-              arthKeys.push( key );
-              return {
-                key,
-                meaning: e.split( '=' )[ 1 ]?.trim() || '',
-              }
-            } )
-          // .filter( ( e: { key: String, meaning: String } ) => e.key.length > 0 )
-          arthKeys.push( `\n` );
-          return splits;
-        } )
-
-      console.log( `sarga ${sargaFileNumber}:` );
-      // console.dir( childrenArthMap )
-      const arthStr = arthKeys.join( ';' );
-      // console.dir( arthStr )
-      const stel = await sdk.transliterate( {
-        text: arthStr,
-        languageFrom: SanscriptScheme.Itrans,
-        languageTo: SanscriptScheme.Telugu
-      } );
-      const arthamKeysTel = stel?.data?.transliterate.split( '\n' )
-        .map( ( e: String ) => e.split( ';' ).filter( e => e.length > 0 ) );
-
-
       const children: EntityInput[] = inputData.contents
         .filter( ( c: any ) => c?.slokam?.length > 0 )
         .map( ( c: any, i: any ) => {
-          const arthKeys = arthamKeysTel[ i ]
-          const arthMeanings = childrenArthMap[ i ]
-          // console.dir( arthKeys )
-          // console.dir( arthMeanings )
-          const prati_pada_artham = arthMeanings.map( ( e: { key: String, meaning: String }, i: any ) => {
-            // console.log( i, e, arthKeys[ i ] );
-            return `${arthKeys[ i ]} ( ${e.key} ) = ${e.meaning}`
-          } ).join( `  \n` )
-          // console.log( prati_pada_artham );
+          const prati_pada_artham = c?.prati_pada_artham?.replaceAll( `\n`, '' )
+            .split( ';' ).filter( ( e: String ) => e.length > 0 )
+            .map( ( a: String ) => {
+              const map = a.split( '=' ).map( e => e.trim() )
+              const tel = Sanscript.t( map[ 0 ], 'iast', 'telugu' )
+              return `${tel} ( ${map[ 0 ]} ) = ${map[ 1 ]}`
+            } ).join( `  \n` ) || '';
           // const prati_pada_artham = c?.prati_pada_artham || '';
+
           return {
             type: EntityTypeEnum.Slokam,
             text: [

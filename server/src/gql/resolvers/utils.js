@@ -1,5 +1,5 @@
 const { Query, Document, FilterQuery } = require( 'mongoose' );
-const { Sanscript, schemes } = require( '@sanskrit-coders/sanscript' )
+const Sanscript = require( '@indic-transliteration/sanscript' )
 const _ = require( 'lodash' );
 const { LANGUAGE_SCHEME_MAP } = require( '../../db/constants' );
 
