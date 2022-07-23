@@ -546,6 +546,15 @@ export type GetEntityTypesQueryVariables = Exact<{
 
 export type GetEntityTypesQuery = { __typename?: 'Query', entityTypes: Array<{ __typename?: 'EntityType', id: string, name: string, code: EntityTypeEnum, description?: string | null }> };
 
+export type TransliterateQueryVariables = Exact<{
+  text: Scalars['String'];
+  languageFrom?: InputMaybe<SanscriptScheme>;
+  languageTo?: InputMaybe<SanscriptScheme>;
+}>;
+
+
+export type TransliterateQuery = { __typename?: 'Query', transliterate: string };
+
 export type GetEntitiesQueryVariables = Exact<{
   by: EntitySearchInput;
 }>;
@@ -586,6 +595,11 @@ export const GetEntityTypesDocument = gql`
   }
 }
     `;
+export const TransliterateDocument = gql`
+    query transliterate($text: String!, $languageFrom: SanscriptScheme, $languageTo: SanscriptScheme) {
+  transliterate(text: $text, schemeFrom: $languageFrom, schemeTo: $languageTo)
+}
+    `;
 export const GetEntitiesDocument = gql`
     query getEntities($by: EntitySearchInput!) {
   entities(by: $by) {
@@ -618,6 +632,7 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 const GetVersionDocumentString = print(GetVersionDocument);
 const GetLanguagesDocumentString = print(GetLanguagesDocument);
 const GetEntityTypesDocumentString = print(GetEntityTypesDocument);
+const TransliterateDocumentString = print(TransliterateDocument);
 const GetEntitiesDocumentString = print(GetEntitiesDocument);
 const CreateEntityDocumentString = print(CreateEntityDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
@@ -630,6 +645,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getEntityTypes(variables?: GetEntityTypesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetEntityTypesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEntityTypesQuery>(GetEntityTypesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getEntityTypes', 'query');
+    },
+    transliterate(variables: TransliterateQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: TransliterateQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<TransliterateQuery>(TransliterateDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'transliterate', 'query');
     },
     getEntities(variables: GetEntitiesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetEntitiesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEntitiesQuery>(GetEntitiesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getEntities', 'query');

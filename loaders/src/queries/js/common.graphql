@@ -19,3 +19,7 @@ query getEntityTypes($language:String){
     description
   }
 }
+
+query transliterate($text:String!, $languageFrom:SanscriptScheme, $languageTo:SanscriptScheme){
+  transliterate(text:$text, schemeFrom:$languageFrom, schemeTo:$languageTo)
+}

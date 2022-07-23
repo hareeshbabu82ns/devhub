@@ -64,6 +64,11 @@ async function initContext( { req } ) {
   // serve UI
   expressApp.use( express.static( path.join( __dirname, '../', 'ui', 'build' ) ) );
 
+  // Handles any requests that don't match the ones above
+  expressApp.get( '*', ( req, res ) => {
+    res.sendFile( path.join( __dirname, '../', 'ui', 'build', 'index.html' ) );
+  } );
+
   // code coverage
   if ( process.env.NODE_ENV === 'dev' )
     expressApp.use( '/cov', express.static( path.join( __dirname, 'coverage', 'lcov-report' ) ) );

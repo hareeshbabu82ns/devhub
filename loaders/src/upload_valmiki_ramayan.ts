@@ -1,6 +1,6 @@
 import { GraphQLClient, gql } from 'graphql-request';
 import { DEVHUB_API_URL } from './constants';
-import { EntityInput, EntityTypeEnum, getSdk, LanguageValueInput } from './generated/graphql_js';
+import { EntityInput, EntityTypeEnum, getSdk, LanguageValueInput, SanscriptScheme } from './generated/graphql_js';
 
 import dotenv from 'dotenv'
 import path from 'path';
@@ -110,23 +110,69 @@ async function main( argv: any ) {
       }, true ) : kandamId
 
       // create slokams child data
+      const arthKeys: String[] = [];
+      const childrenArthMap = inputData.contents
+        .filter( ( c: any ) => c?.slokam?.length > 0 )
+        .map( ( c: any ) => {
+          const arthamSplits = c?.prati_pada_artham?.replaceAll( `\n`, '' )
+            .split( ';' ).map( ( e: String ) => e.trim() )
+            .filter( ( e: String ) => e.length > 0 ) || []
+          const splits = arthamSplits
+            .map( ( e: String ) => {
+              const key = e.split( '=' )[ 0 ]?.trim() || ''
+              arthKeys.push( key );
+              return {
+                key,
+                meaning: e.split( '=' )[ 1 ]?.trim() || '',
+              }
+            } )
+          // .filter( ( e: { key: String, meaning: String } ) => e.key.length > 0 )
+          arthKeys.push( `\n` );
+          return splits;
+        } )
+
+      console.log( `sarga ${sargaFileNumber}:` );
+      // console.dir( childrenArthMap )
+      const arthStr = arthKeys.join( ';' );
+      // console.dir( arthStr )
+      const stel = await sdk.transliterate( {
+        text: arthStr,
+        languageFrom: SanscriptScheme.Itrans,
+        languageTo: SanscriptScheme.Telugu
+      } );
+      const arthamKeysTel = stel?.data?.transliterate.split( '\n' )
+        .map( ( e: String ) => e.split( ';' ).filter( e => e.length > 0 ) );
+
+
       const children: EntityInput[] = inputData.contents
         .filter( ( c: any ) => c?.slokam?.length > 0 )
-        .map( ( c: any ) => ( {
-          type: EntityTypeEnum.Slokam,
-          text: [
-            { language: 'SAN', value: c?.slokam?.replace( '\n', '  \n' ) },
-            { language: 'TEL', value: '$transliterateFrom=SAN' },
-            { language: 'SLP1', value: '$transliterateFrom=SAN' },
-          ],
-          audio: c?.audio,
-          meaning: ( c?.tatparyam?.length > 0 ) ? [
-            { language: 'ENG', value: c?.tatparyam?.replace( '\n', '  \n' ) },
-          ] : [],
-          attributes: ( c?.prati_pada_artham?.length > 0 ) ? [
-            { key: 'each_word_meaning', value: c?.prati_pada_artham?.replaceAll( `\n`, '' ).replaceAll( ';', `  \n` ) || '' }
-          ] : []
-        } ) )
+        .map( ( c: any, i: any ) => {
+          const arthKeys = arthamKeysTel[ i ]
+          const arthMeanings = childrenArthMap[ i ]
+          // console.dir( arthKeys )
+          // console.dir( arthMeanings )
+          const prati_pada_artham = arthMeanings.map( ( e: { key: String, meaning: String }, i: any ) => {
+            // console.log( i, e, arthKeys[ i ] );
+            return `${arthKeys[ i ]} ( ${e.key} ) = ${e.meaning}`
+          } ).join( `  \n` )
+          // console.log( prati_pada_artham );
+          // const prati_pada_artham = c?.prati_pada_artham || '';
+          return {
+            type: EntityTypeEnum.Slokam,
+            text: [
+              { language: 'SAN', value: c?.slokam?.replace( '\n', '  \n' ) },
+              { language: 'TEL', value: '$transliterateFrom=SAN' },
+              { language: 'SLP1', value: '$transliterateFrom=SAN' },
+            ],
+            audio: c?.audio,
+            meaning: ( c?.tatparyam?.length > 0 ) ? [
+              { language: 'ENG', value: c?.tatparyam?.replace( '\n', '  \n' ) },
+            ] : [],
+            attributes: ( c?.prati_pada_artham?.length > 0 ) ? [
+              { key: 'each_word_meaning', value: prati_pada_artham }
+            ] : []
+          }
+        } )
 
       // create sarga
       const stextData = [ { language: 'SAN', value: sargaText }, { language: 'ENG', value: inputData.sargaTitle } ]
