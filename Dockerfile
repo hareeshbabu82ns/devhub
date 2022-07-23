@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 
 COPY server/package.json ./
 
+RUN git init
 RUN yarn install
 
 COPY server/ .
