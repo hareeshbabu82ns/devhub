@@ -1,5 +1,4 @@
-import { useLocation, useNavigate, useParams, useSearchParams, Link } from 'react-router-dom'
-
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Divider, IconButton, Stack, Typography } from "@mui/material"
 import Panel from "../components/utils/Panel"
 import BackIcon from '@mui/icons-material/NavigateBefore'
@@ -16,6 +15,7 @@ import _ from 'lodash'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import AudioPlayPauseButton from '../components/utils/AudioPlayPauseButton'
+import { contentFont } from '../state/contentFont'
 
 
 const QUERY_GET_ENTITY_DETAILS = gql`
@@ -42,6 +42,7 @@ export default function EntityDetailPage( { entityId, onClose } ) {
   const { search: queryParams } = useLocation()
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
+  const contentFontVal = useRecoilValue( contentFont )
 
   const [ refetching, setRefetching ] = useState( false )
   const [ entity, setEntity ] = useState( undefined )
@@ -116,7 +117,9 @@ export default function EntityDetailPage( { entityId, onClose } ) {
       toolbarActions={toolbarActions}>
       <Stack spacing={2}>
 
-        <Typography variant='h5'>
+        <Typography fontSize={contentFontVal.fontSize}
+          letterSpacing={contentFontVal.letterSpacing}
+          lineHeight={contentFontVal.lineHeight}>
           <ReactMarkdown
             children={entity?.text || `**no content**`}
             remarkPlugins={[ remarkGfm ]} />
@@ -126,7 +129,9 @@ export default function EntityDetailPage( { entityId, onClose } ) {
 
         {entity?.meaning &&
           <>
-            <Typography variant='h5'>
+            <Typography fontSize={contentFontVal.fontSize}
+              letterSpacing={contentFontVal.letterSpacing}
+              lineHeight={contentFontVal.lineHeight}>
               <ReactMarkdown
                 children={`**Meaning**  \n\n` + ( entity?.meaning )}
                 remarkPlugins={[ remarkGfm ]} />
@@ -135,7 +140,9 @@ export default function EntityDetailPage( { entityId, onClose } ) {
             <Divider />
           </>}
 
-        <Typography variant='h5'>
+        <Typography fontSize={contentFontVal.fontSize}
+          letterSpacing={contentFontVal.letterSpacing}
+          lineHeight={contentFontVal.lineHeight}>
           <ReactMarkdown
             children={`**Meaning Each Word**  \n\n` +
               entity?.attributes?.find( e => e.key === 'each_word_meaning' )?.value}
@@ -146,9 +153,12 @@ export default function EntityDetailPage( { entityId, onClose } ) {
 
         {entity?.notes &&
           <>
-            <Typography variant='h5'>
+            <Typography fontSize={contentFontVal.fontSize}
+              letterSpacing={contentFontVal.letterSpacing}
+              lineHeight={contentFontVal.lineHeight}>
               <ReactMarkdown
                 children={`**Notes**  \n\n` + ( _.get( entity, 'notes' ) || `**no notes**` )}
+
                 remarkPlugins={[ remarkGfm ]} />
             </Typography>
 
