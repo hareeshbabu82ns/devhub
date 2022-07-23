@@ -2,11 +2,13 @@
 # Server BUILDER #
 ##################
 
-FROM node:14-alpine as builder
+FROM node:16-alpine as builder
 
 WORKDIR /usr/src/app
 
 COPY server/package.json ./
+
+RUN git version
 
 RUN yarn install
 
@@ -18,7 +20,7 @@ COPY server/ .
 # UI BUILDER #
 ##############
 
-FROM node:14-alpine as ui-builder
+FROM node:16-alpine as ui-builder
 WORKDIR /usr/src/app
 COPY ./ui/package.json /usr/src/app
 RUN yarn install
@@ -30,7 +32,7 @@ RUN yarn build
 # FINAL #
 #########
 
-FROM node:14-alpine
+FROM node:16-alpine
 
 ENV APP_HOME=/home/app
 ENV APP_SERVER=/home/app/server
