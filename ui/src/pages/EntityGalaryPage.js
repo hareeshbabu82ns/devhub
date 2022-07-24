@@ -6,8 +6,6 @@ import BackIcon from '@mui/icons-material/NavigateBefore'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import EditIcon from '@mui/icons-material/Edit'
 import NewIcon from '@mui/icons-material/Add'
-import TextIncrease from '@mui/icons-material/TextIncrease'
-import TextDecrease from '@mui/icons-material/TextDecrease'
 import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
@@ -19,7 +17,6 @@ import _ from 'lodash'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { entityTypesState } from '../state/entityTypes'
 import { entityDetailState } from '../state/entityDetail'
-import { contentFont } from '../state/contentFont'
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
   query($id:ID, $language:String) {
@@ -53,7 +50,6 @@ export default function EntityGalaryPage() {
   const { enqueueSnackbar } = useSnackbar()
 
   const setEntityDetailDlg = useSetRecoilState( entityDetailState )
-  const setContentFont = useSetRecoilState( contentFont )
 
   const entityTypes = useRecoilValue( entityTypesState( searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT ) )
 
@@ -111,18 +107,6 @@ export default function EntityGalaryPage() {
         onClick={refetchData}>
         <RefreshIcon />
       </IconButton>
-      {( children?.length > 0 && hasTextContents ) &&
-        <>
-          <IconButton disabled={loading || ( networkStatus === NetworkStatus.refetch ) || refetching}
-            onClick={() => setContentFont( s => ( { ...s, fontSize: s.fontSize + 2 } ) )}>
-            <TextIncrease />
-          </IconButton>
-          <IconButton disabled={loading || ( networkStatus === NetworkStatus.refetch ) || refetching}
-            onClick={() => setContentFont( s => ( { ...s, fontSize: s.fontSize - 2 } ) )}>
-            <TextDecrease />
-          </IconButton>
-        </>
-      }
     </React.Fragment>
   )
 
