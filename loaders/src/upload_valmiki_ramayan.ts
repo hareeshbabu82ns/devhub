@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from 'graphql-request';
-import { DEVHUB_API_URL } from './constants';
+import { DEVHUB_API_URL, C_ENTITY_ATTR_MEANING } from './constants';
 import { EntityInput, EntityTypeEnum, getSdk, LanguageValueInput, SanscriptScheme } from './generated/graphql_js';
 import Sanscript from '@indic-transliteration/sanscript'
 
@@ -134,7 +134,7 @@ async function main( argv: any ) {
               { language: 'ENG', value: c?.tatparyam?.replace( '\n', '  \n' ) },
             ] : [],
             attributes: ( c?.prati_pada_artham?.length > 0 ) ? [
-              { key: 'each_word_meaning', value: prati_pada_artham }
+              { key: C_ENTITY_ATTR_MEANING, value: prati_pada_artham }
             ] : []
           }
         } )

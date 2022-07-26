@@ -1,12 +1,12 @@
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Divider, IconButton, Stack, Typography } from "@mui/material"
+import { Divider, Fab, IconButton, Stack, Typography } from "@mui/material"
 import Panel from "../components/utils/Panel"
 import BackIcon from '@mui/icons-material/NavigateBefore'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import EditIcon from '@mui/icons-material/Edit'
 import CloseIcon from '@mui/icons-material/Close'
-import { gql, NetworkStatus, useQuery } from '@apollo/client'
-import { C_LANGUAGE_DEFAULT } from '../constants'
+import { gql, NetworkStatus, useMutation, useQuery } from '@apollo/client'
+import { C_ENTITY_ATTR_MEANING, C_LANGUAGE_DEFAULT } from '../constants'
 import { Fragment, useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { useRecoilValue } from 'recoil'
@@ -16,6 +16,10 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import AudioPlayPauseButton from '../components/utils/AudioPlayPauseButton'
 import { contentFont } from '../state/contentFont'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
+import BookmarkOffIcon from '@mui/icons-material/BookmarkBorder'
+import ToTopIcon from '@mui/icons-material/KeyboardArrowUp'
+import useScroll from '../utils/useScroll'
 
 
 const QUERY_GET_ENTITY_DETAILS = gql`
@@ -27,12 +31,18 @@ const QUERY_GET_ENTITY_DETAILS = gql`
       childrenCount
       audio
       meaning(language: $language)
+      bookmarked
       attributes{
         key
         value
       }
       notes
     }
+  }
+`
+const MUTATION_UPDATE_ENTITY = gql`
+  mutation($id:ID!, $data: EntityInput) {
+    updateEntity(id:$id, withData: $data)
   }
 `
 
@@ -43,24 +53,30 @@ export default function EntityDetailPage( { entityId, onClose } ) {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const contentFontVal = useRecoilValue( contentFont )
+  const [ executeScroll, elRef ] = useScroll()
 
   const [ refetching, setRefetching ] = useState( false )
   const [ entity, setEntity ] = useState( undefined )
+  const [ bookmarked, setBookmarked ] = useState( false )
 
   const entityTypes = useRecoilValue( entityTypesState( searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT ) )
 
   const { loading, error, data, refetch, networkStatus } = useQuery( QUERY_GET_ENTITY_DETAILS,
     { variables: { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT, id: entityId || params.id } } )
 
+  const [ updateEntityMutation, { data: mUpdData, error: mUpdError, loading: mUpdLoading } ] = useMutation( MUTATION_UPDATE_ENTITY )
+
   useEffect( () => {
     if ( data?.entities[ 0 ] ) {
-      const { id, type, text, audio, meaning, attributes, notes, childrenCount } = data.entities[ 0 ]
+      const { id, type, text, audio, meaning, attributes, notes, childrenCount, bookmarked } = data.entities[ 0 ]
       setEntity( {
-        id, type, text, childrenCount, audio, meaning, attributes, notes,
+        id, type, text, childrenCount, audio, meaning, attributes, notes, bookmarked,
         typeData: _.find( entityTypes, { 'code': type } )
       } )
+      setBookmarked( bookmarked )
     } else {
       setEntity( undefined )
+      setBookmarked( false )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ data ] )
@@ -81,6 +97,23 @@ export default function EntityDetailPage( { entityId, onClose } ) {
     setRefetching( false )
   }
 
+  const toggleBookmark = async () => {
+    // setRefetching( true )
+    try {
+      setBookmarked( !bookmarked )
+      await updateEntityMutation( {
+        variables: {
+          id: entity.id,
+          data: { bookmarked: !bookmarked },
+        }
+      } )
+    } catch ( e ) {
+      enqueueSnackbar( 'Error Updating Bookmark', { variant: 'error' } )
+      setBookmarked( !bookmarked )
+    }
+    // setRefetching( false )
+  }
+
   const toolbarActions = (
     <Fragment>
       <IconButton aria-label="Edit Entity"
@@ -92,8 +125,12 @@ export default function EntityDetailPage( { entityId, onClose } ) {
         <RefreshIcon />
       </IconButton>
       {entity?.audio && <AudioPlayPauseButton url={entity?.audio} />}
-      {
-        onClose && <IconButton
+      <IconButton disabled={loading || ( networkStatus === NetworkStatus.refetch ) || refetching}
+        onClick={toggleBookmark}>
+        {bookmarked ? <BookmarkIcon /> : <BookmarkOffIcon />}
+      </IconButton>
+      {onClose &&
+        <IconButton
           aria-label="close"
           onClick={onClose}>
           <CloseIcon />
@@ -116,7 +153,7 @@ export default function EntityDetailPage( { entityId, onClose } ) {
       onRefresh={refetchData}
       toolbarActions={toolbarActions}>
       <Stack spacing={2}>
-
+        <div ref={elRef}></div>
         <Typography fontSize={contentFontVal.fontSize}
           letterSpacing={contentFontVal.letterSpacing}
           lineHeight={contentFontVal.lineHeight}>
@@ -139,17 +176,19 @@ export default function EntityDetailPage( { entityId, onClose } ) {
 
             <Divider />
           </>}
-
-        <Typography fontSize={contentFontVal.fontSize}
-          letterSpacing={contentFontVal.letterSpacing}
-          lineHeight={contentFontVal.lineHeight}>
-          <ReactMarkdown
-            children={`**Meaning Each Word**  \n\n` +
-              entity?.attributes?.find( e => e.key === 'each_word_meaning' )?.value}
-            remarkPlugins={[ remarkGfm ]} />
-        </Typography>
-
-        <Divider />
+        {entity?.attributes?.find( e => e.key === C_ENTITY_ATTR_MEANING ) &&
+          <>
+            <Typography fontSize={contentFontVal.fontSize}
+              letterSpacing={contentFontVal.letterSpacing}
+              lineHeight={contentFontVal.lineHeight}>
+              <ReactMarkdown
+                children={`**Meaning Each Word**  \n\n` +
+                  entity?.attributes?.find( e => e.key === C_ENTITY_ATTR_MEANING )?.value}
+                remarkPlugins={[ remarkGfm ]} />
+            </Typography>
+            <Divider />
+          </>
+        }
 
         {entity?.notes &&
           <>
@@ -167,6 +206,11 @@ export default function EntityDetailPage( { entityId, onClose } ) {
 
         {/* <pre>{JSON.stringify( entity, null, 2 )}</pre> */}
       </Stack>
+      <Fab color="secondary" aria-label='To Top'
+        onClick={executeScroll}
+        sx={{ position: 'fixed', bottom: 16, right: 24 }}>
+        <ToTopIcon />
+      </Fab>
     </Panel >
   )
 }

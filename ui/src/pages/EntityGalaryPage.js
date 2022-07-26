@@ -1,11 +1,14 @@
 import * as React from 'react'
 import {
-  ImageList, IconButton, List, useMediaQuery,
+  ImageList, IconButton, List, useMediaQuery, Fab, Breadcrumbs, Link, Typography, Divider,
 } from '@mui/material'
 import BackIcon from '@mui/icons-material/NavigateBefore'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import EditIcon from '@mui/icons-material/Edit'
 import NewIcon from '@mui/icons-material/Add'
+import HomeIcon from '@mui/icons-material/AccountTreeOutlined'
+import NavBackIcon from '@mui/icons-material/NavigateBefore'
+import ToTopIcon from '@mui/icons-material/KeyboardArrowUp'
 import { useSnackbar } from 'notistack'
 import { useQuery, gql, NetworkStatus } from '@apollo/client'
 import EntityGalaryItem from '../components/EntityGalaryItem'
@@ -17,6 +20,8 @@ import _ from 'lodash'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { entityTypesState } from '../state/entityTypes'
 import { entityDetailState } from '../state/entityDetail'
+import useScroll from '../utils/useScroll'
+import { contentFont } from '../state/contentFont'
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
   query($id:ID, $language:String) {
@@ -30,7 +35,32 @@ const QUERY_GET_ENTITY_CHILDREN = gql`
         type
         text(language: $language)
         imageThumbnail
+        bookmarked
       }
+      parents {
+        id
+        text(language: $language)
+        type
+        imageThumbnail
+        parents {
+          id
+          text(language: $language)
+          type
+          imageThumbnail
+          parents {
+            id
+            text(language: $language)
+            type
+            imageThumbnail
+            parents {
+              id
+              text(language: $language)
+              type
+              imageThumbnail
+            }
+          }
+        }
+      } 
     }
   }
 `
@@ -41,6 +71,9 @@ export default function EntityGalaryPage() {
   const mediaMdUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'md' ) )
   const mediaLgUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'lg' ) )
   const mediaXlUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'xl' ) )
+  const [ executeScroll, elRef ] = useScroll()
+  const [ scrollToTop, elTopRef ] = useScroll()
+  const contentFontVal = useRecoilValue( contentFont )
 
   const params = useParams()
   const [ searchParams ] = useSearchParams()
@@ -61,10 +94,12 @@ export default function EntityGalaryPage() {
   const { loading, error, data, refetch, networkStatus } = useQuery( QUERY_GET_ENTITY_CHILDREN,
     { variables: { language: searchParams.get( 'language' ) || C_LANGUAGE_DEFAULT, id: params.id } } )
 
+  React.useEffect( executeScroll, [ executeScroll ] ) // Runs after component mounts
+
   React.useEffect( () => {
     if ( data?.entities[ 0 ] ) {
-      const { id, type, text, childrenCount } = data.entities[ 0 ]
-      setEntity( { id, type, text, childrenCount, typeData: _.find( entityTypes, { 'code': type } ) } )
+      const { id, type, text, childrenCount, parents } = data.entities[ 0 ]
+      setEntity( { id, type, text, childrenCount, parents, typeData: _.find( entityTypes, { 'code': type } ) } )
       setChildren( data.entities[ 0 ].children
         .map( i => ( { ...i, typeData: _.find( entityTypes, { 'code': i.type } ) } ) ) )
       const index = data.entities[ 0 ].children.findIndex( e => e.type === C_ENTITY_TYPE_SLOKAM )
@@ -110,6 +145,7 @@ export default function EntityGalaryPage() {
     </React.Fragment>
   )
 
+
   return (
     <Panel title={entity ? `${entity.text}` : 'Entity Children'}
       titleIcon={
@@ -123,6 +159,32 @@ export default function EntityGalaryPage() {
       error={error}
       onRefresh={refetchData}
       toolbarActions={toolbarActions}>
+
+      {/* Ref Element to Scroll to Top */}
+      <div ref={elTopRef}></div>
+
+      {/* Parent Breadcrumbs */}
+      {( entity?.parents?.length > 0 ) &&
+        <>
+          <Breadcrumbs
+            separator={<NavBackIcon fontSize='small' />}
+            aria-label="to parent">
+            {
+              mapEntityParents( { item: entity.parents[ 0 ], res: [] } ).map( ( p, i ) => (
+                <Link underline="hover" color="inherit"
+                  onClick={() => navigate( `/entity/${p.id}${queryParams}` )}>
+                  <Typography fontSize={contentFontVal.fontSize}
+                    letterSpacing={contentFontVal.letterSpacing}
+                    lineHeight={contentFontVal.lineHeight}>
+                    {( i === 0 ) && <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />} {p.text}
+                  </Typography>
+                </Link>
+              ) )
+            }
+          </Breadcrumbs>
+          <Divider />
+        </>
+      }
 
       {/* Children as Image List */}
       {( children?.length > 0 && !hasTextContents ) &&
@@ -138,15 +200,29 @@ export default function EntityGalaryPage() {
       {( children?.length > 0 && hasTextContents ) &&
         <List sx={{ width: '100%' }} >
           {children.map( ( item, i ) => (
-            <EntityTextListItem item={item} key={item.id}
-              onSelect={() => setEntityDetailDlg( s => ( { ...s, drawerOpened: true, entityId: item.id } ) )} />
+            <div ref={item.bookmarked ? elRef : null}>
+              <EntityTextListItem item={item} key={item.id}
+                onSelect={() => setEntityDetailDlg( s => ( { ...s, drawerOpened: true, entityId: item.id } ) )} />
+            </div>
             // onSelect={() => navigate( `/entity/${item.id}/details${queryParams}` )} />
           ) )}
         </List>}
 
-
+      <Fab color="secondary" aria-label='To Top'
+        onClick={scrollToTop}
+        sx={{ position: 'fixed', bottom: 16, right: 24 }}>
+        <ToTopIcon />
+      </Fab>
     </Panel>
   )
 }
 
 
+
+function mapEntityParents( { item, res = [] } ) {
+  if ( item.parents && item.parents.length > 0 ) {
+    mapEntityParents( { item: item.parents[ 0 ], res } )
+  }
+  res.push( { ...item } )
+  return res;
+}

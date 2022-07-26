@@ -6,6 +6,13 @@ import ImageListItemBar from '@mui/material/ImageListItemBar'
 import _ from 'lodash'
 
 export default function EntityGalaryItem( { item, onSelect } ) {
+  const buildText = ( item ) => {
+    if ( item.parents && item.parents.length > 0 ) {
+      return `${item.text} - ${buildText( item.parents[ 0 ] )}`
+    } else {
+      return item.text
+    }
+  }
   return (
     <ImageListItem onClick={onSelect}>
       <img
@@ -15,7 +22,7 @@ export default function EntityGalaryItem( { item, onSelect } ) {
         loading="lazy"
       />
       <ImageListItemBar
-        title={item.text}
+        title={buildText( item )}
         subtitle={_.get( item, 'typeData.name', item.type )}
         onClick={onSelect}
       // actionIcon={

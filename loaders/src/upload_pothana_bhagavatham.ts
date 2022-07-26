@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from 'graphql-request';
-import { DEVHUB_API_URL } from './constants';
+import { DEVHUB_API_URL, C_ENTITY_ATTR_MEANING } from './constants';
 import { EntityInput, EntityTypeEnum, getSdk, LanguageValueInput } from './generated/graphql_js';
 
 import dotenv from 'dotenv'
@@ -121,7 +121,7 @@ async function main( argv: any ) {
             { language: 'TEL', value: c?.tatparyam?.replace( '\n', '  \n' ) },
           ] : [],
           attributes: ( c?.prati_pada_artham?.length > 0 ) ? [
-            { key: 'each_word_meaning', value: c?.prati_pada_artham?.replaceAll( `\n`, '' ).replaceAll( ';', `  \n` ) || '' }
+            { key: C_ENTITY_ATTR_MEANING, value: c?.prati_pada_artham?.replaceAll( `\n`, '' ).replaceAll( ';', `  \n` ) || '' }
           ] : [],
         }, false )
         console.log( `skandam: ${skandamFileNumber} - ${inputData.kandaTitle}, ghattam: ${ghattamFileNumber} - ${inputData.sargaTitle}, slokam: ${slokamId}` )

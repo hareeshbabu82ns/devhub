@@ -31,6 +31,10 @@ const schema = new mongoose.Schema(
       type: String,
       default: ( data ) => `${DEFAULT_ENTITY_THUMBNAIL}?random=${data.id}`
     },
+    bookmarked: {
+      type: Boolean,
+      default: false,
+    },
     audio: String,
     text: {
       type: [ LanguageTextSchema ],
