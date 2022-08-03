@@ -30,11 +30,68 @@ export type AttributeValueType = {
 };
 
 export enum Dictionary {
+  /** 1962	Aufrecht's Catalogus Catalogorum */
+  Acc = 'ACC',
+  /** 1920	Apte Student`s English-Sanskrit Dictionary */
+  Ae = 'AE',
+  /** 1957	Practical Sanskrit-English Dictionary */
+  Ap = 'AP',
+  /** 1890	Apte Practical Sanskrit-English Dictionary */
+  Ap90 = 'AP90',
+  /** 1861	Abhidhānaratnamālā of Halāyudha */
+  Armh = 'ARMH',
+  /** 1866	Benfey Sanskrit-English Dictionary */
+  Ben = 'BEN',
+  /** 1953	Edgerton Buddhist Hybrid Sanskrit Dictionary */
+  Bhs = 'BHS',
+  /** 1877	Borooah English-Sanskrit Dictionary */
+  Bor = 'BOR',
+  /** 1891	Cappeller Sanskrit-English Dictionary */
+  Cae = 'CAE',
+  /** Dhatu Pata */
   DhatuPata = 'DHATU_PATA',
+  /** 1856	Goldstücker Sanskrit-English Dictionary */
+  Gst = 'GST',
+  /** 1966	Indian Epigraphical Glossary */
+  Ieg = 'IEG',
+  /** 1904	Index to the Names in the Mahabharata */
+  Inm = 'INM',
+  /** 1965	Kṛdantarūpamālā */
+  Krm = 'KRM',
+  /** 1884	Lanman`s Sanskrit Reader Vocabulary */
+  Lan = 'LAN',
+  /** 1993	Mahabharata Cultural Index */
+  Mci = 'MCI',
+  /** 1893	Macdonell Sanskrit-English Dictionary */
+  Md = 'MD',
+  /** 1899	Monier-Williams Sanskrit-English Dictionary */
   Mw = 'MW',
+  /** 1872	Monier-Williams Sanskrit-English Dictionary */
+  Mw72 = 'MW72',
+  /** 1851	Monier-Williams English-Sanskrit Dictionary */
   Mwe = 'MWE',
+  /** 1976	An Encyclopedic Dictionary */
+  Pd = 'PD',
+  /** 1975	Puranic Encyclopedia */
+  Pe = 'PE',
+  /** 1978	Personal and Geographical Names in the Gupta Inscriptions */
+  Pgn = 'PGN',
+  /** 1951	The Purana Index */
+  Pui = 'PUI',
+  /** 1900	Shabda-Sagara Sanskrit-English Dictionary */
+  Shs = 'SHS',
+  /** 1886	Sabda-kalpadruma */
   Skd = 'SKD',
-  Vcp = 'VCP'
+  /** 1974	Meulenbeld's Sanskrit Names of Plants */
+  Snp = 'SNP',
+  /** 1873	Vacaspatyam */
+  Vcp = 'VCP',
+  /** 1912	The Vedic Index of Names and Subjects */
+  Vei = 'VEI',
+  /** 1832	Wilson Sanskrit-English Dictionary */
+  Wil = 'WIL',
+  /** 1846	Yates Sanskrit-English Dictionary */
+  Yat = 'YAT'
 }
 
 export type DictionaryItem = {
@@ -68,6 +125,7 @@ export type Entity = {
   __typename?: 'Entity';
   attributes?: Maybe<Array<AttributeValueType>>;
   audio?: Maybe<Scalars['String']>;
+  bookmarked?: Maybe<Scalars['Boolean']>;
   children?: Maybe<Array<Entity>>;
   childrenCount: Scalars['Int'];
   id: Scalars['ID'];
@@ -115,6 +173,7 @@ export type EntityTextArgs = {
 export type EntityInput = {
   attributes?: InputMaybe<Array<InputMaybe<AttributeValueInput>>>;
   audio?: InputMaybe<Scalars['String']>;
+  bookmarked?: InputMaybe<Scalars['Boolean']>;
   /**  Child Entity IDs only (will just link to existing entities)  */
   childIDs?: InputMaybe<Array<TypeEntityInput>>;
   /**  Child Entities with Data (will create new entities)  */
@@ -132,6 +191,7 @@ export type EntityInput = {
 
 export type EntitySearchInput = {
   and?: InputMaybe<Array<EntitySearchInput>>;
+  bookmarked?: InputMaybe<FilterBoolean>;
   id?: InputMaybe<FilterId>;
   or?: InputMaybe<Array<EntitySearchInput>>;
   text?: InputMaybe<FilterString>;
@@ -836,6 +896,7 @@ export type DictionaryKeyResolvers<ContextType = any, ParentType extends Resolve
 export type EntityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entity'] = ResolversParentTypes['Entity']> = {
   attributes?: Resolver<Maybe<Array<ResolversTypes['AttributeValueType']>>, ParentType, ContextType>;
   audio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  bookmarked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   children?: Resolver<Maybe<Array<ResolversTypes['Entity']>>, ParentType, ContextType, Partial<EntityChildrenArgs>>;
   childrenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<EntityChildrenCountArgs>>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
