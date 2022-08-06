@@ -1,5 +1,4 @@
 import { GraphQLClient, gql } from 'graphql-request';
-import { DEVHUB_API_URL } from './constants';
 import { EntityInput, EntityTypeEnum, getSdk, LanguageValueInput } from './generated/graphql_js';
 
 import dotenv from 'dotenv'
@@ -9,6 +8,8 @@ import { readFile, readFileSync } from 'fs';
 dotenv.config( {
   path: path.resolve( process.cwd(), '.env.local' )
 } )
+
+import { DEVHUB_API_URL } from './constants';
 
 const devhubClient = new GraphQLClient( DEVHUB_API_URL );
 const sdk = getSdk( devhubClient );
