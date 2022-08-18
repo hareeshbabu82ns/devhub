@@ -15,7 +15,7 @@ import { entityTypesState } from '../state/entityTypes'
 
 const QUERY_GET_ENTITIES_BY_TYPE = gql`
   query($type:EntityTypeEnum, $language:String) {
-    entities(by:{type:{value:$type}}){
+    entities(by:{type:{value:$type}},limit:100){
       id
       type
       text(language: $language)
