@@ -30,6 +30,7 @@ export const C_TRANSLATE_TEXT_MAP = [ { language: 'SAN', value: 'devanagari' },
 
 export const C_DICTIONARY_MAP = [
   { label: 'Dhatu Pata', value: 'DHATU_PATA' },
+  { label: 'English to Telugu', value: 'ENG2TEL' },
 
   { label: 'Abhidhānaratnamālā of Halāyudha San-San', value: 'ARMH' },
   { label: 'Vacaspatyam San-San', value: 'VCP' },
