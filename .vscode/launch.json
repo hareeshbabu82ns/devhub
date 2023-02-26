@@ -5,14 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "pwa-node",
+      "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch Server",
       "skipFiles": [
         "<node_internals>/**"
       ],
       "cwd": "${workspaceFolder}/server",
       "program": "${workspaceFolder}/server/index.js"
+    },
+    {
+      "name": "Launch UI",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000", // create-react-app's default port 3000
+      "cwd": "${workspaceFolder}/ui",
+      "webRoot": "${workspaceFolder}/ui",
+      "preLaunchTask": "npm: start" // Add prelaunch Task npm: start (defined in tasks.json)
     }
   ]
 }
