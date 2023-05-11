@@ -3,7 +3,6 @@
   set_fact:
     img_tag: "{{ git_tag | default('latest') }}"
 
-# APP_NAME=$([ "$REPO_BRANCH" == "master" || "$REPO_BRANCH" == "main" ] && echo "$REPO_NAME" || echo "$REPO_BRANCH")
 - name: AppName from Extra Vars
   set_fact:
     app_name: "{{ git_repo }}"
