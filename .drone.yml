@@ -31,8 +31,8 @@ steps:
     REPO_NAME: ${DRONE_REPO_NAME/\//-}
     REPO_BRANCH: ${DRONE_BRANCH/\//-}
   commands:
-    - echo $REPO_NAME - $APP_NAME - $DRONE_TAG
     - APP_NAME=$([ "$REPO_BRANCH" == "master" ] && echo "$REPO_NAME" || echo "$REPO_BRANCH")
+    - echo $REPO_NAME - $APP_NAME - $DRONE_TAG
     - env
     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
     # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhubjs:$DRONE_TAG -f Dockerfile . 
