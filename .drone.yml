@@ -1,4 +1,5 @@
 kind: pipeline
+type: docker
 name: devhubjs
 
 steps:
@@ -29,8 +30,8 @@ steps:
     DRONE_TAG: ${DRONE_TAG}
   commands:
     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-    - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhubjs:latest -f Dockerfile . 
-    - docker push docker.$SERVER_DOMAIN/home/devhubjs:latest
+    - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhubjs:${DRONE_TAG=latest} -f Dockerfile . 
+    - docker push docker.$SERVER_DOMAIN/home/devhubjs:${DRONE_TAG=latest}
 
     # - docker build -t docker.$SERVER_DOMAIN/home/mathub-api:$DRONE_TAG -f Dockerfile .
     # - docker push docker.$SERVER_DOMAIN/home/mathub-api:$DRONE_TAG    
@@ -40,7 +41,7 @@ steps:
 
 # Deploy app using ansible
 - name: apply ansible playbook
-  image: plugins/ansible:1
+  image: plugins/ansible:3
   environment:
     ansible_vault_pass:
       from_secret: ansible_vault_pass
@@ -52,8 +53,7 @@ steps:
       from_secret: host_ssh_key
     vault_password:
       from_secret: ansible_vault_pass
-    extra_vars:
-      commit_sha: ${DRONE_COMMIT_SHA}      
+    extra_vars: git_tag=${DRONE_TAG},commit_sha=${DRONE_COMMIT_SHA}
   # when:
   #   branch:
   #   - master
