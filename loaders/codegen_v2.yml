@@ -1,0 +1,16 @@
+overwrite: true
+schema: "https://devhub2.terabits.io/graphql"
+documents: './src/queries/v2/**/*.graphql'
+generates:
+  src/generated/graphql_v2.ts:
+    plugins:
+      - "typescript"
+      - typescript-operations
+      - typescript-graphql-request
+      - typescript-resolvers
+config:
+  rawRequest: true
+      # documentMode: external
+      # importDocumentNodeExternallyFrom: src/queries/test.graphql
+  scalars:
+    DateTime: string  

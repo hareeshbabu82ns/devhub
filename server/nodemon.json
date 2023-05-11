@@ -1,0 +1,12 @@
+{
+  "watch": [
+    "src",
+    "index.js"
+  ],
+  "ext": "js,graphql",
+  "ignore": [
+    "*.test.js",
+    "node_modules"
+  ],
+  "delay": "3"
+}

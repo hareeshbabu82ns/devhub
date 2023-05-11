@@ -1,0 +1,38 @@
+{
+  "name": "loaders",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/text-to-speech": "^4.0.0",
+    "@indic-transliteration/sanscript": "^1.2.7",
+    "dotenv": "^16.0.0",
+    "graphql": "^16.3.0",
+    "yargs": "^17.4.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.4.8",
+    "@graphql-codegen/typescript-graphql-request": "^4.4.5",
+    "@graphql-codegen/typescript-operations": "^2.3.5",
+    "@graphql-codegen/typescript-resolvers": "^2.6.1",
+    "@types/node": "^17.0.23",
+    "@types/yargs": "^17.0.10",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  },
+  "scripts": {
+    "gql-codegen-v1": "graphql-codegen --config codegen_v1.yml",
+    "tsc-gql-v1": "tsc src/generated/graphql_v1.ts",
+    "tsc-test-v1": "ts-node test_v1.ts",
+    "gql-codegen-v2": "graphql-codegen --config codegen_v2.yml",
+    "tsc-gql-v2": "tsc src/generated/graphql_v2.ts",
+    "tsc-test-v2": "ts-node test_v2.ts",
+    "gql-codegen-js": "graphql-codegen --config codegen_js.yml",
+    "tsc-gql-js": "tsc src/generated/graphql_js.ts",
+    "tsc-test-js": "ts-node test_js.ts",
+    "upload-sthotram": "ts-node src/upload_sthotram_v1.ts",
+    "upload-pothana-bhagavatham": "ts-node src/upload_pothana_bhagavatham.ts",
+    "upload-valmiki-ramayan": "ts-node src/upload_valmiki_ramayan.ts"
+  }
+}

@@ -1,0 +1,63 @@
+extend type Query {
+  entityTypes(
+      by: EntityTypeSearchInput, 
+      limit: Int = 10
+  ): [EntityType!]!
+}
+
+extend type Mutation {
+  createEntityType(withData: EntityTypeInput): ID!
+  updateEntityType(id: ID!, withData: EntityTypeInput): ID!
+  deleteEntityType(id: ID!): ID!
+}
+
+input EntityTypeInput {
+  code: EntityTypeEnum
+  name: [LanguageValueInput]
+  description: String
+}
+
+# Type of the Entity ex. God, Author, Slokam etc.
+type EntityType {
+  id: ID!
+  code: EntityTypeEnum!
+  name(language:String = "DEFAULT"): String!
+  # gets text data for all languages
+  nameData: [LanguageValueType!]!
+
+  description: String
+}
+
+input EntityTypeSearchInput {
+  id: FilterID
+  code: FilterEntityTypeEnum
+  name: FilterString
+  description: FilterString
+  and: [EntityTypeSearchInput!]
+  or: [EntityTypeSearchInput!]  
+}
+
+enum EntityTypeEnum {
+  GOD
+  AUTHOR
+  ITIHASAM
+  PURANAM
+  STHOTRAM
+  DANDAKAM
+  KAANDAM
+  SARGA
+  PARVAM
+  ADHYAAYAM
+  SLOKAM
+  OTHERS
+  SKANDAM
+  GHATTAM
+}
+
+input FilterEntityTypeEnum {
+  operation: FilterOperation = EQUALS
+  path: String
+  value: EntityTypeEnum
+  valueList: [EntityTypeEnum!]
+  valueString: String
+}

@@ -2,11 +2,12 @@ venv/
 __pycache__
 *.sqlite3
 loaders/data
+scrappers/data
 old_code/
 tmp/
 
 # dependencies
-/node_modules
+**/node_modules
 /.pnp
 .pnp.js
 

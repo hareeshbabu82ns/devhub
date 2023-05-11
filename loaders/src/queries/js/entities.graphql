@@ -1,0 +1,23 @@
+query getEntities($by:EntitySearchInput!){
+    entities(by:$by){
+    id
+    text
+    type
+    children{
+      id
+      type
+      text
+    }
+    parents{
+      id
+      type
+      text
+    }
+  }
+}
+
+mutation createEntity($withData:EntityInput) {
+  createEntity(
+    withData: $withData
+  )
+}

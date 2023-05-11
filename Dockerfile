@@ -1,20 +1,62 @@
-FROM python:3.8-slim
+##################
+# Server BUILDER #
+##################
 
-RUN apt-get clean \
-  && apt-get -y update
+FROM node:16 as builder
 
-RUN apt-get -y install nginx \
-  && apt-get -y install python3-dev \
-  && apt-get -y install build-essential
+WORKDIR /usr/src/app
 
-COPY . /srv/app
-WORKDIR /srv/app
+COPY server/package.json ./
 
-RUN pip install -r requirements.txt --src /usr/local/src
+RUN git init
+RUN yarn install
 
-# COPY nginx.conf /etc/nginx
-# RUN chmod +x ./start.sh
-# CMD ["./start.sh"]
+COPY server/ .
+# RUN yarn build
+# RUN npm audit fix
 
-EXPOSE 8000
-CMD ["gunicorn", "wsgi:app", "--bind", "0.0.0.0:8000"]
+##############
+# UI BUILDER #
+##############
+
+FROM node:16 as ui-builder
+WORKDIR /usr/src/app
+COPY ./ui/package.json /usr/src/app
+RUN git init
+RUN yarn install
+COPY ui/ /usr/src/app
+RUN yarn build
+# RUN ls /usr/src/app/build/
+
+#########
+# FINAL #
+#########
+
+FROM node:16-alpine
+
+ENV APP_HOME=/home/app
+ENV APP_SERVER=/home/app/server
+ENV APP_WEB=/home/app/ui/build
+ENV DATA_DIR=/data
+
+RUN mkdir $DATA_DIR
+
+WORKDIR $APP_HOME
+COPY --from=builder /usr/src/app $APP_SERVER
+COPY --from=ui-builder /usr/src/app/build $APP_WEB
+
+EXPOSE 4000
+
+# create the app user
+RUN addgroup -S app \
+  && adduser -S app -G app
+
+# chown all the files to the app user
+RUN chown -R app:app $APP_HOME \
+  && chown -R app:app $DATA_DIR
+
+# change to the app user
+USER app
+
+WORKDIR $APP_SERVER
+CMD [ "npm", "run", "start" ]

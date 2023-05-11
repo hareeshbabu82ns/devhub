@@ -1,0 +1,660 @@
+{
+  "users": [
+    {
+      "id": "0",
+      "displayName": "Admin",
+      "settings": "{displayLang='SAN', meaningLang='TEL'}"
+    }
+  ],
+  "languages": [
+    {
+      "iso": "SAN",
+      "name": "संस्कृतम्",
+      "description": "Sanskrit"
+    },
+    {
+      "iso": "TEL",
+      "name": "తెలుగు",
+      "description": "Telugu"
+    },
+    {
+      "iso": "ENG",
+      "name": "English",
+      "description": "English"
+    },
+    {
+      "iso": "TAM",
+      "name": "தமிழ்",
+      "description": "Tamil"
+    },
+    {
+      "iso": "IAST",
+      "name": "IAST",
+      "description": "International Alphabet of Sanskrit Transliteration"
+    },
+    {
+      "iso": "SLP1",
+      "name": "SLP1",
+      "description": "Sanskrit Library Phonetic Basic"
+    },
+    {
+      "iso": "HIN",
+      "name": "हिन्दि",
+      "description": "Hindi"
+    }
+  ],
+  "entityTypes": [
+    {
+      "code": "GOD",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "God"
+        },
+        {
+          "lang": "TEL",
+          "value": "దేవుడు"
+        },
+        {
+          "lang": "SLP1",
+          "value": "devatAni"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        }
+      ]
+    },
+    {
+      "code": "AUTHOR",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Author"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "racayita"
+        }
+      ]
+    },
+    {
+      "code": "SLOKAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Slokam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "Slokama"
+        }
+      ]
+    },
+    {
+      "code": "ADHYAAYAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Adhyaayam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "aDyAyam"
+        }
+      ]
+    },
+    {
+      "code": "PARVAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Parvam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "parvam"
+        }
+      ]
+    },
+    {
+      "code": "KAANDAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Kaandam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "kAnqam"
+        }
+      ]
+    },
+    {
+      "code": "STHOTRAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Sthotram"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "Stotram"
+        }
+      ]
+    },
+    {
+      "code": "DANDAKAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Dandakam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "danqakam"
+        }
+      ]
+    },
+    {
+      "code": "SARGA",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Sarga"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "sarga"
+        }
+      ]
+    },
+    {
+      "code": "PURANAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Puranam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "purARam"
+        }
+      ]
+    },
+    {
+      "code": "ITIHASAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Itihasam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "itihAsam"
+        }
+      ]
+    },
+    {
+      "code": "SKANDAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Skandam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "skandam"
+        }
+      ]
+    },
+    {
+      "code": "GHATTAM",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Ghattam"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "GawwaM"
+        }
+      ]
+    },
+    {
+      "code": "OTHERS",
+      "name": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Others"
+        },
+        {
+          "lang": "TEL",
+          "value": "అన్యము"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "anyARi"
+        }
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://www.templepurohit.com/wp-content/uploads/2015/07/Lord-Vishnu-Hindu-Gods-and-Deities-1.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Vishnu"
+        },
+        {
+          "lang": "TEL",
+          "value": "విష్ణువు"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "vizRu"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://2.bp.blogspot.com/-RFpbh_pvjMY/VvC4K_LBajI/AAAAAAAAb9I/yjtqsI6OkyQLPc1pFaunnmknSutouBNLg/s1600/appearance-hindu-god-shiva.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Shiva"
+        },
+        {
+          "lang": "TEL",
+          "value": "శివుడు"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "Siva"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://www.templepurohit.com/wp-content/uploads/2015/07/Goddess-Saraswati-Hindu-Goddesses-and-Deities-288x300.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Sarasvati"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "sarasvati"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://www.templepurohit.com/wp-content/uploads/2015/07/Lord-Ganesha-Hindu-Gods-and-Deities-e1438140555627.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Ganesh"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "gaReSa"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://i.pinimg.com/564x/20/98/69/209869de2cf8a70f9beac33f6a7f71ba.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Sakthi"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "Sakti"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://www.templepurohit.com/wp-content/uploads/2015/07/Goddess-Lakshmi-Hindu-Godesses-and-Deities.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Lakshmi"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "lakzmi"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://www.templepurohit.com/wp-content/uploads/2015/07/Lord-Subramanya-Hindu-Gods-and-Deities-1.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Subrahmanya"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "subrahmaRya"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "http://www.chakranews.com/wp-content/uploads/2013/03/Hindu-God-Hanuman-300x225.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Hanuman"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "hanumAn"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://www.templepurohit.com/wp-content/uploads/2016/06/Lord-Rama-About-the-Ideal-Avatar-of-Lord-Vishnu-1.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "Rama"
+        },
+        {
+          "lang": "TEL",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "rAma"
+        }
+      ]
+    },
+    {
+      "type": "GOD",
+      "imageThumbnail": "https://www.nhsf.org.uk/wp-content/uploads/2007/05/holycow.jpg",
+      "text": [
+        {
+          "lang": "SAN",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "ENG",
+          "value": "All"
+        },
+        {
+          "lang": "TEL",
+          "value": "అన్దరూ"
+        },
+        {
+          "lang": "IAST",
+          "value": "$transliterateFrom=SLP1"
+        },
+        {
+          "lang": "SLP1",
+          "value": "sakalAni"
+        }
+      ]
+    }
+  ]
+}

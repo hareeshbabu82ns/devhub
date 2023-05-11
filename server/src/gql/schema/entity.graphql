@@ -1,0 +1,96 @@
+extend type Query {
+  entities(
+      by: EntitySearchInput, 
+      limit: Int = 10
+  ): [Entity!]!
+}
+
+extend type Mutation {
+  createEntity(withData: EntityInput): ID!
+  updateEntity(id: ID!, withData: EntityInput): ID!
+  deleteEntity(id: ID!): ID!
+}
+
+input EntityInput {
+  type: EntityTypeEnum
+  text: [LanguageValueInput]
+  imageThumbnail: String
+  audio: String
+  notes: String
+  bookmarked: Boolean = false
+
+  meaning: [LanguageValueInput]
+  attributes: [AttributeValueInput]
+
+  """ Child Entities with Data (will create new entities) """
+  children: [EntityInput!]
+
+  """ Child Entity IDs only (will just link to existing entities) """
+  childIDs: [TypeEntityInput!]
+
+  """ Parent Entities with Data (will create new entities) """
+  parents: [EntityInput!]
+
+  """ Parent Entity IDs only (will just link to existing entities) """
+  parentIDs: [TypeEntityInput!]
+}
+
+# Type of the Entity ex. God, Author, Slokam etc.
+type Entity {
+  id: ID!
+  type: EntityTypeEnum!
+  imageThumbnail: String
+  audio: String
+  bookmarked: Boolean
+
+  parents(type: [EntityTypeEnum!]): [Entity!]
+  parentsCount(type: [EntityTypeEnum!]): Int!
+
+  children(type: [EntityTypeEnum!]): [Entity!]
+  childrenCount(type: [EntityTypeEnum!]): Int!
+
+  text(language:String = "DEFAULT"): String!
+
+  # gets text data for all languages
+  textData: [LanguageValueType!]!
+
+  meaning(language:String = "DEFAULT"): String
+
+  # gets meaning data for all languages
+  meaningData: [LanguageValueType!]
+
+  attributes: [AttributeValueType!]
+
+  notes: String
+}
+
+input EntitySearchInput {
+  id: FilterID
+  type: FilterEntityTypeEnum
+  text: FilterString
+  bookmarked: FilterBoolean
+  and: [EntitySearchInput!]
+  or: [EntitySearchInput!]  
+}
+
+type LanguageValueType {
+  language: String
+  value: String
+}
+type AttributeValueType {
+  key: String
+  value: String
+}
+input LanguageValueInput {
+  language: String!
+  value: String!
+}
+input AttributeValueInput {
+  key: String!
+  value: String!
+}
+input TypeEntityInput {
+  type: EntityTypeEnum!
+  entity: ID!
+  # entities: [ID!]
+}

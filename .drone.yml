@@ -1,10 +1,11 @@
 kind: pipeline
-name: devhub2
+type: docker
+name: devhubjs
 
 steps:
   
 ## activate tests in future  
-# - name: devhub2 - test
+# - name: devhubjs - test
 #   image: node:14-alpine
 #   commands:
 #   - yarn install
@@ -14,7 +15,7 @@ steps:
 #     - docker
 
 # For Custom Docker Registry
-- name: devhub2 - build docker image
+- name: devhubjs - build docker image
   image: docker:latest
   volumes:
     - name: docker_sock
@@ -26,18 +27,23 @@ steps:
       from_secret: docker_pass
     SERVER_DOMAIN:
       from_secret: server_domain
+    DRONE_TAG: ${DRONE_TAG=latest}
+    REPO_NAME: ${DRONE_REPO_NAME/\//-}
+    REPO_BRANCH: ${DRONE_BRANCH/\//-}
   commands:
+    - APP_NAME=$([ "$REPO_BRANCH" == "master" || "$REPO_BRANCH" == "main" ] && echo "$REPO_NAME" || echo "$REPO_BRANCH")
+    - echo $REPO_NAME - $APP_NAME - $DRONE_TAG
+    # - env
     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-    # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/devhub2:latest -f Dockerfile .
-    - docker build -t docker.$SERVER_DOMAIN/home/devhub2:latest -f Dockerfile . 
-    # - docker push docker.$SERVER_DOMAIN/home/devhub2:latest
+    - docker build --no-cache -t docker.$SERVER_DOMAIN/home/$APP_NAME:$DRONE_TAG -f Dockerfile . 
+    - docker push docker.$SERVER_DOMAIN/home/$APP_NAME:$DRONE_TAG
   # when:
   #   branch:
   #   - docker
 
 # Deploy app using ansible
 - name: apply ansible playbook
-  image: plugins/ansible:1
+  image: plugins/ansible:3
   environment:
     ansible_vault_pass:
       from_secret: ansible_vault_pass
@@ -46,9 +52,11 @@ steps:
     # galaxy: .ansible/requirements.yml
     inventory: .ansible/inventory
     private_key:
-      from_secret: unraid_ssh_key
+      from_secret: host_ssh_key
     vault_password:
       from_secret: ansible_vault_pass
+    extra_vars: git_repo=${DRONE_REPO_NAME/\//-},git_tag=${DRONE_TAG=latest},git_branch=${DRONE_BRANCH/\//-},commit_sha=${DRONE_COMMIT_SHA}
+    # ref https://docs.drone.io/pipeline/environment/substitution/
   # when:
   #   branch:
   #   - master
@@ -59,12 +67,12 @@ steps:
 #   settings:
 #     tags:
 #       - latest
-#     # dockerfile: devhub2/Dockerfile
-#     repo: test/devhub2
+#     # dockerfile: devhubjs/Dockerfile
+#     repo: test/devhubjs
 #     registry: registry.unraid:33294
 #     insecure: true
 
-# - name: devhub2 - deploy - docker
+# - name: devhubjs - deploy - docker
 #   image: docker:latest
 #   volumes:
 #     - name: docker_sock
@@ -80,10 +88,10 @@ steps:
 #       from_secret: secret_key
 #   commands:
 #     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-#     - docker rm devhub2
-#     - docker run -d -p '23842:8000/tcp' --name='devhub2' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhub2:latest
+#     - docker rm devhubjs
+#     - docker run -d -p '23842:8000/tcp' --name='devhubjs' -e PY_ENV="prod" -e DJANGO_ALLOWED_HOSTS="*" -e SECRET_KEY="$SECRET_KEY" --net='proxynet' -v '/tmp':'/data':'rw,slave' docker.$SERVER_DOMAIN/home/devhubjs:latest
 
-# - name: devhub2 - deploy
+# - name: devhubjs - deploy
 #   image: sinlead/drone-kubectl
 #   settings:
 #     kubernetes_server:
@@ -104,7 +112,7 @@ steps:
 #     - sed -i "s/{{server_domain}}/$SERVER_DOMAIN/g"  ./k8s/deployment.yaml
 #     - sed -i "s/{{devhub_secret_key}}/$DEVHUB_SECRET_KEY/g"  ./k8s/deployment.yaml
 #     - kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
-#     - kubectl rollout restart deployment/devhub2 --insecure-skip-tls-verify
+#     - kubectl rollout restart deployment/devhubjs --insecure-skip-tls-verify
 #   # when:
 #   #   branch:
 #   #   - docker
