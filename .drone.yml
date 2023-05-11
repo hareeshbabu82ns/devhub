@@ -35,8 +35,8 @@ steps:
     - echo $REPO_NAME - $APP_NAME - $DRONE_TAG
     # - env
     - docker login -p $DPASS -u $DUSER docker.$SERVER_DOMAIN
-    # - docker build --no-cache -t docker.$SERVER_DOMAIN/home/$APP_NAME:$DRONE_TAG -f Dockerfile . 
-    # - docker push docker.$SERVER_DOMAIN/home/$APP_NAME:$DRONE_TAG
+    - docker build --no-cache -t docker.$SERVER_DOMAIN/home/$APP_NAME:$DRONE_TAG -f Dockerfile . 
+    - docker push docker.$SERVER_DOMAIN/home/$APP_NAME:$DRONE_TAG
   # when:
   #   branch:
   #   - docker
