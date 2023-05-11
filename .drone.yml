@@ -30,7 +30,7 @@ steps:
     DRONE_TAG: ${DRONE_TAG=latest}
     REPO_NAME: ${DRONE_REPO_NAME/\//-}
     APP_NAME: ${DRONE_REPO_BRANCH/\//-/master/devhubjs}
-    APP_NAME1: ${DRONE_GIT_SSH_URL/\.@:\//-/hareeshbabu82ns/devhubjs}
+    APP_NAME1: ${DRONE_GIT_SSH_URL/hareeshbabu82ns/devhubjs}
   commands:
     - echo $REPO_NAME - $APP_NAME - $DRONE_TAG
     - env
