@@ -41,8 +41,15 @@ spec:
             - name: MONGO_DB_PASSWORD
               value: "{{mongodb_pwd}}"
           ports:
-            - containerPort: "{{app_port | int}}"
+            - containerPort: {{app_port | int}}
               protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
       restartPolicy: Always
 ---
 apiVersion: v1
