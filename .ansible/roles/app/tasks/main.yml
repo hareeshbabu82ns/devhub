@@ -3,6 +3,14 @@
   set_fact:
     img_tag: "{{ git_tag | default('latest') }}"
 
+- name: GitTag from Extra Vars
+  set_fact:
+    app_name: "{{ git_branch | default('devhub') }}"
+
+- name: App Name
+  debug:
+    var: app_name
+
 - name: Check GitTag
   set_fact:
     img_tag: latest

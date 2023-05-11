@@ -23,8 +23,10 @@ spec:
         commit_sha: "{{commit_sha}}"
         # redeploy: "$(date +%s)"
     spec:
+      imagePullSecrets:
+        - name: docker-terabits    
       containers:
-        - image: "{{docker_fdqn}}/home/{{app_name}}:{{img_tag}}"
+        - image: "{{docker_fdqn}}/home/devhubjs:{{img_tag}}"
           imagePullPolicy: Always
           name: "{{app_name}}"
           env:
@@ -63,7 +65,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80 # port to be exposed on service
-      targetPort: "{{app_port | int}}" #port on the pod
+      targetPort: {{app_port | int}} #port on the pod
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
