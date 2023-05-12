@@ -42,6 +42,8 @@ spec:
               value: "{{mongodb_user}}"
             - name: MONGO_DB_PASSWORD
               value: "{{mongodb_pwd}}"
+            - name: SANSCRIPT_UTILS_URL
+              value: "{{sanscript_utils_url}}"
           ports:
             - containerPort: {{app_port | int}}
               protocol: TCP
