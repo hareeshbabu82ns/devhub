@@ -67,7 +67,16 @@ spec:
   ports:
     - protocol: TCP
       port: 80 # port to be exposed on service
-      targetPort: {{app_port | int}} #port on the pod
+      targetPort: {{app_port | int}} # port on the pod
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-sans-utils-prefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /sanskrit-utils-api
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -85,29 +94,12 @@ spec:
       services:
         - name: "{{app_name}}"
           port: 80
-      # middlewares:
-      #   - name: default-headers
-      #     namespace: default
-  # if not specified, the default wildcard certificate will be used by default
+    - match: PathPrefix(`/sanskrit-utils-api`)
+      kind: Rule
+      services:
+        - name: "sanskrit-utils-api"
+          port: 80
+      middlewares:
+        - name: strip-sans-utils-prefix          
   tls:
     secretName: cert-terabits-io-tls
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: "{{app_name}}"
-#   annotations:
-# spec:
-#   ingressClassName: nginx
-#   rules:
-#     - host: "{{app_fqdn}}"
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: "{{app_name}}"
-#                 port:
-#                   number: 80 # port of the service
-# # curl -H "Host: "{{app_name}}".kube.local.io" http://192.168.86.151
