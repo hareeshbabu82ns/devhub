@@ -1,4 +1,7 @@
 import { Routes, Route, useSearchParams } from "react-router-dom";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+
 import EntityGalaryPage from "./pages/EntityGalaryPage";
 import GodsPage from "./pages/GodsPage";
 import SthotramUploadPage from "./pages/SthotramUploadPage";
@@ -75,7 +78,7 @@ function App() {
   // useKeyPress( [ `${C_KEY_CTRL}+t`, `${C_KEY_CTRL}+d`, `${C_KEY_CTRL}+s` ], keyHandler )
 
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Routes>
         {/* All Simple Page Layout Routes goes under here */}
         <Route element={<SimplePageLayout />}>
@@ -118,7 +121,7 @@ function App() {
           selectedText={selectedText}
         />
       )}
-    </>
+    </LocalizationProvider>
   );
 }
 
