@@ -9,7 +9,9 @@ import {
   ListItemButton,
   ListItemText,
   MenuItem,
+  Pagination,
   Select,
+  TablePagination,
   TextField,
   Typography,
 } from "@mui/material";
@@ -70,11 +72,13 @@ const SanscriptDictPage = ({ onClose }) => {
 
   const [inputText, setInputText] = useState(sdict.inputText);
   const [limit, setLimit] = useState(sdict.limit);
+  const [offset, setOffset] = useState(sdict.offset);
   const [origin, setOrigin] = useState(sdict.origin);
   const [inputScheme, setInputScheme] = useState(sdict.inputScheme);
   const [outputScheme, setOutputScheme] = useState(sdict.outputScheme);
   const [switches, setSwitches] = useState(switchFromState(sdict));
 
+  const [total, setTotal] = useState(0);
   const [dictResult, setDictResult] = useState([]);
 
   const [openDetailDlg, setOpenDetailDlg] = React.useState(false);
@@ -84,11 +88,19 @@ const SanscriptDictPage = ({ onClose }) => {
     () =>
       throttle(
         (
-          { inputText, inputScheme, outputScheme, limit, origin, switches },
+          {
+            inputText,
+            inputScheme,
+            outputScheme,
+            limit,
+            offset,
+            origin,
+            switches,
+          },
           callback
         ) => {
           if (!inputText) {
-            callback({ inputText, data: [] });
+            callback({ inputText, data: { total: 0, results: [] } });
             return;
           }
           client
@@ -98,6 +110,7 @@ const SanscriptDictPage = ({ onClose }) => {
                 searchWith: {
                   search: inputText,
                   limit: Number(limit),
+                  offset: Number(offset),
                   origin,
                   searchScheme: inputScheme,
                   outputScheme,
@@ -106,7 +119,7 @@ const SanscriptDictPage = ({ onClose }) => {
               },
             })
             .then(({ data }) =>
-              callback({ inputText, data: data?.dictionarySearch.results })
+              callback({ inputText, data: data?.dictionarySearch })
             )
             .catch(console.log);
         },
@@ -120,18 +133,23 @@ const SanscriptDictPage = ({ onClose }) => {
       {
         inputText,
         limit,
+        offset,
         origin,
         inputScheme,
         outputScheme,
         switches,
       },
       ({ inputText, data }) => {
-        setDictResult(data);
+        setDictResult(data.results);
+        setTotal(data.total);
+        setOffset(data.total >= limit * offset ? offset : 0);
         setSansDict((state) => ({
           ...state,
           data,
           inputText,
           origin,
+          limit,
+          offset: data.total >= limit * offset ? offset : 0,
           inputScheme,
           outputScheme,
           ...switchToMap(switches),
@@ -143,6 +161,7 @@ const SanscriptDictPage = ({ onClose }) => {
     setSansDict,
     inputText,
     limit,
+    offset,
     origin,
     inputScheme,
     outputScheme,
@@ -300,7 +319,25 @@ const SanscriptDictPage = ({ onClose }) => {
 
         {/* Results */}
         <Grid item xs={12}>
-          <Panel title={"Results"} sx={{ border: 0, mt: 2 }}>
+          <Panel
+            title={"Results"}
+            sx={{ border: 0, mt: 2 }}
+            toolbarActions={
+              <TablePagination
+                component="div"
+                count={total}
+                page={offset}
+                onPageChange={(e, page) => setOffset(page)}
+                rowsPerPage={limit}
+                onRowsPerPageChange={(event) => {
+                  setLimit(parseInt(event.target.value, 10));
+                  setOffset(0);
+                }}
+                showFirstButton={true}
+                showLastButton={true}
+              />
+            }
+          >
             <List>
               {dictResult?.map((i) => (
                 <DictionaryListItem

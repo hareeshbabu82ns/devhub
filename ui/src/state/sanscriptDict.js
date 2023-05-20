@@ -1,14 +1,15 @@
-import { atom } from "recoil"
+import { atom } from "recoil";
 
-export const sanscriptDictState = atom( {
-  key: 'sanscriptDictState',
+export const sanscriptDictState = atom({
+  key: "sanscriptDictState",
   default: {
     drawerOpened: false,
     dictDetailsOpened: false,
-    inputScheme: 'SLP1',
-    outputScheme: 'TELUGU',
-    inputText: '',
+    inputScheme: "SLP1",
+    outputScheme: "TELUGU",
+    inputText: "",
     limit: 10,
+    offset: 0,
     origin: [],
     fuzzySearch: false,
     searchOnlyKeys: false,
@@ -16,4 +17,4 @@ export const sanscriptDictState = atom( {
     startsWith: true,
     endsWith: false,
   },
-} )
+});
