@@ -76,7 +76,7 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-      - /sanskrit-utils-api
+      - /sanskrit-utils
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -94,10 +94,10 @@ spec:
       services:
         - name: "{{app_name}}"
           port: 80
-    - match: PathPrefix(`/sanskrit-utils-api`)
+    - match: PathPrefix(`/sanskrit-utils`)
       kind: Rule
       services:
-        - name: "sanskrit-utils-api"
+        - name: "sanskrit-utils"
           port: 80
       middlewares:
         - name: strip-sans-utils-prefix          

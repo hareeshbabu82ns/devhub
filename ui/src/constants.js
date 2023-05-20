@@ -1,7 +1,7 @@
 export const drawerWidth = 240;
 export const DATE_FORMAT_DB = "YYYYMMDDHHmmss";
 export const DATE_FORMAT_INPUT_FIELD = "YYYY-MM-DDTHH:mm:ss";
-export const PANEL_RADIUS = 10;
+export const PANEL_RADIUS = 6;
 
 export const APP_THEME_MODE = "theme-mode";
 

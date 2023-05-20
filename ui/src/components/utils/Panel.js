@@ -8,6 +8,7 @@ import {
   Stack,
   Toolbar,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { PANEL_RADIUS } from "../../constants";
 
@@ -24,6 +25,8 @@ const Panel = ({
   titleVarient = "dense",
   sx,
 }) => {
+  const theme = useTheme();
+
   const Titlebar = ({
     title,
     toolbarActions,
@@ -34,7 +37,7 @@ const Panel = ({
     return title || toolbarActions || onRefresh ? (
       <Toolbar
         sx={{
-          backgroundColor: "primary.100",
+          backgroundColor: theme.tones.primary[theme.isDark ? 95 : 60],
           borderRadius: 0,
           borderTopRightRadius: PANEL_RADIUS,
           borderTopLeftRadius: PANEL_RADIUS,
@@ -151,6 +154,7 @@ const Panel = ({
             borderRadius: 0,
             borderBottomRightRadius: PANEL_RADIUS,
             borderBottomLeftRadius: PANEL_RADIUS,
+            background: theme.tones.secondary[99],
           }}
         >
           {children}
