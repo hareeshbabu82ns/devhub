@@ -8,7 +8,7 @@ export const sanscriptDictState = atom({
     inputScheme: "SLP1",
     outputScheme: "TELUGU",
     inputText: "",
-    limit: 10,
+    limit: 25,
     offset: 0,
     origin: [],
     fuzzySearch: false,
@@ -16,5 +16,22 @@ export const sanscriptDictState = atom({
     caseInsensitive: false,
     startsWith: true,
     endsWith: false,
+    selectedItemId: "",
+    dictBrowseSearch: "browse",
+  },
+});
+
+export const sanscriptDictBrowseState = atom({
+  key: "sanscriptDictBrowseState",
+  default: {
+    drawerOpened: false,
+    dictDetailsOpened: false,
+    inputScheme: "SLP1",
+    outputScheme: "TELUGU",
+    limit: 25,
+    offset: 0,
+    origin: "",
+    dictBrowseSearch: "search",
+    selectedItemId: "",
   },
 });
