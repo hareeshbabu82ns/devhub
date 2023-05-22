@@ -17,7 +17,7 @@ export const sanscriptDictState = atom({
     startsWith: true,
     endsWith: false,
     selectedItemId: "",
-    dictBrowseSearch: "browse",
+    dictBrowseSearch: "search",
   },
 });
 
