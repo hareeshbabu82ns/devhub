@@ -108,3 +108,16 @@ $ docker exec -d devhub python manage.py flush --no-input
 $ docker exec -d devhub python manage.py migrate
 $ docker exec -d devhub python manage.py loaddata init_data
 ```
+
+### MongoDB Shell scripts
+
+```sh
+$> use devhubjs
+$> db.Entities.find({type: 'SLOKAM'}, {type:1}).limit(10)
+
+# fetch count of thumbnail defaults
+$> db.Entities.find({imageThumbnail:{$regex: /picsum\.photos.*?random=/}},{type:1,imageThumbnail:1}).count()
+
+# update all thumbnails to default png
+$> db.Entities.updateMany({_id: ObjectId('62d87447c408a0849a425f0b')},{$set:{imageThumbnail:'/default-om_256.png'}})
+```
