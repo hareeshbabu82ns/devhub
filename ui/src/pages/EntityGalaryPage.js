@@ -35,6 +35,7 @@ import { entityTypesState } from "../state/entityTypes";
 import { entityDetailState } from "../state/entityDetail";
 import useScroll from "../utils/useScroll";
 import { contentFont } from "../state/contentFont";
+import AudioPlayPauseButton from "../components/utils/AudioPlayPauseButton";
 
 const QUERY_GET_ENTITY_CHILDREN = gql`
   query ($id: ID, $language: String) {
@@ -42,6 +43,7 @@ const QUERY_GET_ENTITY_CHILDREN = gql`
       id
       type
       text(language: $language)
+      audio
       childrenCount
       children {
         id
@@ -119,11 +121,13 @@ export default function EntityGalaryPage() {
 
   React.useEffect(() => {
     if (data?.entities[0]) {
-      const { id, type, text, childrenCount, parents } = data.entities[0];
+      const { id, type, text, childrenCount, parents, audio } =
+        data.entities[0];
       setEntity({
         id,
         type,
         text,
+        audio,
         childrenCount,
         parents,
         typeData: _.find(entityTypes, { code: type }),
@@ -177,6 +181,7 @@ export default function EntityGalaryPage() {
       >
         <NewIcon />
       </IconButton>
+      {entity?.audio && <AudioPlayPauseButton url={entity?.audio} />}
       <IconButton
         disabled={
           loading || networkStatus === NetworkStatus.refetch || refetching

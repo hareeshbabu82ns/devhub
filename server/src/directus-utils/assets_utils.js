@@ -17,14 +17,21 @@ module.exports = {
 
     const fwdPath = path.replace("/directus-assets", "/assets");
     // console.log(fwdPath, query);
-    const apiRes = await directusUtilsAPI.get(fwdPath, {
-      responseType: "arraybuffer",
-      params: { access_token: process.env.DIRECTUS_USER_AUTH_TOKEN, ...query },
-    });
-    // console.log(apiRes.headers);
-    // console.log(apiRes.data);
-    res.set(apiRes.headers);
-    res.status(apiRes.status);
-    res.send(apiRes.data);
+    try {
+      const apiRes = await directusUtilsAPI.get(fwdPath, {
+        responseType: "arraybuffer",
+        params: {
+          access_token: process.env.DIRECTUS_USER_AUTH_TOKEN,
+          ...query,
+        },
+      });
+      // console.log(apiRes.headers);
+      // console.log(apiRes.data);
+      res.set(apiRes.headers);
+      res.status(apiRes.status);
+      res.send(apiRes.data);
+    } catch (e) {
+      res.status(404).send("not found");
+    }
   },
 };
